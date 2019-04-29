@@ -9,21 +9,14 @@ from database_operations import execute_sql, create_connection, execute_many_sql
 ORIGINAL_DATABASE_PATH = 'C://tennis.sqlite'
 
 
-def get_tournaments(first_year, last_year):
-    sql = "select * from turnaje where pohlavi=\'men\' and typ=\'dvouhra\' and rok>=? and rok<=? and (nazev like \
-    '%Australian open%' or nazev like '%French open%' or nazev like '%Wimbledon%' or nazev like '%US open%')"
-
-    tournaments = execute_sql(ORIGINAL_DATABASE_PATH, sql, [first_year, last_year])
-    cleaned_tournaments = []
-    for tournament in tournaments:
-        tour = list(tournament[:len(tournament) - 1])
-        tour[3] = "singles"
-        tour[1] = re.sub('ATP ', '', tour[1])
-        tour[1] = re.sub('\\d*', '', tour[1])
-        tour[1] = tour[1].strip()
-        cleaned_tournaments.append(tour)
-
-    return cleaned_tournaments
+# function used for removing nested lists in python.
+def remove_nestings(l, output):
+    for i in l:
+        if type(i) == list:
+            remove_nestings(i, output)
+        else:
+            output.append(i)
+    return output
 
 
 def translate_month(text):
@@ -51,6 +44,33 @@ def get_set_results(match, mat, cur_index):
         else:
             match.append(None)
     return match
+
+
+def get_matchids(matches):
+    matchids = []
+    unnested_matches = []
+    for val in matches:
+        for val2 in val:
+            matchids.append(val2[0])
+            unnested_matches.append(val2)
+    return matchids, unnested_matches
+
+
+def get_tournaments(first_year, last_year):
+    sql = "select * from turnaje where pohlavi=\'men\' and typ=\'dvouhra\' and rok>=? and rok<=? and (nazev like \
+    '%Australian open%' or nazev like '%French open%' or nazev like '%Wimbledon%' or nazev like '%US open%')"
+
+    tournaments = execute_sql(ORIGINAL_DATABASE_PATH, sql, [first_year, last_year])
+    cleaned_tournaments = []
+    for tournament in tournaments:
+        tour = list(tournament[:len(tournament) - 1])
+        tour[3] = "singles"
+        tour[1] = re.sub('ATP ', '', tour[1])
+        tour[1] = re.sub('\\d*', '', tour[1])
+        tour[1] = tour[1].strip()
+        cleaned_tournaments.append(tour)
+
+    return cleaned_tournaments
 
 
 def get_matches(tournament, first_year):
@@ -104,29 +124,7 @@ def get_matches(tournament, first_year):
     return cleaned_matches
 
 
-def get_matchids(matches):
-    matchids = []
-    unnested_matches = []
-    for val in matches:
-        for val2 in val:
-            matchids.append(val2[0])
-            unnested_matches.append(val2)
-    return matchids, unnested_matches
-
-
-# function used for removing nested lists in python.
-def remove_nestings(l, output):
-    for i in l:
-        if type(i) == list:
-            remove_nestings(i, output)
-        else:
-            output.append(i)
-    return output
-
-
 def get_odds(bookmaker, matchids):
-    matchids = [2092, 2093, 38929, 120826, 122029]
-
     questionmarks = '?' * len(matchids)
     sql = f"select home.id as id, home.id_matchids as id_match, home.sazkovka as bookmaker, home.usek as match_part, \
             home.odds_1 as odds_home, away.odds_2 as odds_away, max(home.termin,away.termin) as 'date', \
@@ -156,25 +154,25 @@ def get_odds(bookmaker, matchids):
     cleaned_odds = []
     for oddrow in odds:
         odd = list(oddrow)
-        odd[5] = translate_month(odd[5])
+        odd[6] = translate_month(odd[6])
         cleaned_odds.append(odd)
 
     return cleaned_odds
 
 
 def prepare_database(first_year, last_year, bookmaker):
-    # select tournaments, export (10 years, 40 tournaments)
+    # select tournaments (10 years, 40 tournaments)
     tournaments = get_tournaments(first_year, last_year)
     matches = []
 
-    # iterate over each tournament, select matches (filter out errors), export (40 * 127 = 5 080 matches)
+    # iterate over each tournament, select matches, (40 * 127 = 5 080 matches)
     for tournament in tournaments:
         matches.append(get_matches(tournament, first_year))
 
     # get matchids
     matchids, matches = get_matchids(matches)
 
-    # select odds for each match, export (which odds?)
+    # select odds for each match
     odds = get_odds(bookmaker, matchids)
 
     # create new DB
