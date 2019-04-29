@@ -124,32 +124,37 @@ def get_matches(tournament, first_year):
     return cleaned_matches
 
 
-def get_odds(bookmaker, matchids):
-    questionmarks = '?' * len(matchids)
-    sql = f"select home.id as id, home.id_matchids as id_match, home.sazkovka as bookmaker, home.usek as match_part, \
-            home.odds_1 as odds_home, away.odds_2 as odds_away, max(home.termin,away.termin) as 'date', \
-            max(home.utime,away.utime) as utime from \
-            (select * from home_away \
-                where \
-                (usek='fulltime' or usek='1.set') and \
-                (aktivni='true' or aktivni='false') and \
-                sazkovka=? and \
-                         id_matchids in ({','.join(questionmarks)}) and \
-                         odds_1 not null \
-            ) home \
-            inner join \
-            (select * from home_away \
-                where \
-                (usek='fulltime' or usek='1.set') and \
-                (aktivni='true' or aktivni='false') and \
-                sazkovka=? and \
-                         id_matchids in ({','.join(questionmarks)}) and \
-                         odds_2 not null \
-            ) away \
-            on home.id_matchids=away.id_matchids and home.usek=away.usek"
+def get_odds(bookmaker, matchids_original):
+    step_size = 850
+    odds = []
+    for i in range(0, len(matchids_original), step_size):
+        matchids = matchids_original[i:i + step_size]
 
-    params = remove_nestings([bookmaker, matchids, bookmaker, matchids], [])
-    odds = execute_sql(ORIGINAL_DATABASE_PATH, sql, params)
+        questionmarks = '?' * len(matchids)
+        sql = f"select home.id as id, home.id_matchids as id_match, home.sazkovka as bookmaker, home.usek as match_part, \
+                home.odds_1 as odds_home, away.odds_2 as odds_away, max(home.termin,away.termin) as 'date', \
+                max(home.utime,away.utime) as utime from \
+                (select * from home_away \
+                    where \
+                        (usek='fulltime' or usek='1.set') and \
+                        (aktivni='true' or aktivni='false') and \
+                        sazkovka=? and \
+                        id_matchids in ({','.join(questionmarks)}) and \
+                        odds_1 not null \
+                ) home \
+                inner join \
+                (select * from home_away \
+                    where \
+                        (usek='fulltime' or usek='1.set') and \
+                        (aktivni='true' or aktivni='false') and \
+                        sazkovka=? and \
+                        id_matchids in ({','.join(questionmarks)}) and \
+                        odds_2 not null \
+                ) away \
+                on home.id_matchids=away.id_matchids and home.usek=away.usek"
+
+        params = remove_nestings([bookmaker, matchids, bookmaker, matchids], [])
+        odds.append(execute_sql(ORIGINAL_DATABASE_PATH, sql, params))
 
     cleaned_odds = []
     for oddrow in odds:
@@ -250,7 +255,7 @@ def prepare_database(first_year, last_year, bookmaker):
     execute_many_sql(new_database_path, sql, matches, True)
 
     questionmarks = '?' * len(odds[0])
-    sql = f"INSERT INTO odds (id,id_match,bookmaker,match_part,odds_home,odds_away,date,utime) \
+    sql = f"INSERT INTO home_away (id,id_match,bookmaker,match_part,odds_home,odds_away,date,utime) \
             VALUES ({','.join(questionmarks)})"
     execute_many_sql(new_database_path, sql, odds, True)
 
