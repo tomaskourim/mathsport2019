@@ -1,6 +1,7 @@
 # This is a support file used only for one time extraction of a database from a larger and more complex database
 
 import argparse
+import datetime
 import os
 import re
 
@@ -263,6 +264,8 @@ def prepare_database(first_year, last_year, bookmaker):
 
 
 if __name__ == '__main__':
+    start_time = datetime.now()
+
     parser = argparse.ArgumentParser(
         description="Prepares a relevant, lightweight database for the purpose of this project out of a much larger \
         and complex database available to the author.")
@@ -280,3 +283,6 @@ if __name__ == '__main__':
         ORIGINAL_DATABASE_PATH = args.original_database_path
 
     prepare_database(first_year, last_year, bookmaker)
+
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
