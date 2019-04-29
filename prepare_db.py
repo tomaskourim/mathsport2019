@@ -1,7 +1,7 @@
 # This is a support file used only for one time extraction of a database from a larger and more complex database
 
 import argparse
-import datetime
+from datetime import datetime
 import os
 import re
 
@@ -126,7 +126,7 @@ def get_matches(tournament, first_year):
 
 
 def get_odds(bookmaker, matchids_original):
-    step_size = 850
+    step_size = 425
     odds = []
     for i in range(0, len(matchids_original), step_size):
         matchids = matchids_original[i:i + step_size]
