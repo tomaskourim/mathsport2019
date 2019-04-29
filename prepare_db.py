@@ -2,6 +2,8 @@
 
 import argparse
 import csv
+import os
+
 from database_operations import execute_sql
 
 ORIGINAL_DATABASE_PATH = 'C://tennis.sqlite'
@@ -19,7 +21,7 @@ def export_tournaments(first_year, last_year):
     return tournaments
 
 
-def export_matches_from_tournament(tournament, first_year):
+def export_matches_from_tournament(tournament, first_year, matches_filename):
     # qualification is considered part of the tournament, however, it is played as best-of-three only and thus
     # not interesting for this case
     sql = "select min(utime) from( \
@@ -48,7 +50,7 @@ def export_matches_from_tournament(tournament, first_year):
     if len(matches) != 127:
         print(len(matches), tournament)
 
-    with open('matches.csv', 'a', encoding="utf-8") as myfile:
+    with open(matches_filename, 'a', encoding="utf-8") as myfile:
         wr = csv.writer(myfile, lineterminator='\n')
         for match in matches:
             wr.writerow(match)
@@ -56,14 +58,28 @@ def export_matches_from_tournament(tournament, first_year):
     return matches
 
 
+def get_matchids(matches):
+    matchids = []
+    for val in matches:
+        for val2 in val:
+            matchids.append(val2[0])
+    return matchids
+
+
 def prepare_database(first_year, last_year, bookmaker):
     # select tournaments, export (10 years, 40 tournaments)
     tournaments = export_tournaments(first_year, last_year)
-    matches=[]
+    matches = []
 
     # iterate over each tournament, select matches (filter out errors), export (40 * 127 = 5 080 matches)
+    matches_filename = 'matches.csv'
+    if os.path.isfile(matches_filename):
+        os.remove(matches_filename)
     for tournament in tournaments:
-        matches.append(export_matches_from_tournament(tournament, first_year))
+        matches.append(export_matches_from_tournament(tournament, first_year, matches_filename))
+
+    # get matchids
+    matchids = get_matchids(matches)
 
     # select odds for each match, export (which odds?)
 
