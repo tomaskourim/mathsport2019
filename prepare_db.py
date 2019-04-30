@@ -158,10 +158,11 @@ def get_odds(bookmaker, matchids_original):
         odds.append(execute_sql(ORIGINAL_DATABASE_PATH, sql, params))
 
     cleaned_odds = []
-    for oddrow in odds:
-        odd = list(oddrow)
-        odd[6] = translate_month(odd[6])
-        cleaned_odds.append(odd)
+    for oddpart in odds:
+        for oddrow in oddpart:
+            odd = list(oddrow)
+            odd[6] = translate_month(odd[6])
+            cleaned_odds.append(odd)
 
     return cleaned_odds
 
