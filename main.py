@@ -3,11 +3,39 @@
 import argparse
 from datetime import datetime
 
+import pandas as pd
+
+from database_operations import execute_sql
+
 DATABASE_PATH = 'mathsport2019.sqlite'
+
+
+def get_match_data(odds_probability_type):
+    sql = "select matches.id, \
+            case when home_away.odds_home >= home_away.odds_away then matches.home else matches.away end as favorite, \
+            case when home_away.odds_home >= home_away.odds_away then matches.away else matches.home end as outsider, \
+            matches.home_sets, matches.away_sets, matches.set1, matches.set2, matches.set3, matches.set4, matches.set5,\
+            tournaments.name, tournaments.year, home_away.odds_home, home_away.odds_away from ( \
+                (select * from matches where other_result is null) as matches \
+                join \
+                (select * from tournaments) as tournaments \
+                ON matches.id_tournament=tournaments.id \
+                inner join \
+                (select * from home_away where match_part= ? ) as home_away \
+                on matches.id=home_away.id_match)"
+
+    match_data = execute_sql(DATABASE_PATH, sql, odds_probability_type)
+    return match_data
 
 
 def fit_and_evaluate(first_year, last_year, training_type, odds_probability_type):
     # get matches, results and from database
+    match_data = pd.DataFrame(get_match_data(odds_probability_type))
+    match_data.columns = ["id", "home", "away", "home_sets", "away_sets", "set1", "set2", "set3", "set4", "set5",
+                          "tournament_name", "year", "odds_home", "odds_away"]
+
+    years = match_data.year.unique()
+
     # get probabilities from odds
     # iterate over training sets
     # fit the model - find optimal lambda
