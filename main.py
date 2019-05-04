@@ -14,9 +14,9 @@ FAIR_ODDS_PARAMETER = 0.5
 
 
 def get_match_data(odds_probability_type):
-    sql = "select matches.id, matches.home, matches.home_sets, matches.away_sets, matches.set1, matches.set2, \
-            matches.set3, matches.set4, matches.set5,tournaments.name, tournaments.year, home_away.odds_home, \
-            home_away.odds_away \
+    sql = "select matches.id, matches.home, matches.away, matches.home_sets, matches.away_sets, matches.set1, \
+            matches.set2, matches.set3, matches.set4, matches.set5,tournaments.name, tournaments.year, \
+            home_away.odds_home, home_away.odds_away \
             from ( \
                 (select * from matches where other_result is null) as matches \
                 join \
@@ -41,13 +41,13 @@ def get_probabilities_from_odds(match_data, odds_probability_type):
 
 def fit_and_evaluate(first_year, last_year, training_type, odds_probability_type):
     # get matches, results and from database
-    match_data = pd.DataFrame(get_match_data(odds_probability_type))
-    match_data.columns = ["id", "home", "away", "home_sets", "away_sets", "set1", "set2", "set3", "set4", "set5",
-                          "tournament_name", "year", "odds_home", "odds_away"]
+    matches_data = pd.DataFrame(get_match_data(odds_probability_type))
+    matches_data.columns = ["id", "home", "away", "home_sets", "away_sets", "set1", "set2", "set3", "set4", "set5",
+                            "tournament_name", "year", "odds_home", "odds_away"]
 
     # get probabilities from odds
-    probabilities = pd.DataFrame(get_probabilities_from_odds(match_data, odds_probability_type))
-    match_data = match_data.assign(probability_home=probabilities[0], probability_away=probabilities[1])
+    probabilities = pd.DataFrame(get_probabilities_from_odds(matches_data, odds_probability_type))
+    matches_data = matches_data.assign(probability_home=probabilities[0], probability_away=probabilities[1])
 
     # iterate over training sets
     years = match_data.year.unique()
