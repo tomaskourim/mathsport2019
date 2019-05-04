@@ -14,11 +14,10 @@ FAIR_ODDS_PARAMETER = 0.5
 
 
 def get_match_data(odds_probability_type):
-    sql = "select matches.id, \
-            case when home_away.odds_home >= home_away.odds_away then matches.home else matches.away end as favorite, \
-            case when home_away.odds_home >= home_away.odds_away then matches.away else matches.home end as outsider, \
-            matches.home_sets, matches.away_sets, matches.set1, matches.set2, matches.set3, matches.set4, matches.set5,\
-            tournaments.name, tournaments.year, home_away.odds_home, home_away.odds_away from ( \
+    sql = "select matches.id, matches.home, matches.home_sets, matches.away_sets, matches.set1, matches.set2, \
+            matches.set3, matches.set4, matches.set5,tournaments.name, tournaments.year, home_away.odds_home, \
+            home_away.odds_away \
+            from ( \
                 (select * from matches where other_result is null) as matches \
                 join \
                 (select * from tournaments) as tournaments \
