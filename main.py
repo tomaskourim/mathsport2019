@@ -5,6 +5,7 @@ from datetime import datetime
 
 import numpy as np
 import pandas as pd
+import scipy.optimize as opt
 
 from database_operations import execute_sql
 from odds_to_probabilities import probabilities_from_odds
@@ -39,6 +40,30 @@ def get_probabilities_from_odds(match_data, odds_probability_type):
     return probabilities
 
 
+def log_likelihood_single_lambda(c_lambda, matches_data):
+    log_likelihood = 0
+    for match_data in matches_data.iterrows():
+        p_set = match_data[1]["probability_home"]  # probability of home winning 1.set, not subject to optimization
+        for set in range(1, match_data[1]["home_sets"] + match_data[1]["away_sets"]):
+            p_set = c_lambda * p_set + 1 / 2 * (1 - c_lambda) * (1 + (1 if match_data[1][f"set{set}"] > 0 else -1))
+            log_likelihood = log_likelihood + np.log(p_set if match_data[1][f"set{set + 1}"] > 0 else 1 - p_set)
+
+    return log_likelihood
+
+
+# just for the sake of minimalization
+def negative_log_likelihood(c_lambda, matches_data):
+    return - log_likelihood_single_lambda(c_lambda, matches_data)
+
+
+def find_single_lambda(training_set):
+    return opt.minimize_scalar(negative_log_likelihood, bounds=(0, 1), method='bounded', args=training_set).x
+
+
+def evaluate_single_lambda(testing_set, c_lambda):
+    pass
+
+
 def fit_and_evaluate(first_year, last_year, training_type, odds_probability_type):
     # get matches, results and from database
     matches_data = pd.DataFrame(get_match_data(odds_probability_type))
@@ -50,10 +75,22 @@ def fit_and_evaluate(first_year, last_year, training_type, odds_probability_type
     matches_data = matches_data.assign(probability_home=probabilities[0], probability_away=probabilities[1])
 
     # iterate over training sets
-    years = match_data.year.unique()
+    years = matches_data.year.unique()
+    for year in range(first_year, last_year):
+        if year == years[len(years) - 1]:
+            continue
+        # fit the model - find optimal lambda
+        print('-----------------------')
+        print(year)
+        training_set = matches_data[matches_data["year"] == year]
+        c_lambda = find_single_lambda(training_set)  # lambda is a Python keyword
+        print(f"Optimal lambda is: {c_lambda}. Value of corresponding log-likelihood is: "
+              f"{log_likelihood_single_lambda(c_lambda, training_set)}")
 
-    # fit the model - find optimal lambda
-    # apply the model - evaluate success rate
+        # apply the model - evaluate success rate
+        testing_set = matches_data[matches_data["year"] == year + 1]
+        evaluate_single_lambda(testing_set, c_lambda)
+
     # export results
     pass
 
