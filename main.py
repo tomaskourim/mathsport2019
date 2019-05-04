@@ -17,7 +17,7 @@ def get_match_data(odds_probability_type):
             matches.home_sets, matches.away_sets, matches.set1, matches.set2, matches.set3, matches.set4, matches.set5,\
             tournaments.name, tournaments.year, home_away.odds_home, home_away.odds_away from ( \
                 (select * from matches where other_result is null) as matches \
-                join \
+                inner join \
                 (select * from tournaments) as tournaments \
                 ON matches.id_tournament=tournaments.id \
                 inner join \
@@ -70,4 +70,4 @@ if __name__ == '__main__':
     fit_and_evaluate(first_year, last_year, training_type, odds_probability_type)
 
     end_time = datetime.now()
-    print('Duration: {}'.format(end_time - start_time))
+    print(f"Duration: {(end_time - start_time)}")
