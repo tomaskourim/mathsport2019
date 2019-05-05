@@ -294,4 +294,4 @@ if __name__ == '__main__':
     prepare_database(first_year, last_year, bookmaker)
 
     end_time = datetime.now()
-    print('Duration: {}'.format(end_time - start_time))
+    print(f"Duration: {(end_time - start_time)}")
