@@ -15,8 +15,9 @@ FAIR_ODDS_PARAMETER = 0.5
 
 
 def get_match_data(odds_probability_type):
-    sql = "select matches.id, matches.home, matches.away, matches.home_sets, matches.away_sets, matches.set1, \
-            matches.set2, matches.set3, matches.set4, matches.set5,tournaments.name, tournaments.year, \
+    sql = "select matches.id, matches.home, matches.away, matches.home_sets, matches.away_sets, \
+            matches.set1home, matches.set1away, matches.set2home, matches.set2away, matches.set3home, matches.set3away,\
+            matches.set4home, matches.set4away, matches.set5home, matches.set5away, tournaments.name, tournaments.year,\
             home_away.odds_home, home_away.odds_away \
             from ( \
                 (select * from matches where other_result is null) as matches \
@@ -40,13 +41,17 @@ def get_probabilities_from_odds(match_data, odds_probability_type):
     return probabilities
 
 
+def home_won_set(match_data, set):
+    return match_data[f"set{set}home"] > match_data[1][f"set{set}away"]
+
+
 def log_likelihood_single_lambda(c_lambda, matches_data):
     log_likelihood = 0
     for match_data in matches_data.iterrows():
         p_set = match_data[1]["probability_home"]  # probability of home winning 1.set, not subject to optimization
         for set in range(1, match_data[1]["home_sets"] + match_data[1]["away_sets"]):
-            p_set = c_lambda * p_set + 1 / 2 * (1 - c_lambda) * (1 + (1 if match_data[1][f"set{set}"] > 0 else -1))
-            log_likelihood = log_likelihood + np.log(p_set if match_data[1][f"set{set + 1}"] > 0 else 1 - p_set)
+            p_set = c_lambda * p_set + 1 / 2 * (1 - c_lambda) * (1 + (1 if home_won_set(match_data[1], set) else -1))
+            log_likelihood = log_likelihood + np.log(p_set if home_won_set(match_data[1], set + 1) else 1 - p_set)
 
     return log_likelihood
 
@@ -67,7 +72,9 @@ def evaluate_single_lambda(testing_set, c_lambda):
 def fit_and_evaluate(first_year, last_year, training_type, odds_probability_type):
     # get matches, results and from database
     matches_data = pd.DataFrame(get_match_data(odds_probability_type))
-    matches_data.columns = ["id", "home", "away", "home_sets", "away_sets", "set1", "set2", "set3", "set4", "set5",
+    matches_data.columns = ["id", "home", "away", "home_sets", "away_sets",
+                            "set1home", "set1away", "set2home", "set2away", "set3home", "set3away",
+                            "set4home", "set4away", "set5home", "set5away",
                             "tournament_name", "year", "odds_home", "odds_away"]
 
     # get probabilities from odds
@@ -83,6 +90,8 @@ def fit_and_evaluate(first_year, last_year, training_type, odds_probability_type
         print('-----------------------')
         print(year)
         training_set = matches_data[matches_data["year"] == year]
+        if len(training_set) == 0:
+            continue
         c_lambda = find_single_lambda(training_set)  # lambda is a Python keyword
         print(f"Optimal lambda is: {c_lambda}. Value of corresponding log-likelihood is: "
               f"{log_likelihood_single_lambda(c_lambda, training_set)}")
