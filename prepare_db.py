@@ -1,9 +1,9 @@
 # This is a support file used only for one time extraction of a database from a larger and more complex database
 
 import argparse
-from datetime import datetime
 import os
 import re
+from datetime import datetime
 
 from database_operations import execute_sql, create_connection, execute_many_sql
 
@@ -105,20 +105,16 @@ def get_matches(tournament, first_year):
 
     cleaned_matches = []
     for mat in matches:
-        match = [mat[0], mat[2], list(mat[6:12])]
+        match = [mat[0], mat[2], list(mat[6:22])]
         match = remove_nestings(match, [])
         match[4] = translate_month(match[4])
-        # only looser's sets
-        cur_index = 12
-        match = get_set_results(match, mat, cur_index)
         # other result
         if mat[22] == 'null':
             match.append(None)
         else:
             match.append(mat[22])
-        # only looser's tiebreaks
-        cur_index = 23
-        match = get_set_results(match, mat, cur_index)
+        match.append(list(mat[23:33]))
+        match = remove_nestings(match, [])
 
         cleaned_matches.append(match)
 
@@ -213,17 +209,27 @@ def prepare_database(first_year, last_year, bookmaker):
             `utime`	INTEGER NOT NULL, \
             `home_sets`	INTEGER, \
             `away_sets`	INTEGER, \
-            `set1`	INTEGER, \
-            `set2`	INTEGER, \
-            `set3`	INTEGER, \
-            `set4`	INTEGER, \
-            `set5`	INTEGER, \
+            `set1home`	INTEGER, \
+            `set1away`	INTEGER, \
+            `set2home`	INTEGER, \
+            `set2away`	INTEGER, \
+            `set3home`	INTEGER, \
+            `set3away`	INTEGER, \
+            `set4home`	INTEGER, \
+            `set4away`	INTEGER, \
+            `set5home`	INTEGER, \
+            `set5away`	INTEGER, \
             `other_result`	TEXT, \
-            `tiebreak1`	INTEGER, \
-            `tiebreak2`	INTEGER, \
-            `tiebreak3`	INTEGER, \
-            `tiebreak4`	INTEGER, \
-            `tiebreak5`	INTEGER, \
+            `tiebreak1home`	INTEGER, \
+            `tiebreak1away`	INTEGER, \
+            `tiebreak2home`	INTEGER, \
+            `tiebreak2away`	INTEGER, \
+            `tiebreak3home`	INTEGER, \
+            `tiebreak3away`	INTEGER, \
+            `tiebreak4home`	INTEGER, \
+            `tiebreak4away`	INTEGER, \
+            `tiebreak5home`	INTEGER, \
+            `tiebreak5away`	INTEGER, \
             PRIMARY KEY(`id`) \
             FOREIGN KEY(`id_tournament`) REFERENCES tournaments(`id`) \
         );"
@@ -252,8 +258,10 @@ def prepare_database(first_year, last_year, bookmaker):
     execute_many_sql(new_database_path, sql, tournaments, True)
 
     questionmarks = '?' * len(matches[0])
-    sql = f"INSERT INTO matches (id,id_tournament,home,away,date,utime,home_sets,away_sets,set1,set2,set3,set4,set5,\
-                other_result,tiebreak1,tiebreak2,tiebreak3,tiebreak4,tiebreak5) VALUES ({','.join(questionmarks)})"
+    sql = f"INSERT INTO matches (id,id_tournament,home,away,date,utime,home_sets,away_sets,\
+                set1home,set1away,set2home,set2away,set3home,set3away,set4home,set4away,set5home,set5away,\
+                other_result,tiebreak1home,tiebreak1away,tiebreak2home,tiebreak2away,tiebreak3home,tiebreak3away,\
+                tiebreak4home,tiebreak4away,tiebreak5home,tiebreak5away) VALUES ({','.join(questionmarks)})"
     execute_many_sql(new_database_path, sql, matches, True)
 
     questionmarks = '?' * len(odds[0])
@@ -286,4 +294,4 @@ if __name__ == '__main__':
     prepare_database(first_year, last_year, bookmaker)
 
     end_time = datetime.now()
-    print('Duration: {}'.format(end_time - start_time))
+    print(f"Duration: {(end_time - start_time)}")
