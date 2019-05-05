@@ -40,15 +40,26 @@ def get_probabilities_from_odds(match_data, odds_probability_type):
     return probabilities
 
 
-def log_likelihood_single_lambda(c_lambda, matches_data):
+def log_likelihood_single_lambda(c_lambda, matches_data, return_observations=False):
     log_likelihood = 0
+    if return_observations:
+        observations = pd.DataFrame(columns=['probability', 'result'])
     for match_data in matches_data.iterrows():
         p_set = match_data[1]["probability_home"]  # probability of home winning 1.set, not subject to optimization
         for set in range(1, match_data[1]["home_sets"] + match_data[1]["away_sets"]):
             p_set = c_lambda * p_set + 1 / 2 * (1 - c_lambda) * (1 + (1 if match_data[1][f"set{set}"] > 0 else -1))
-            log_likelihood = log_likelihood + np.log(p_set if match_data[1][f"set{set + 1}"] > 0 else 1 - p_set)
+            result = 1 if match_data[1][f"set{set + 1}"] > 0 else 0
+            log_likelihood = log_likelihood + np.log(p_set * result + (1 - p_set) * (1 - result))
+            if return_observations:
+                observations = observations.append({
+                    "probability": p_set,
+                    "result": result
+                }, ignore_index=True)
 
-    return log_likelihood
+    if return_observations:
+        return log_likelihood, observations
+    else:
+        return log_likelihood
 
 
 # just for the sake of minimalization
@@ -60,7 +71,7 @@ def find_single_lambda(training_set):
     return opt.minimize_scalar(negative_log_likelihood, bounds=(0, 1), method='bounded', args=training_set).x
 
 
-def evaluate_single_lambda(testing_set, c_lambda):
+def evaluate_single_lambda(c_lambda, matches_data):
     pass
 
 
@@ -89,10 +100,10 @@ def fit_and_evaluate(first_year, last_year, training_type, odds_probability_type
 
         # apply the model - evaluate success rate
         testing_set = matches_data[matches_data["year"] == year + 1]
-        evaluate_single_lambda(testing_set, c_lambda)
+        evaluate_single_lambda(c_lambda, testing_set)
 
-    # export results
-    pass
+        # export results
+        pass
 
 
 if __name__ == '__main__':
@@ -100,8 +111,9 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(
         description="Prepares a relevant, lightweight database for the purpose of this project out of a much larger \
-        and complex database available to the author.")
-    parser.add_argument("--first_year", help="The first tennis season to be considered", default=2009, required=False)
+            and complex database available to the author.")
+    parser.add_argument("--first_year", help="The first tennis season to be considered", default=2009,
+                        required=False)
     parser.add_argument("--last_year", help="The last tennis season to be considered", default=2018, required=False)
     parser.add_argument("--training_type", help="Whether to learn from one previous season only or from all",
                         default='all', required=False)
