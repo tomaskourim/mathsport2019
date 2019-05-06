@@ -3,9 +3,11 @@
 import argparse
 from datetime import datetime
 
+import math
 import numpy as np
 import pandas as pd
 import scipy.optimize as opt
+import scipy.stats as stat
 
 from database_operations import execute_sql
 from odds_to_probabilities import probabilities_from_odds
@@ -78,6 +80,28 @@ def find_single_lambda(training_set):
 
 def evaluate_single_lambda(c_lambda, matches_data):
     _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
+    X = sum(observations.result)
+    mu_hat = sum(observations.probability)
+    var_hat = sum(observations.probability * (1 - observations.probability))
+    print(f"Observed value: {X}, expected value: {mu_hat}, standard deviation: {math.sqrt(var_hat)}")
+    expected_distribution = stat.norm(mu_hat, math.sqrt(var_hat))
+
+    cdf_x = expected_distribution.cdf(X)
+    probability_of_more_extreme = min(cdf_x, 1 - cdf_x) * 2
+
+    print(f"Cumulative distribution function at observed value F({X}) = {cdf_x}.")
+    print(f"Probability of more extreme value: {probability_of_more_extreme}.")
+
+    if probability_of_more_extreme < 0.1:
+        print("Reject H0 on 90% level.")
+    else:
+        print("Cannot reject H0.")
+
+    if probability_of_more_extreme < 0.05:
+        print("Reject H0 on 95% level.")
+
+    if probability_of_more_extreme < 0.01:
+        print("Reject H0 on 99% level.")
 
     pass
 
