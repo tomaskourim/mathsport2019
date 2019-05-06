@@ -53,7 +53,7 @@ def log_likelihood_single_lambda(c_lambda, matches_data, return_observations=Fal
         p_set = match_data[1]["probability_home"]  # probability of home winning 1.set, not subject to optimization
         for set in range(1, match_data[1]["home_sets"] + match_data[1]["away_sets"]):
             p_set = c_lambda * p_set + 1 / 2 * (1 - c_lambda) * (1 + (1 if home_won_set(match_data[1], set) else -1))
-            result = 1 if home_won_set(match_data[1], set+1) else 0
+            result = 1 if home_won_set(match_data[1], set + 1) else 0
             log_likelihood = log_likelihood + np.log(p_set * result + (1 - p_set) * (1 - result))
             if return_observations:
                 observations = observations.append({
@@ -77,6 +77,8 @@ def find_single_lambda(training_set):
 
 
 def evaluate_single_lambda(c_lambda, matches_data):
+    _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
+
     pass
 
 
