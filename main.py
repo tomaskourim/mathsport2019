@@ -2,6 +2,7 @@
 
 import argparse
 from datetime import datetime
+from typing import Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -14,7 +15,7 @@ DATABASE_PATH = 'mathsport2019.sqlite'
 FAIR_ODDS_PARAMETER = 0.5
 
 
-def get_match_data(odds_probability_type):
+def get_match_data(odds_probability_type: str) -> list:
     sql = "select matches.id, matches.home, matches.away, matches.home_sets, matches.away_sets, \
             matches.set1home, matches.set1away, matches.set2home, matches.set2away, matches.set3home, matches.set3away,\
             matches.set4home, matches.set4away, matches.set5home, matches.set5away, tournaments.name, tournaments.year,\
@@ -32,7 +33,7 @@ def get_match_data(odds_probability_type):
     return match_data
 
 
-def get_probabilities_from_odds(match_data, odds_probability_type):
+def get_probabilities_from_odds(match_data: pd.DataFrame, odds_probability_type: str) -> list:
     probabilities = []
     for i in range(0, len(match_data)):
         probabilities.append(
@@ -41,11 +42,12 @@ def get_probabilities_from_odds(match_data, odds_probability_type):
     return probabilities
 
 
-def home_won_set(match_data, set):
+def home_won_set(match_data: pd.Series, set: int) -> bool:
     return match_data[f"set{set}home"] > match_data[f"set{set}away"]
 
 
-def log_likelihood_single_lambda(c_lambda, matches_data, return_observations=False):
+def log_likelihood_single_lambda(c_lambda: int, matches_data: pd.DataFrame, return_observations: bool = False) -> \
+        Union[int, Tuple[int, pd.DataFrame]]:
     log_likelihood = 0
     if return_observations:
         observations = pd.DataFrame(columns=['probability', 'result'])
@@ -53,7 +55,7 @@ def log_likelihood_single_lambda(c_lambda, matches_data, return_observations=Fal
         p_set = match_data[1]["probability_home"]  # probability of home winning 1.set, not subject to optimization
         for set in range(1, match_data[1]["home_sets"] + match_data[1]["away_sets"]):
             p_set = c_lambda * p_set + 1 / 2 * (1 - c_lambda) * (1 + (1 if home_won_set(match_data[1], set) else -1))
-            result = 1 if home_won_set(match_data[1], set+1) else 0
+            result = 1 if home_won_set(match_data[1], set + 1) else 0
             log_likelihood = log_likelihood + np.log(p_set * result + (1 - p_set) * (1 - result))
             if return_observations:
                 observations = observations.append({
@@ -68,19 +70,19 @@ def log_likelihood_single_lambda(c_lambda, matches_data, return_observations=Fal
 
 
 # just for the sake of minimalization
-def negative_log_likelihood(c_lambda, matches_data):
+def negative_log_likelihood(c_lambda: int, matches_data: pd.DataFrame) -> int:
     return - log_likelihood_single_lambda(c_lambda, matches_data)
 
 
-def find_single_lambda(training_set):
+def find_single_lambda(training_set: pd.DataFrame) -> int:
     return opt.minimize_scalar(negative_log_likelihood, bounds=(0, 1), method='bounded', args=training_set).x
 
 
-def evaluate_single_lambda(c_lambda, matches_data):
+def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
     pass
 
 
-def fit_and_evaluate(first_year, last_year, training_type, odds_probability_type):
+def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_probability_type: str):
     # get matches, results and from database
     matches_data = pd.DataFrame(get_match_data(odds_probability_type))
     matches_data.columns = ["id", "home", "away", "home_sets", "away_sets",
