@@ -1,9 +1,10 @@
 # This is a support file used only for one time extraction of a database from a larger and more complex database
 
 import argparse
-from datetime import datetime
 import os
 import re
+from datetime import datetime
+from typing import Tuple
 
 from database_operations import execute_sql, create_connection, execute_many_sql
 
@@ -11,7 +12,7 @@ ORIGINAL_DATABASE_PATH = 'C://tennis.sqlite'
 
 
 # function used for removing nested lists in python.
-def remove_nestings(l, output):
+def remove_nestings(l: list, output: list) -> list:
     for i in l:
         if type(i) == list:
             remove_nestings(i, output)
@@ -20,7 +21,7 @@ def remove_nestings(l, output):
     return output
 
 
-def translate_month(text):
+def translate_month(text: str) -> str:
     text = text.replace('Led', 'Jan')
     text = text.replace('Úno', 'Feb')
     text = text.replace('Bře', 'Mar')
@@ -36,18 +37,7 @@ def translate_month(text):
     return text
 
 
-def get_set_results(match, mat, cur_index):
-    for i in range(5):
-        if mat[2 * i + cur_index] > mat[2 * i + cur_index + 1]:
-            match.append(mat[2 * i + cur_index + 1])
-        elif mat[2 * i + cur_index] < mat[2 * i + cur_index + 1]:
-            match.append(-mat[2 * i + cur_index])
-        else:
-            match.append(None)
-    return match
-
-
-def get_matchids(matches):
+def get_matchids(matches: list) -> Tuple[list, list]:
     matchids = []
     unnested_matches = []
     for val in matches:
@@ -57,7 +47,7 @@ def get_matchids(matches):
     return matchids, unnested_matches
 
 
-def get_tournaments(first_year, last_year):
+def get_tournaments(first_year: int, last_year: int) -> list:
     sql = "select * from turnaje where pohlavi=\'men\' and typ=\'dvouhra\' and rok>=? and rok<=? and (nazev like \
     '%Australian open%' or nazev like '%French open%' or nazev like '%Wimbledon%' or nazev like '%US open%')"
 
@@ -74,7 +64,7 @@ def get_tournaments(first_year, last_year):
     return cleaned_tournaments
 
 
-def get_matches(tournament, first_year):
+def get_matches(tournament: list, first_year: int) -> list:
     # qualification is considered part of the tournament, however, it is played as best-of-three only and thus
     # not interesting for this case
     sql = "select min(utime) from( \
@@ -105,27 +95,23 @@ def get_matches(tournament, first_year):
 
     cleaned_matches = []
     for mat in matches:
-        match = [mat[0], mat[2], list(mat[6:12])]
+        match = [mat[0], mat[2], list(mat[6:22])]  # id, tournament, players, time, match and sets results
         match = remove_nestings(match, [])
         match[4] = translate_month(match[4])
-        # only looser's sets
-        cur_index = 12
-        match = get_set_results(match, mat, cur_index)
         # other result
         if mat[22] == 'null':
             match.append(None)
         else:
             match.append(mat[22])
-        # only looser's tiebreaks
-        cur_index = 23
-        match = get_set_results(match, mat, cur_index)
+        match.append(list(mat[23:33]))  # tiebreak results
+        match = remove_nestings(match, [])
 
         cleaned_matches.append(match)
 
     return cleaned_matches
 
 
-def get_odds(bookmaker, matchids_original):
+def get_odds(bookmaker: str, matchids_original: list) -> list:
     step_size = 425
     odds = []
     for i in range(0, len(matchids_original), step_size):
@@ -167,7 +153,7 @@ def get_odds(bookmaker, matchids_original):
     return cleaned_odds
 
 
-def prepare_database(first_year, last_year, bookmaker):
+def prepare_database(first_year: int, last_year: str, bookmaker: str):
     # select tournaments (10 years, 40 tournaments)
     tournaments = get_tournaments(first_year, last_year)
     matches = []
@@ -202,7 +188,7 @@ def prepare_database(first_year, last_year, bookmaker):
             `tournament_link`	TEXT NOT NULL, \
             PRIMARY KEY(`id`) \
         );"
-    execute_sql(new_database_path, sql, None, modifiying=True)
+    execute_sql(new_database_path, sql, None, modifying=True)
 
     sql = "CREATE TABLE `matches` ( \
             `id`	INTEGER NOT NULL UNIQUE, \
@@ -213,22 +199,32 @@ def prepare_database(first_year, last_year, bookmaker):
             `utime`	INTEGER NOT NULL, \
             `home_sets`	INTEGER, \
             `away_sets`	INTEGER, \
-            `set1`	INTEGER, \
-            `set2`	INTEGER, \
-            `set3`	INTEGER, \
-            `set4`	INTEGER, \
-            `set5`	INTEGER, \
+            `set1home`	INTEGER, \
+            `set1away`	INTEGER, \
+            `set2home`	INTEGER, \
+            `set2away`	INTEGER, \
+            `set3home`	INTEGER, \
+            `set3away`	INTEGER, \
+            `set4home`	INTEGER, \
+            `set4away`	INTEGER, \
+            `set5home`	INTEGER, \
+            `set5away`	INTEGER, \
             `other_result`	TEXT, \
-            `tiebreak1`	INTEGER, \
-            `tiebreak2`	INTEGER, \
-            `tiebreak3`	INTEGER, \
-            `tiebreak4`	INTEGER, \
-            `tiebreak5`	INTEGER, \
+            `tiebreak1home`	INTEGER, \
+            `tiebreak1away`	INTEGER, \
+            `tiebreak2home`	INTEGER, \
+            `tiebreak2away`	INTEGER, \
+            `tiebreak3home`	INTEGER, \
+            `tiebreak3away`	INTEGER, \
+            `tiebreak4home`	INTEGER, \
+            `tiebreak4away`	INTEGER, \
+            `tiebreak5home`	INTEGER, \
+            `tiebreak5away`	INTEGER, \
             PRIMARY KEY(`id`) \
             FOREIGN KEY(`id_tournament`) REFERENCES tournaments(`id`) \
         );"
 
-    execute_sql(new_database_path, sql, None, modifiying=True)
+    execute_sql(new_database_path, sql, None, modifying=True)
 
     sql = "CREATE TABLE `home_away` ( \
             `id`	INTEGER NOT NULL UNIQUE, \
@@ -243,7 +239,7 @@ def prepare_database(first_year, last_year, bookmaker):
             FOREIGN KEY(`id_match`) REFERENCES matches(`id`) \
         );"
 
-    execute_sql(new_database_path, sql, None, modifiying=True)
+    execute_sql(new_database_path, sql, None, modifying=True)
 
     # import data
     questionmarks = '?' * len(tournaments[0])
@@ -252,8 +248,10 @@ def prepare_database(first_year, last_year, bookmaker):
     execute_many_sql(new_database_path, sql, tournaments, True)
 
     questionmarks = '?' * len(matches[0])
-    sql = f"INSERT INTO matches (id,id_tournament,home,away,date,utime,home_sets,away_sets,set1,set2,set3,set4,set5,\
-                other_result,tiebreak1,tiebreak2,tiebreak3,tiebreak4,tiebreak5) VALUES ({','.join(questionmarks)})"
+    sql = f"INSERT INTO matches (id,id_tournament,home,away,date,utime,home_sets,away_sets,\
+                set1home,set1away,set2home,set2away,set3home,set3away,set4home,set4away,set5home,set5away,\
+                other_result,tiebreak1home,tiebreak1away,tiebreak2home,tiebreak2away,tiebreak3home,tiebreak3away,\
+                tiebreak4home,tiebreak4away,tiebreak5home,tiebreak5away) VALUES ({','.join(questionmarks)})"
     execute_many_sql(new_database_path, sql, matches, True)
 
     questionmarks = '?' * len(odds[0])
