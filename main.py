@@ -2,7 +2,7 @@
 
 import argparse
 from datetime import datetime
-from typing import Tuple, Union
+from typing import Tuple, Union, Optional
 
 import numpy as np
 import pandas as pd
@@ -74,8 +74,12 @@ def negative_log_likelihood(c_lambda: int, matches_data: pd.DataFrame) -> int:
     return - log_likelihood_single_lambda(c_lambda, matches_data)
 
 
-def find_single_lambda(training_set: pd.DataFrame) -> int:
-    return opt.minimize_scalar(negative_log_likelihood, bounds=(0, 1), method='bounded', args=training_set).x
+def find_single_lambda(training_set: pd.DataFrame) -> Optional[int]:
+    opt_result = opt.minimize_scalar(negative_log_likelihood, bounds=(0, 1), method='bounded', args=training_set)
+    if opt_result.success:
+        return opt_result.x
+    else:
+        return None
 
 
 def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
@@ -98,7 +102,7 @@ def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_p
     years = matches_data.year.unique()
     for year in range(first_year, last_year):
         if year == years[len(years) - 1]:
-            continue
+            break
         # fit the model - find optimal lambda
         print('-----------------------')
         print(year)
@@ -106,6 +110,10 @@ def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_p
         if len(training_set) == 0:
             continue
         c_lambda = find_single_lambda(training_set)  # lambda is a Python keyword
+        if c_lambda is None:
+            print(f"Unable to find optimal lambda in year {year}")
+            continue
+
         print(f"Optimal lambda is: {c_lambda}. Value of corresponding log-likelihood is: "
               f"{log_likelihood_single_lambda(c_lambda, training_set)}")
 

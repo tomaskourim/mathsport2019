@@ -95,7 +95,7 @@ def get_matches(tournament: list, first_year: int) -> list:
 
     cleaned_matches = []
     for mat in matches:
-        match = [mat[0], mat[2], list(mat[6:22])]
+        match = [mat[0], mat[2], list(mat[6:22])]  # id, tournament, players, time, match and sets results
         match = remove_nestings(match, [])
         match[4] = translate_month(match[4])
         # other result
@@ -103,7 +103,7 @@ def get_matches(tournament: list, first_year: int) -> list:
             match.append(None)
         else:
             match.append(mat[22])
-        match.append(list(mat[23:33]))
+        match.append(list(mat[23:33]))  # tiebreak results
         match = remove_nestings(match, [])
 
         cleaned_matches.append(match)
