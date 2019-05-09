@@ -2,7 +2,7 @@
 
 import argparse
 from datetime import datetime
-from typing import Tuple, Union, Optional
+from typing import Tuple, Optional
 
 import math
 import numpy as np
@@ -49,7 +49,7 @@ def home_won_set(match_data: pd.Series, set: int) -> bool:
 
 
 def log_likelihood_single_lambda(c_lambda: int, matches_data: pd.DataFrame, return_observations: bool = False) -> \
-        Union[int, Tuple[int, pd.DataFrame]]:
+        Tuple[int, Optional[pd.DataFrame]]:
     log_likelihood = 0
     if return_observations:
         observations = pd.DataFrame(columns=['probability', 'result'])
@@ -68,17 +68,18 @@ def log_likelihood_single_lambda(c_lambda: int, matches_data: pd.DataFrame, retu
     if return_observations:
         return log_likelihood, observations
     else:
-        return log_likelihood
+        return log_likelihood, None
 
 
-# just for the sake of minimalization
+# just for the sake of minimization
 def negative_log_likelihood(c_lambda: int, matches_data: pd.DataFrame) -> int:
-    return - log_likelihood_single_lambda(c_lambda, matches_data)
+    return - log_likelihood_single_lambda(c_lambda, matches_data)[0]
 
 
 def find_single_lambda(training_set: pd.DataFrame) -> Optional[int]:
     opt_result = opt.minimize_scalar(negative_log_likelihood, bounds=(0, 1), method='bounded', args=training_set)
     if opt_result.success:
+        print("Fitted successfully.")
         return opt_result.x
     else:
         return None
@@ -86,16 +87,20 @@ def find_single_lambda(training_set: pd.DataFrame) -> Optional[int]:
 
 def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
     _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
-    X = sum(observations.result)
-    mu_hat = sum(observations.probability)
-    var_hat = sum(observations.probability * (1 - observations.probability))
-    print(f"Observed value: {X}, expected value: {mu_hat}, standard deviation: {math.sqrt(var_hat)}")
-    expected_distribution = stat.norm(mu_hat, math.sqrt(var_hat))
+    num_observations = len(observations)
+    x_mean = sum(observations.result) / num_observations
+    mu_hat = sum(observations.probability) / num_observations
+    var_hat = sum(observations.probability * (1 - observations.probability)) / num_observations
+    print(f"Observations: {len(observations)}. Observed value: {x_mean}, expected value: {mu_hat}, \
+        standard deviation: {math.sqrt(var_hat)}")
+    expected_distribution = stat.norm()
 
-    cdf_x = expected_distribution.cdf(X)
-    probability_of_more_extreme = min(cdf_x, 1 - cdf_x) * 2
+    observed_value = math.sqrt(num_observations) * (x_mean - mu_hat) / math.sqrt(var_hat)
 
-    print(f"Cumulative distribution function at observed value F({X}) = {cdf_x}.")
+    cdf_observed = expected_distribution.cdf(observed_value)
+    probability_of_more_extreme = min(cdf_observed, 1 - cdf_observed) * 2
+
+    print(f"Cumulative distribution function at observed value F({observed_value}) = {cdf_observed}.")
     print(f"Probability of more extreme value: {probability_of_more_extreme}.")
 
     if probability_of_more_extreme < 0.1:
@@ -141,7 +146,7 @@ def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_p
             continue
 
         print(f"Optimal lambda is: {c_lambda}. Value of corresponding log-likelihood is: "
-              f"{log_likelihood_single_lambda(c_lambda, training_set)}")
+              f"{log_likelihood_single_lambda(c_lambda, training_set)[0]}")
 
         # apply the model - evaluate success rate
         testing_set = matches_data[matches_data["year"] == year + 1]
