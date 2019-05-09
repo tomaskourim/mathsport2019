@@ -117,6 +117,21 @@ def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
     pass
 
 
+def transform_home_favorite_single(match_data):
+
+    pass
+
+
+def transform_home_favorite(matches_data: pd.DataFrame) -> pd.DataFrame:
+    transformed_matches = pd.DataFrame()
+    for match_data in matches_data.iterrows():
+        if match_data.odds_home <= match_data.odds_away:
+            transformed_matches.append(match_data)
+        else:
+            transformed_matches.append(transform_home_favorite_single(match_data))
+    transformed_matches
+
+
 def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_probability_type: str):
     # get matches, results and from database
     matches_data = pd.DataFrame(get_match_data(odds_probability_type))
@@ -124,6 +139,9 @@ def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_p
                             "set1home", "set1away", "set2home", "set2away", "set3home", "set3away",
                             "set4home", "set4away", "set5home", "set5away",
                             "tournament_name", "year", "odds_home", "odds_away"]
+
+    # transform data so that home <=> favorite
+    matches_data = transform_home_favorite(matches_data)
 
     # get probabilities from odds
     probabilities = pd.DataFrame(get_probabilities_from_odds(matches_data, odds_probability_type))
