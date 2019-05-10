@@ -121,7 +121,6 @@ def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
 
     if probability_of_more_extreme < 0.01:
         print("Reject H0 on 99% level.")
-
     pass
 
 
