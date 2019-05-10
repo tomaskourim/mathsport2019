@@ -82,7 +82,6 @@ def evaluate_observations_single_lambda(observations: pd.DataFrame):
 
     if probability_of_more_extreme < 0.01:
         print("Reject H0 on 99% level.")
-    print(observations)
     pass
 
 
