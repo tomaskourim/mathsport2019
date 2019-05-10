@@ -10,48 +10,9 @@ import pandas as pd
 import scipy.optimize as opt
 import scipy.stats as stat
 
-from database_operations import execute_sql
-from odds_to_probabilities import probabilities_from_odds
-
-DATABASE_PATH = 'mathsport2019.sqlite'
-FAIR_ODDS_PARAMETER = 0.5
-
-COLUMN_NAMES = ["id", "predicted_player", "not_predicted_player", "predicted_player_sets", "not_predicted_player_sets",
-                "set1predicted_player", "set1not_predicted_player", "set2predicted_player", "set2not_predicted_player",
-                "set3predicted_player", "set3not_predicted_player", "set4predicted_player", "set4not_predicted_player",
-                "set5predicted_player", "set5not_predicted_player", "tournament_name", "year",
-                "odds_predicted_player", "odds_not_predicted_player"]
-
-
-def get_match_data(odds_probability_type: str) -> list:
-    sql = "select matches.id, matches.home, matches.away, matches.home_sets, matches.away_sets, \
-            matches.set1home, matches.set1away, matches.set2home, matches.set2away, matches.set3home, matches.set3away,\
-            matches.set4home, matches.set4away, matches.set5home, matches.set5away, tournaments.name, tournaments.year,\
-            home_away.odds_home, home_away.odds_away \
-            from ( \
-                (select * from matches where other_result is null) as matches \
-                inner join \
-                (select * from tournaments) as tournaments \
-                ON matches.id_tournament=tournaments.id \
-                inner join \
-                (select * from home_away where match_part= ? ) as home_away \
-                on matches.id=home_away.id_match)"
-
-    match_data = execute_sql(DATABASE_PATH, sql, odds_probability_type)
-    return match_data
-
-
-def get_probabilities_from_odds(match_data: pd.DataFrame, odds_probability_type: str) -> list:
-    probabilities = []
-    for i in range(0, len(match_data)):
-        odds = np.array([match_data['odds_predicted_player'][i], match_data['odds_not_predicted_player'][i]])
-        probabilities.append(probabilities_from_odds(odds, odds_probability_type, FAIR_ODDS_PARAMETER))
-
-    return probabilities
-
-
-def predicted_player_won_set(match_data: pd.Series, set: int) -> bool:
-    return match_data[f"set{set}predicted_player"] > match_data[f"set{set}not_predicted_player"]
+from constants import COLUMN_NAMES
+from data_operations import transform_home_favorite, get_probabilities_from_odds, predicted_player_won_set
+from database_operations import get_match_data
 
 
 def log_likelihood_single_lambda(c_lambda: int, matches_data: pd.DataFrame, return_observations: bool = False) -> Tuple[
@@ -123,44 +84,6 @@ def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
         print("Reject H0 on 99% level.")
 
     pass
-
-
-def transform_home_favorite_single(match_data: pd.Series) -> pd.Series:
-    tranformed_data = pd.Series(index=COLUMN_NAMES)
-    tranformed_data.id = match_data.id
-    tranformed_data.predicted_player = match_data.not_predicted_player
-    tranformed_data.not_predicted_player = match_data.predicted_player
-    tranformed_data.predicted_player_sets = match_data.not_predicted_player_sets
-    tranformed_data.not_predicted_player_sets = match_data.predicted_player_sets
-    tranformed_data.set1predicted_player = match_data.set1not_predicted_player
-    tranformed_data.set1not_predicted_player = match_data.set1predicted_player
-    tranformed_data.set2predicted_player = match_data.set2not_predicted_player
-    tranformed_data.set2not_predicted_player = match_data.set2predicted_player
-    tranformed_data.set3predicted_player = match_data.set3not_predicted_player
-    tranformed_data.set3not_predicted_player = match_data.set3predicted_player
-    tranformed_data.set4predicted_player = match_data.set4not_predicted_player
-    tranformed_data.set4not_predicted_player = match_data.set4predicted_player
-    tranformed_data.set5predicted_player = match_data.set5not_predicted_player
-    tranformed_data.set5not_predicted_player = match_data.set5predicted_player
-    tranformed_data.tournament_name = match_data.tournament_name
-    tranformed_data.year = match_data.year
-    tranformed_data.odds_predicted_player = match_data.odds_not_predicted_player
-    tranformed_data.odds_not_predicted_player = match_data.odds_predicted_player
-
-    return tranformed_data
-
-
-def transform_home_favorite(matches_data: pd.DataFrame) -> pd.DataFrame:
-    transformed_matches = []
-    for match_data in matches_data.iterrows():
-        if match_data[1].odds_predicted_player <= match_data[1].odds_not_predicted_player:
-            transformed_matches.append(list(match_data[1]))
-        else:
-            transformed_matches.append(list(transform_home_favorite_single(match_data[1])))
-
-    transformed_matches = pd.DataFrame(transformed_matches, columns=COLUMN_NAMES)
-
-    return transformed_matches
 
 
 def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_probability_type: str):
