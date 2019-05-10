@@ -10,7 +10,7 @@ import pandas as pd
 import scipy.optimize as opt
 import scipy.stats as stat
 
-from constants import COLUMN_NAMES
+from constants import COLUMN_NAMES, SETS_TO_WIN
 from data_operations import transform_home_favorite, get_probabilities_from_odds, predicted_player_won_set
 from database_operations import get_match_data
 
@@ -19,7 +19,8 @@ def log_likelihood_single_lambda(c_lambda: int, matches_data: pd.DataFrame, retu
     int, Optional[pd.DataFrame]]:
     log_likelihood = 0
     if return_observations:
-        observations = pd.DataFrame(columns=['probability', 'result'])
+        observations = [pd.DataFrame(columns=['probability', 'result'])] * (
+                2 * SETS_TO_WIN - 2)  # Number of sets that are predicted
     for match_data in matches_data.iterrows():
         p_set = match_data[1][
             "probability_predicted_player"]  # probability of winning 1.set, not subject to optimization
@@ -29,7 +30,7 @@ def log_likelihood_single_lambda(c_lambda: int, matches_data: pd.DataFrame, retu
             result = 1 if predicted_player_won_set(match_data[1], set + 1) else 0
             log_likelihood = log_likelihood + np.log(p_set * result + (1 - p_set) * (1 - result))
             if return_observations:
-                observations = observations.append({
+                observations[set - 1] = observations[set - 1].append({
                     "probability": p_set,
                     "result": result
                 }, ignore_index=True)
@@ -54,14 +55,13 @@ def find_single_lambda(training_set: pd.DataFrame) -> Optional[int]:
         return None
 
 
-def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
-    _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
+def evaluate_observations_single_lambda(observations: pd.DataFrame):
     num_observations = len(observations)
     x_mean = sum(observations.result) / num_observations
     mu_hat = sum(observations.probability) / num_observations
     var_hat = sum(observations.probability * (1 - observations.probability)) / num_observations
     print(f"Observations: {len(observations)}. Observed value: {x_mean}, expected value: {mu_hat}, \
-        standard deviation: {math.sqrt(var_hat)}")
+            standard deviation: {math.sqrt(var_hat)}")
     expected_distribution = stat.norm()
 
     observed_value = math.sqrt(num_observations) * (x_mean - mu_hat) / math.sqrt(var_hat)
@@ -82,6 +82,20 @@ def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
 
     if probability_of_more_extreme < 0.01:
         print("Reject H0 on 99% level.")
+    print(observations)
+    pass
+
+
+def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
+    _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
+
+    print("Starting evaluation:")
+    for set_number, observations_set in enumerate(observations):
+        print(f"\nEvaluating set number {set_number + 1}:")
+        evaluate_observations_single_lambda(observations_set)
+
+    print(f"\nEvaluating all sets together:")
+    evaluate_observations_single_lambda(pd.concat(observations))
 
     pass
 

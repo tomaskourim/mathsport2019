@@ -1,3 +1,5 @@
+# support functions handling specific data structures
+
 import numpy as np
 import pandas as pd
 
