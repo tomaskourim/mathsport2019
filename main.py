@@ -166,12 +166,13 @@ if __name__ == '__main__':
     last_year = args.last_year
     training_type = args.training_type
     odds_probability_type = args.odds_probability_type
+    do_transform_home_favorite = args.do_transform_home_favorite
     if args.database_path is not None:
         DATABASE_PATH = args.database_path
     if args.fair_odds_parameter is not None:
         FAIR_ODDS_PARAMETER = args.fair_odds_parameter
 
-    fit_and_evaluate(first_year, last_year, training_type, odds_probability_type)
+    fit_and_evaluate(first_year, last_year, training_type, odds_probability_type, do_transform_home_favorite)
 
     end_time = datetime.now()
     print(f"Duration: {(end_time - start_time)}")
