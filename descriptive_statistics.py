@@ -46,5 +46,6 @@ def analyze_data(matches_data: pd.DataFrame):
     # most retired and retired against
     # most tournament wins
     # most wins
+    # best winning ratio
 
     pass
