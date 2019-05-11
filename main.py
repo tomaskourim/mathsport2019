@@ -66,6 +66,9 @@ def find_single_lambda(training_set: pd.DataFrame) -> Optional[int]:
 
 def evaluate_observations_single_lambda(observations: pd.DataFrame):
     num_observations = len(observations)
+    if num_observations == 0:
+        print("No observations for current setting, skipping.")
+        pass
     x_mean = sum(observations.result) / num_observations
     mu_hat = sum(observations.probability) / num_observations
     var_hat = sum(observations.probability * (1 - observations.probability)) / num_observations
@@ -94,17 +97,29 @@ def evaluate_observations_single_lambda(observations: pd.DataFrame):
     pass
 
 
+def evaluate_single_lambda_tournaments(observations_set: pd.DataFrame):
+    for tournament in constants.TOURNAMENTS:
+        print(f"\nEvaluating {tournament}")
+        observations_set_tournament = observations_set[observations_set.tournament_name == tournament]
+        evaluate_observations_single_lambda(observations_set_tournament)
+    pass
+
+
 def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
     _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
 
     print("Starting evaluation:")
     for set_number in range(2, 2 * constants.SETS_TO_WIN):
+        print('-----------------------------------------------------------')
         print(f"\nEvaluating set number {set_number}:")
         observations_set = observations[observations.set_number == set_number]
         evaluate_observations_single_lambda(observations_set)
+        evaluate_single_lambda_tournaments(observations_set)
 
+    print('-----------------------------------------------------------')
     print(f"\nEvaluating all sets together:")
     evaluate_observations_single_lambda(observations)
+    evaluate_single_lambda_tournaments(observations)
 
     pass
 
@@ -130,7 +145,8 @@ def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_p
         if year == years[len(years) - 1]:
             break
         # fit the model - find optimal lambda
-        print('-----------------------')
+        print('----------------------------------------------------------------------------------------------')
+        print('----------------------------------------------------------------------------------------------')
         print(year)
         training_set = matches_data[matches_data["year"] == year]
         if len(training_set) == 0:
