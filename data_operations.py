@@ -21,28 +21,28 @@ def predicted_player_won_set(match_data: pd.Series, set: int) -> bool:
 
 
 def transform_home_favorite_single(match_data: pd.Series) -> pd.Series:
-    tranformed_data = pd.Series(index=COLUMN_NAMES)
-    tranformed_data.id = match_data.id
-    tranformed_data.predicted_player = match_data.not_predicted_player
-    tranformed_data.not_predicted_player = match_data.predicted_player
-    tranformed_data.predicted_player_sets = match_data.not_predicted_player_sets
-    tranformed_data.not_predicted_player_sets = match_data.predicted_player_sets
-    tranformed_data.set1predicted_player = match_data.set1not_predicted_player
-    tranformed_data.set1not_predicted_player = match_data.set1predicted_player
-    tranformed_data.set2predicted_player = match_data.set2not_predicted_player
-    tranformed_data.set2not_predicted_player = match_data.set2predicted_player
-    tranformed_data.set3predicted_player = match_data.set3not_predicted_player
-    tranformed_data.set3not_predicted_player = match_data.set3predicted_player
-    tranformed_data.set4predicted_player = match_data.set4not_predicted_player
-    tranformed_data.set4not_predicted_player = match_data.set4predicted_player
-    tranformed_data.set5predicted_player = match_data.set5not_predicted_player
-    tranformed_data.set5not_predicted_player = match_data.set5predicted_player
-    tranformed_data.tournament_name = match_data.tournament_name
-    tranformed_data.year = match_data.year
-    tranformed_data.odds_predicted_player = match_data.odds_not_predicted_player
-    tranformed_data.odds_not_predicted_player = match_data.odds_predicted_player
+    transformed_data = pd.Series(index=COLUMN_NAMES)
+    transformed_data.id = match_data.id
+    transformed_data.predicted_player = match_data.not_predicted_player
+    transformed_data.not_predicted_player = match_data.predicted_player
+    transformed_data.predicted_player_sets = match_data.not_predicted_player_sets
+    transformed_data.not_predicted_player_sets = match_data.predicted_player_sets
+    transformed_data.set1predicted_player = match_data.set1not_predicted_player
+    transformed_data.set1not_predicted_player = match_data.set1predicted_player
+    transformed_data.set2predicted_player = match_data.set2not_predicted_player
+    transformed_data.set2not_predicted_player = match_data.set2predicted_player
+    transformed_data.set3predicted_player = match_data.set3not_predicted_player
+    transformed_data.set3not_predicted_player = match_data.set3predicted_player
+    transformed_data.set4predicted_player = match_data.set4not_predicted_player
+    transformed_data.set4not_predicted_player = match_data.set4predicted_player
+    transformed_data.set5predicted_player = match_data.set5not_predicted_player
+    transformed_data.set5not_predicted_player = match_data.set5predicted_player
+    transformed_data.tournament_name = match_data.tournament_name
+    transformed_data.year = match_data.year
+    transformed_data.odds_predicted_player = match_data.odds_not_predicted_player
+    transformed_data.odds_not_predicted_player = match_data.odds_predicted_player
 
-    return tranformed_data
+    return transformed_data
 
 
 def transform_home_favorite(matches_data: pd.DataFrame) -> pd.DataFrame:
