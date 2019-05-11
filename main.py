@@ -99,13 +99,15 @@ def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
     pass
 
 
-def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_probability_type: str):
+def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_probability_type: str,
+                     do_transform_home_favorite: bool):
     # get matches, results and from database
     matches_data = pd.DataFrame(get_match_data(odds_probability_type), columns=COLUMN_NAMES)
 
     # transform data so that home <=> favorite. Originally, home player, i.e. the player listed first, is considered
     # predicted player. However, predicting the favorite seems reasonable.
-    matches_data = transform_home_favorite(matches_data)
+    if do_transform_home_favorite:
+        matches_data = transform_home_favorite(matches_data)
 
     # get probabilities from odds
     probabilities = pd.DataFrame(get_probabilities_from_odds(matches_data, odds_probability_type))
@@ -154,6 +156,9 @@ if __name__ == '__main__':
     parser.add_argument("--database_path", help="Path to the original database", required=False)
     parser.add_argument("--fair_odds_parameter", help="Parameter used to compute probabilities from odds",
                         required=False)
+    parser.add_argument("--do_transform_home_favorite",
+                        help="Boolean specifying whether to use default player to predict or to transform data" +
+                             "so that favorite odds are always predicted.", required=False, default=True)
 
     args = parser.parse_args()
 
