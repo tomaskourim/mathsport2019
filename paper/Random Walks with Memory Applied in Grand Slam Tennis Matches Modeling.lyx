@@ -651,8 +651,47 @@ name "sec:Model-description-and"
 \end_layout
 
 \begin_layout Standard
-Analysis of tennis mathces shows that the odds of winning a set tend to
- increase after a set is won by a player, and decrease when the set is lost.
+Original inspiration of the random walk described in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Random-walk-with"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is based on intensive study of historical sport results and their development.
+ The data suggests that the probability of success (i.e.
+ scoring, winning a set or a point etc.) evolves according to the random
+ walk with varying probabilities.
+ Moreover, it follows from the data that sports can be very roughly divided
+ into two categories.
+ Sports played for a certain amount of time, such as soccer or ice-hockey,
+ evolve according to the walk defined by 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:suc_punished"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ On the other hand, sports where there is neccessary to achieve certain
+ number of points, such as tennis or volleybal, appear to follow the pattern
+ defined in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:suc_rew"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
  Therefore the random walk defined in 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -664,7 +703,94 @@ noprefix "false"
 \end_inset
 
  is used to model a tennis game.
- In order to find the correct 
+\end_layout
+
+\begin_layout Standard
+The model is used to predict the winning probabilities of sets 2 on and
+ is constructed in a following manner.
+ For each match, the first set winning probability of Player A
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Initially, the player on the first position in a database is considered
+ Player A.
+ It is an arbitrary choice made by www.oddsportal.com and/or respective tournament
+ organization comitees.
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ is given (see Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Initial-probability-derivation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) and a coefficient 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ is fixed for the entire dataset.
+ In order to compute the second set winning probabilities
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Winning probability of Player A is always considered as Player B winning
+ probability is just the complement.
+\end_layout
+
+\end_inset
+
+, the result of a first set is observed and second set winning probability
+ is computed using 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:suc_rew"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ This procedure is repeated for all remaining sets.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+There can be either 3, 4 or 5 sets played in total in a 
+\emph on
+best-of-five
+\emph default
+ tennis game.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Training set and a maximal likelihood estimate are then used to obtain the
+ optimal value of parameter 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In order to find the correct 
 \begin_inset Formula $\lambda$
 \end_inset
 
@@ -687,80 +813,6 @@ status open
 cite{ja2016ddny}
 \end_layout
 
-\end_inset
-
-.
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Two alternatives are considered, first the entire history is taken to be
- the training set, second only the previous year is taken as the training
- set.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The model is constructed in a following manner.
- Initially, the first set winning probability of Player A
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Initially, the player on the first position in a database is considered
- Player A.
- It is an arbitrary choice made by www.oddsportal.com and/or respective tournament
- organization comitees.
-\end_layout
-
-\end_inset
-
- is computed using bookmaker's odds (See Section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Initial-probability-derivation"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-).
- Then, the result of a first set is observed and second set winning probability
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Winning probability of Player A is always considered as Player B winning
- probability is just the complement.
-\end_layout
-
-\end_inset
-
- is computed.
- Second set result is observed and the procedure is repeated for all remaining
- sets.
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-There can be either 3, 4 or 5 sets played in total in a 
-\emph on
-best-of-five
-\emph default
- tennis game.
-\end_layout
-
-\end_inset
-
- Training set and a maximal likelihood estimate are then used to obtain
- the optimal value of parameter 
-\begin_inset Formula $\lambda$
 \end_inset
 
 .
