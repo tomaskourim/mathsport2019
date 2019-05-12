@@ -468,7 +468,7 @@ Australian Open, French Open, The Wimbledon and US Open.
 
 \end_inset
 
- tournaments each year, 40 tournaments togehter.
+ tournaments each year, 40 tournaments together.
  Each Grand Slam has 
 \begin_inset Formula $128$
 \end_inset
@@ -484,7 +484,7 @@ Australian Open, French Open, The Wimbledon and US Open.
 
  games together.
  However, for the sake of completeness, the games where either one of the
- players retired were ommited from the dataset and so were the matches where
+ players retired were omitted from the dataset and so were the matches where
  no bookmaker's odds were available.
  Together there were 
 \begin_inset Formula $4255$
@@ -512,7 +512,7 @@ status open
 Such player/team would be normally considered as ``home'', however, as there
  are (usually) no home players on the international tournaments, the order
  is based on the www.oddsportal.com data and/or the respective tournament
- comitees.
+ committees.
 \end_layout
 
 \end_inset
@@ -520,7 +520,7 @@ Such player/team would be normally considered as ``home'', however, as there
  won total 2201, just slightly over half of all matches.
  On the other hand, if the bookmaker's favorite (i.e.
  the player with better odds or the first listed player in case the odds
- are even) is considered, the situation changes significatnly.
+ are even) is considered, the situation changes significantly.
  The favorite won 3307 matches in total, mostly 3:0, and lost 311 times
  0:3, 347 times 1:3 and 290 times 2:3.
  It suggests that bookmaker's odds can be used as a probability estimate,
@@ -591,9 +591,9 @@ noprefix "false"
 
 \begin_layout Standard
 Estimating the initial set winning probability is a major task by itself
- and represents one of the elementar problems in tennis modelling.
- For the purpose of this article an estimation based on bookmakers' odds
- wiil be used.
+ and represents one of the elementary problems in tennis modeling.
+ For the purpose of this article an estimation based on bookmaker's odds
+ will be used.
  Specifically, the closing odds
 \begin_inset Foot
 status open
@@ -617,7 +617,7 @@ Closing odds means the last odds available before the match start.
 .
  Such odds represent a good estimation of the underlying winning probability
  and are considered as a baseline in the sports betting industry.
- The odds, however, have to be trasformed into probabilities.
+ The odds, however, have to be transformed into probabilities.
  A method described in 
 \begin_inset ERT
 status open
@@ -692,9 +692,9 @@ noprefix "false"
 \end_inset
 
 .
- On the other hand, sports where there is neccessary to achieve certain
- number of points, such as tennis or volleybal, appear to follow the pattern
- defined in 
+ On the other hand, sports where there is necessary to achieve certain number
+ of points, such as tennis or volleyball, appear to follow the pattern defined
+ in 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:suc_rew"
@@ -729,7 +729,7 @@ status open
 Initially, the player on the first position in a database is considered
  Player A.
  It is an arbitrary choice made by www.oddsportal.com and/or respective tournament
- organization comitees.
+ organization committees.
 \end_layout
 
 \end_inset
@@ -803,7 +803,7 @@ In order to verify the model's accuracy, several tests were performed.
  The division is done naturally by the order of games played.
  Given a specific time, past matches constitute to a training set, future
  matches to testing set.
- Sepcifcally, the split was done on a yearly basis, the data from one previous
+ Specifically, the split was done on a yearly basis, the data from one previous
  year are considered as a training set and data from predicted year as testing
  set (i.e.
  2010 was the first season used as testing data, 2017 was the last season
@@ -1283,12 +1283,12 @@ H_{1}:\bar{p}\neq\hat{p}.
 
 \begin_layout Standard
 This approach has several drawbacks.
- One of the assumtions of the CLT is that the observed random variables
+ One of the assumptions of the CLT is that the observed random variables
  are independent.
  This is obviously not true in this case.
  Quite the opposite, the model assumes that the winning probability of a
  set directly depends on the winning probability of the previous set.
- This can be easilly solved by splitting the testing dataset into 4 subsets
+ This can be easily solved by splitting the testing dataset into 4 subsets
  containing only results from single set of a match, i.e.
  sets 2, 3, 4 and 5 (if they were played).
  The matches can be considered independent from each other and so can be
@@ -1336,7 +1336,8 @@ status open
  enough to reject the null hypothesis.
  It is worth mentioning that the size of the datasets, especially for the
  fifth set, is only slightly above 20 observations for some datasets, which
- can interfere with the assuptions justifying the use of Central Limit Theorem.
+ can interfere with the assumptions justifying the use of Central Limit
+ Theorem.
 \end_layout
 
 \begin_layout Standard
@@ -1387,11 +1388,11 @@ ty
 \end_inset
 
 .
- Such a division is based on an assuption, that the matches with similar
+ Such a division is based on an assumption, that the matches with similar
  bookmaker odds should have similar development.
  The matches are divided into 5 groups, each containing 10 percentage points
  in first set winning probability.
- Expect for the biggist favorites (with first set winning probability over
+ Expect for the biggest favorites (with first set winning probability over
  90%), this division seems reasonable.
  The data histogram can be seen on Figure 
 \begin_inset CommandInset ref
@@ -1565,19 +1566,19 @@ name "sec:Conclusion"
 \end_layout
 
 \begin_layout Standard
-This paper describes the random walk with varying probabilites and its applicati
-on on Grand Slam tennis data.
+This paper describes the random walk with varying probabilities and its
+ application on Grand Slam tennis data.
  A model describing the development of a single match is introduced and
  tested on a dataset containing all matches from seasons 2009-2018.
  The results show that the model is robust and performs well on various
  data subsets.
  To further verify the robustness of the model, produced predictions will
- be compared agains real 
+ be compared against real 
 \emph on
 in-play
 \emph default
  odds provided by bookmakers.
- This comparision will be part of a further study.
+ This comparison will be part of a further study.
 \end_layout
 
 \begin_layout Section
@@ -1587,7 +1588,7 @@ Remarks
 \begin_layout Standard
 The source code containing all functionality mentioned in this article is
  freely available as open source at GitHub (https://github.com/tomaskourim/mathsp
-ort2019) together with a database containg all data that was used in this
+ort2019) together with a database containing all data that was used in this
  paper.
  Some results can be also obtained from the same repository.
 \end_layout
