@@ -70,7 +70,7 @@ def evaluate_observations_single_lambda(observations: pd.DataFrame) -> float:
     num_observations = len(observations)
     if num_observations == 0:
         print("No observations for current setting, skipping.")
-        return None
+        return 1
     x_mean = sum(observations.result) / num_observations
     mu_hat = sum(observations.probability) / num_observations
     var_hat = sum(observations.probability * (1 - observations.probability)) / num_observations
