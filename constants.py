@@ -10,3 +10,5 @@ COLUMN_NAMES = ["id", "predicted_player", "not_predicted_player", "predicted_pla
                 "set3predicted_player", "set3not_predicted_player", "set4predicted_player", "set4not_predicted_player",
                 "set5predicted_player", "set5not_predicted_player", "tournament_name", "year",
                 "odds_predicted_player", "odds_not_predicted_player"]
+
+TOURNAMENTS = ["Australian Open", "French Open", "Wimbledon", "US Open"]

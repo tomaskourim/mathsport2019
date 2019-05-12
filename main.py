@@ -1,8 +1,7 @@
 # main file to run the algorithms
 import argparse
 from datetime import datetime
-from typing import Optional
-from typing import Tuple
+from typing import Optional, Tuple
 
 import math
 import numpy as np
@@ -10,7 +9,7 @@ import pandas as pd
 import scipy.optimize as opt
 import scipy.stats as stat
 
-from constants import COLUMN_NAMES, SETS_TO_WIN
+import constants
 from data_operations import transform_home_favorite, get_probabilities_from_odds, predicted_player_won_set
 from database_operations import get_match_data
 
@@ -19,21 +18,31 @@ def log_likelihood_single_lambda(c_lambda: int, matches_data: pd.DataFrame, retu
     int, Optional[pd.DataFrame]]:
     log_likelihood = 0
     if return_observations:
-        observations = [pd.DataFrame(columns=['probability', 'result'])] * (
-                2 * SETS_TO_WIN - 2)  # Number of sets that are predicted
+        observations = pd.DataFrame(
+            columns=["predicted_player", "not_predicted_player", "tournament_name", "year",
+                     "1.set probability", "set_number", "probability", "result"])
     for match_data in matches_data.iterrows():
         p_set = match_data[1][
             "probability_predicted_player"]  # probability of winning 1.set, not subject to optimization
+        if return_observations:
+            current_observation = {"predicted_player": match_data[1].predicted_player,
+                                   "not_predicted_player": match_data[1].not_predicted_player,
+                                   "tournament_name": match_data[1].tournament_name,
+                                   "year": match_data[1].year,
+                                   "1.set probability": match_data[1].probability_predicted_player}
         for set in range(1, match_data[1]["predicted_player_sets"] + match_data[1]["not_predicted_player_sets"]):
             p_set = c_lambda * p_set + 1 / 2 * (1 - c_lambda) * (
                     1 + (1 if predicted_player_won_set(match_data[1], set) else -1))
             result = 1 if predicted_player_won_set(match_data[1], set + 1) else 0
             log_likelihood = log_likelihood + np.log(p_set * result + (1 - p_set) * (1 - result))
             if return_observations:
-                observations[set - 1] = observations[set - 1].append({
+                set_observation = {
+                    "set_number": set + 1,
                     "probability": p_set,
                     "result": result
-                }, ignore_index=True)
+                }
+                current_observation.update(set_observation)
+                observations = observations.append(current_observation, ignore_index=True)
 
     if return_observations:
         return log_likelihood, observations
@@ -57,6 +66,9 @@ def find_single_lambda(training_set: pd.DataFrame) -> Optional[int]:
 
 def evaluate_observations_single_lambda(observations: pd.DataFrame):
     num_observations = len(observations)
+    if num_observations == 0:
+        print("No observations for current setting, skipping.")
+        pass
     x_mean = sum(observations.result) / num_observations
     mu_hat = sum(observations.probability) / num_observations
     var_hat = sum(observations.probability * (1 - observations.probability)) / num_observations
@@ -85,27 +97,42 @@ def evaluate_observations_single_lambda(observations: pd.DataFrame):
     pass
 
 
+def evaluate_single_lambda_tournaments(observations_set: pd.DataFrame):
+    for tournament in constants.TOURNAMENTS:
+        print(f"\nEvaluating {tournament}")
+        observations_set_tournament = observations_set[observations_set.tournament_name == tournament]
+        evaluate_observations_single_lambda(observations_set_tournament)
+    pass
+
+
 def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
     _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
 
     print("Starting evaluation:")
-    for set_number, observations_set in enumerate(observations):
-        print(f"\nEvaluating set number {set_number + 1}:")
+    for set_number in range(2, 2 * constants.SETS_TO_WIN):
+        print('-----------------------------------------------------------')
+        print(f"\nEvaluating set number {set_number}:")
+        observations_set = observations[observations.set_number == set_number]
         evaluate_observations_single_lambda(observations_set)
+        evaluate_single_lambda_tournaments(observations_set)
 
+    print('-----------------------------------------------------------')
     print(f"\nEvaluating all sets together:")
-    evaluate_observations_single_lambda(pd.concat(observations))
+    evaluate_observations_single_lambda(observations)
+    evaluate_single_lambda_tournaments(observations)
 
     pass
 
 
-def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_probability_type: str):
+def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_probability_type: str,
+                     do_transform_home_favorite: bool):
     # get matches, results and from database
-    matches_data = pd.DataFrame(get_match_data(odds_probability_type), columns=COLUMN_NAMES)
+    matches_data = pd.DataFrame(get_match_data(odds_probability_type), columns=constants.COLUMN_NAMES)
 
     # transform data so that home <=> favorite. Originally, home player, i.e. the player listed first, is considered
     # predicted player. However, predicting the favorite seems reasonable.
-    matches_data = transform_home_favorite(matches_data)
+    if do_transform_home_favorite:
+        matches_data = transform_home_favorite(matches_data)
 
     # get probabilities from odds
     probabilities = pd.DataFrame(get_probabilities_from_odds(matches_data, odds_probability_type))
@@ -118,7 +145,8 @@ def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_p
         if year == years[len(years) - 1]:
             break
         # fit the model - find optimal lambda
-        print('-----------------------')
+        print('----------------------------------------------------------------------------------------------')
+        print('----------------------------------------------------------------------------------------------')
         print(year)
         training_set = matches_data[matches_data["year"] == year]
         if len(training_set) == 0:
@@ -154,6 +182,9 @@ if __name__ == '__main__':
     parser.add_argument("--database_path", help="Path to the original database", required=False)
     parser.add_argument("--fair_odds_parameter", help="Parameter used to compute probabilities from odds",
                         required=False)
+    parser.add_argument("--do_transform_home_favorite",
+                        help="Boolean specifying whether to use default player to predict or to transform data" +
+                             "so that favorite odds are always predicted.", required=False, default=True)
 
     args = parser.parse_args()
 
@@ -161,12 +192,13 @@ if __name__ == '__main__':
     last_year = args.last_year
     training_type = args.training_type
     odds_probability_type = args.odds_probability_type
+    do_transform_home_favorite = args.do_transform_home_favorite
     if args.database_path is not None:
-        DATABASE_PATH = args.database_path
+        constants.DATABASE_PATH = args.database_path
     if args.fair_odds_parameter is not None:
-        FAIR_ODDS_PARAMETER = args.fair_odds_parameter
+        constants.FAIR_ODDS_PARAMETER = args.fair_odds_parameter
 
-    fit_and_evaluate(first_year, last_year, training_type, odds_probability_type)
+    fit_and_evaluate(first_year, last_year, training_type, odds_probability_type, do_transform_home_favorite)
 
     end_time = datetime.now()
     print(f"Duration: {(end_time - start_time)}")
