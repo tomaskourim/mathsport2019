@@ -176,7 +176,7 @@ def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int
 
         # apply the model - evaluate success rate
         testing_set = matches_data[matches_data["year"] == year + 1]
-        results[year] = evaluate_single_lambda(c_lambda, testing_set)
+        results[year + 1] = evaluate_single_lambda(c_lambda, testing_set)
 
     # export results
     results_df = pd.concat(results)
