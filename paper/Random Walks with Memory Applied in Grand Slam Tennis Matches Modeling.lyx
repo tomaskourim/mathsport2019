@@ -123,7 +123,86 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-A new type of a random walk with varying probabilities was introduced recently
+Tennis is one of the most popular sports both on professional and amateur
+ level.
+ Millions of people pursue tennis as their free time activity
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{pac2019report}
+\end_layout
+
+\end_inset
+
+ and same numbers hold also for the people following and watching the profession
+al tennis competitions.
+ Tennis also plays a major role in the sports betting industry, which grows
+ every year and becomes more and more important part of the global economy.
+ In the Czech Republic only, the total sales in sports betting industry
+ reached almost CZK 65 billion (2.9 billion USD) in 2017, representing 
+\begin_inset Formula $1.3\%$
+\end_inset
+
+ of Czech GDP 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{mf2017report}
+\end_layout
+
+\end_inset
+
+.
+ Such an increase attracts also many fraudsters.
+ The European Sports Security Association regularly reports on suspicious
+ betting activities, the latest report (2018) contained 267 cases of suspicious
+ betting activity, 178 (67%) in tennis 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{essa2018fullreport}
+\end_layout
+
+\end_inset
+
+.
+ It is thus obvious that a precise model describing the game of tennis has
+ many possible uses in real life.
+\end_layout
+
+\begin_layout Standard
+Tennis is also a sport more than suitable to be modelled using random walks
+ or random processes in general, as it naturally consists of many such processes.
+ A series of a tennis matches is a random walk, the sequence of sets withing
+ a match, games within a set, points within a game or even strokes within
+ a point can be all modeled using a random walk.
+ Additionally, these walks are well described by the tennis rules and there
+ exist lots of data describing these random processess (i.e.
+ various tennis result databases provided freely by the tennis federation
+ and many private subjects).
+ In this paper, a sequence of sets is studied and considered.
+ Matches played as a best-of-five, i.e.
+ the man Grand Slam tournaments, are considered in this paper.
+ In these matches, up to 5 steps of the random walk can be observed, making
+ them more suitable than the best-of-three games, where maximum 3 steps
+ can occur.
+\end_layout
+
+\begin_layout Standard
+The matches are modeled using a new type of a recently introduced random
+ walk with varying probabilities 
 \begin_inset ERT
 status open
 
@@ -136,8 +215,8 @@ cite{ja2017ddny}
 
 \end_inset
 
- as a modification of a random walk with varying step size introduced by
- Turban
+, which is a modification of a random walk with varying step size introduced
+ by Turban
 \begin_inset ERT
 status open
 
@@ -151,37 +230,44 @@ cite{turban2010random}
 \end_inset
 
 .
- The original idea comes from intensive studies of the game of tennis, where
- data suggest that a success yields another success, or in other words,
- that winning one particular part of the match increases the chances of
- winning the next part as well.
- This can be formalized in a way that a tennis game is modelled as a random
- walk in which the transition probability changes after each step towards
- success reward.
- 
+ It seems more than suitable to model tennis matches as the data suggest
+ that a success in tennis yields another success, or in other words, that
+ winning one particular part of the match increases the chances of winning
+ the next part as well.
+ This behaivor is well described by the new random walk model.
 \end_layout
 
 \begin_layout Standard
-Tennis is a sport more than suitable to be modelled using random walks or
- random processes in general, as it naturally consists of many such processes.
- The sequence of sets, games, points or even single strokes can be considered
- a random process.
- In this article, a sequence of sets is studied and considered.
- Matches played as a best-of-five, i.e.
- the man Grand Slam tournaments, are considered in this paper.
- In these matches, up to 5 steps of the random walk can be observed, making
- them more suitable than the best-of-three games, where maximum 3 steps
- can occur.
+The paper is organized as follow.
  
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TBD az to bude napsane.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
 proc se vyplati modelovat tenis, jak jsem prisel k datum, jak s nim zachazim
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 co je tenis, proc ho predikovat - sazeni, podvody, je dobrej a ma hodne
  nahodnych procsu
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -349,10 +435,6 @@ kratke shrnuti tezi, DDnu, predstaveni novych variant, ktere nakonec budu
 \end_layout
 
 \begin_layout Section
-Model description
-\end_layout
-
-\begin_layout Section
 Data description
 \begin_inset CommandInset label
 LatexCommand label
@@ -389,8 +471,16 @@ Australian Open, Frech Open, The Wimbledon and US Open.
 \end_inset
 
  tournaments each year, 40 tournaments togehter.
- Each Grand Slam has 128 participants and 127 games, making it a set of
+ Each Grand Slam has 
+\begin_inset Formula $128$
+\end_inset
+
+ participants playing in a single-elimination system (i.e.
  
+\begin_inset Formula $127$
+\end_inset
+
+ games per tournament), making it a set of 
 \begin_inset Formula $5080$
 \end_inset
 
@@ -402,19 +492,29 @@ Australian Open, Frech Open, The Wimbledon and US Open.
 \begin_inset Formula $4255$
 \end_inset
 
- matches with complete data available, presenting total 432 players.
+ matches with complete data available, presenting total 
+\begin_inset Formula $432$
+\end_inset
+
+ players.
  The most active player was Novak Djokovic, who participated in 188 matches.
  On average, each player played 19.7 matches, with the median value 8 matches
  played.
- The most common result is 3:0, occurring 2138 together, on the other hand,
+ The most common result is 3:0, occurring 2138 times, on the other hand,
  5 sets were played only 808 times.
- The order in which the players are listed is rather random.
+\end_layout
+
+\begin_layout Standard
+The order in which the players are listed is rather random.
  The first listed player
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Such player/team would be normally considered as ``home''.
+Such player/team would be normally considered as ``home'', however, as there
+ are (usually) no home players on the international tournaments, the order
+ is based on the www.oddsportal.com data and/or the respective tournament
+ comitees.
 \end_layout
 
 \end_inset
@@ -425,6 +525,21 @@ Such player/team would be normally considered as ``home''.
  are even) is considered, the situation changes significatnly.
  The favorite won 3307 matches in total, mostly 3:0, and lost 311 times
  0:3, 347 times 1:3 and 290 times 2:3.
+ It suggests that bookmaker's odds can be used as a probability estimate,
+ which is in accordance with previous results, for example 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2016ddny}
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
@@ -915,7 +1030,7 @@ ort2019) together with a database containg all data that was used in this
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
 btprint "btPrintCited"
-bibfiles "../../Disertace/doktknih"
+bibfiles "doktknih"
 options "plain"
 
 \end_inset
