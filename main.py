@@ -22,7 +22,7 @@ def log_likelihood_single_lambda(c_lambda: float, matches_data: pd.DataFrame, re
     if return_observations:
         observations = pd.DataFrame(
             columns=["predicted_player", "not_predicted_player", "tournament_name", "year",
-                     "1.set probability", "set_number", "probability", "result"])
+                     "first_set_prob", "set_number", "probability", "result"])
     for match_data in matches_data.iterrows():
         p_set = match_data[1][
             "probability_predicted_player"]  # probability of winning 1.set, not subject to optimization
@@ -31,7 +31,7 @@ def log_likelihood_single_lambda(c_lambda: float, matches_data: pd.DataFrame, re
                                    "not_predicted_player": match_data[1].not_predicted_player,
                                    "tournament_name": match_data[1].tournament_name,
                                    "year": match_data[1].year,
-                                   "1.set probability": match_data[1].probability_predicted_player}
+                                   "first_set_prob": match_data[1].probability_predicted_player}
         for set in range(1, match_data[1]["predicted_player_sets"] + match_data[1]["not_predicted_player_sets"]):
             p_set = c_lambda * p_set + 1 / 2 * (1 - c_lambda) * (
                     1 + (1 if predicted_player_won_set(match_data[1], set) else -1))
@@ -70,7 +70,7 @@ def evaluate_observations_single_lambda(observations: pd.DataFrame) -> float:
     num_observations = len(observations)
     if num_observations == 0:
         print("No observations for current setting, skipping.")
-        pass
+        return 1
     x_mean = sum(observations.result) / num_observations
     mu_hat = sum(observations.probability) / num_observations
     var_hat = sum(observations.probability * (1 - observations.probability)) / num_observations
@@ -103,18 +103,29 @@ def evaluate_single_lambda_tournaments(observations: pd.DataFrame) -> List[float
     result = []
     for tournament in constants.TOURNAMENTS:
         print(f"\nEvaluating {tournament}")
-        observations_tournament = observations[observations.tournament_name == tournament]
-        result.append(evaluate_observations_single_lambda(observations_tournament))
-    print(f"\nEvaluating all tournaments together.")
+        observations_current = observations[observations.tournament_name == tournament]
+        result.append(evaluate_observations_single_lambda(observations_current))
+    print(f"\nEvaluating all set gourps together.")
     result.append(evaluate_observations_single_lambda(observations))
+
+    print(f"\nEvaluating porbability groups.")
+    for i in range(0, len(constants.PROBABILITY_BINS) - 1):
+        lower_bound = constants.PROBABILITY_BINS[i]
+        upper_bound = constants.PROBABILITY_BINS[i + 1]
+        print(f"\nEvaluating: {lower_bound} <= probability < {upper_bound}")
+        observations_current = observations[
+            (lower_bound <= observations.first_set_prob) & (observations.first_set_prob < upper_bound)]
+        result.append(evaluate_observations_single_lambda(observations_current))
+
     return result
 
 
-def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame) -> pd.DataFrame:
+def evaluate_single_lambda(c_lambda: float, matches_data: pd.DataFrame) -> pd.DataFrame:
     _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
 
     possible_sets = list(range(2, 2 * constants.SETS_TO_WIN))
-    result = pd.DataFrame(columns=constants.TOURNAMENTS + ["All tournaments"],
+    result = pd.DataFrame(columns=constants.TOURNAMENTS + ["All set groups"] + constants.PROBABILITY_BINS[
+                                                                               1:len(constants.PROBABILITY_BINS)],
                           index=possible_sets + ["All sets"])
 
     print("Starting evaluation:")
@@ -170,7 +181,7 @@ def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int
 
     # export results
     results_df = pd.concat(results)
-    results_df.to_excel(f"output_favorite_first_{do_transform_home_favorite}.xlsx")
+    results_df.to_excel(f"results/output_favorite_first_{do_transform_home_favorite}.xlsx")
 
     pass
 
@@ -209,10 +220,10 @@ if __name__ == '__main__':
     # get matches, results and odds from database
     matches_data = pd.DataFrame(get_match_data(odds_probability_type), columns=constants.COLUMN_NAMES)
 
-    analyze_data(matches_data, odds_probability_type)
-
     fit_and_evaluate(matches_data, first_year, last_year, training_type, odds_probability_type,
                      do_transform_home_favorite)
+
+    analyze_data(matches_data, odds_probability_type)
 
     end_time = datetime.now()
     print(f"\nDuration: {(end_time - start_time)}")
