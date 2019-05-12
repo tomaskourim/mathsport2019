@@ -1,6 +1,6 @@
 # support file containing all constants
 
-FAIR_ODDS_PARAMETER = 0.5
+FAIR_ODDS_PARAMETER = 0.5 # TODO not constant, but optimized
 DATABASE_PATH = 'mathsport2019.sqlite'
 EVEN_ODDS_PROBABILITY = 0.5
 SETS_TO_WIN = 3
