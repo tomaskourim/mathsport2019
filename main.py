@@ -154,6 +154,7 @@ def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int
                                        probability_not_predicted_player=probabilities[1])
 
     results = {}
+    lambdas = {}
     # iterate over training sets
     years = matches_data.year.unique()
     for year in range(first_year, last_year):
@@ -177,10 +178,14 @@ def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int
         # apply the model - evaluate success rate
         testing_set = matches_data[matches_data["year"] == year + 1]
         results[year + 1] = evaluate_single_lambda(c_lambda, testing_set)
+        lambdas[year + 1] = c_lambda
 
     # export results
     results_df = pd.concat(results)
     results_df.to_excel(f"results/output_favorite_first_{do_transform_home_favorite}.xlsx")
+
+    lambdas_df = pd.DataFrame.from_dict(lambdas, orient='index', columns=['Optimal lambda'])
+    lambdas_df.to_excel(f"results/lambdas_favorite_first_{do_transform_home_favorite}.xlsx")
 
     pass
 
@@ -202,7 +207,7 @@ if __name__ == '__main__':
                         required=False)
     parser.add_argument("--do_transform_home_favorite",
                         help="Boolean specifying whether to use default player to predict or to transform data" +
-                             "so that favorite odds are always predicted.", required=False, default='True')
+                             "so that favorite odds are always predicted.", required=False, default="True")
 
     args = parser.parse_args()
 
@@ -210,7 +215,7 @@ if __name__ == '__main__':
     input_last_year = args.last_year
     input_training_type = args.training_type
     input_odds_probability_type = args.odds_probability_type
-    input_do_transform_home_favorite = args.do_transform_home_favorite == 'True'
+    input_do_transform_home_favorite = args.do_transform_home_favorite == "True"
     if args.database_path is not None:
         constants.DATABASE_PATH = args.database_path
     if args.fair_odds_parameter is not None:
