@@ -90,32 +90,26 @@
 Random Walks with Memory Applied to Grand Slam Tennis Matches Modeling
 \end_layout
 
+\begin_layout Author
+Tomáš Kouřim
+\end_layout
+
 \begin_layout Abstract
 The contribution presents a model of a random walk with varying transition
- probabilities (Kouřim, 2017) implicitly depending on the entire history
- of the walk, which is an improvement of a model with varying step sizes
- (Turban, 2010).
+ probabilities implicitly depending on the entire history of the walk, which
+ is an improvement of a model with varying step sizes.
  The transition probabilities are altered according to the last step of
- the walker using a parameter to either reward or punish success by increasing
- or decreasing its probability in the next step.
- Such a walk seems to suitably approximate the development of a sport game.
- This theory is inspected by applying the walk as a model of a tennis match.
- The focus is on the best-of-five tennis games, i.e.
- the man Grand Slam tournaments, with each set representing one step of
- the random walk.
- The model is fitted on the entire history of matches since 2009 and thoroughly
- examined.
- Further, the theory is extended, and the cases with two parameters (one
- affecting each player’s odds of winning) and with time dependent parameter
- are studied.
- Theoretical assumptions are proposed, proved and applied on real data.
- Differences between respective tournaments are examined, as are the differences
- between the individual players.
- The work especially focuses on the top players from the last decade.
- Additionally, the matches are grouped using bookmaker’s odds into more
- homogenous subsets and the model is applied to each one separately.
- Again, results are compared among the groups and within each group as well.
- 
+ the walker using a memory parameter to either reward or punish success
+ by increasing or decreasing its probability in the next step.
+ This walk is applied to model Grand Slam tennis matches and fitted on their
+ entire history since 2009.
+ The suitability of the model is then thoroughly tested on many real datasets.
+ The model seems to be robust and describe well the majority of matches,
+ making it an useful tool to produce precise 
+\emph on
+in-play
+\emph default
+ odds.
 \end_layout
 
 \begin_layout Section
@@ -190,7 +184,7 @@ Tennis is also a sport more than suitable to be modeled using random walks
  a point can be all considered a random process and modeled using a random
  walk.
  Additionally, these walks are well described by the tennis rules and there
- exist lots of data describing these random processess (i.e.
+ exist lots of data describing these random processes (i.e.
  various tennis result databases provided by the tennis federation as well
  as many private subjects).
  In this paper, the random walk consisting of a sequence of sets within
@@ -243,7 +237,7 @@ cite{turban2010random}
  that a success in tennis yields another success, or in other words, that
  winning one particular part of the match increases the chances of winning
  the next part as well.
- This behaivor is well described by the new random walk model.
+ This behavior is well described by the new random walk model.
 \end_layout
 
 \begin_layout Standard
@@ -319,7 +313,7 @@ cite{turban2010random}
 
 \end_inset
 
- a new version of a random walk with memory, where the memory is inroduced
+ a new version of a random walk with memory, where the memory is introduced
  using variable step size.
  This idea was further extended by Kouřim 
 \begin_inset ERT
@@ -340,7 +334,7 @@ cite{ja2017ddny,ja2019teze}
 
 \begin_layout Standard
 The walk evolves in a following way.
- Initial step is made following the result of a Bernouli random variable
+ Initial step is made following the result of a Bernoulli random variable
  with starting probability parameter 
 \begin_inset Formula $p_{0}$
 \end_inset
@@ -404,9 +398,9 @@ p_{t}=\lambda p_{t-1}+\frac{1}{2}(1-\lambda)(1-X_{t}).\label{eq:suc_punished}
 \end_layout
 
 \begin_layout Standard
-This definition of a random walk means that the oposite direction is always
- prefered and that the walk tends to return back to the origin.
- Alternatively, inverse aproach can be applied and the same decision can
+This definition of a random walk means that the opposite direction is always
+ preferred and that the walk tends to return back to the origin.
+ Alternatively, inverse approach can be applied and the same decision can
  be supported.
  Formally, the expression for the 
 \begin_inset Formula $t-th$
@@ -811,8 +805,8 @@ In order to verify the model's accuracy, several tests were performed.
  matches to a testing set.
  For the purpose of this paper, the split was done on a yearly basis, the
  data from one previous tennis season were used as a training set to predict
- winning probabilities in the following season, constituing the testing
- set (i.e.
+ winning probabilities in the following season, considered the testing set
+ (i.e.
  2010 was the first season used as testing data, 2017 was the last season
  used as training set), making it 9 training/testing splits together.
  Another approach to dataset splitting is to consider data from all previous
