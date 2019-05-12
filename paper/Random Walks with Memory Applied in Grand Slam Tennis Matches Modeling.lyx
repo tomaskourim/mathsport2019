@@ -272,6 +272,13 @@ co je tenis, proc ho predikovat - sazeni, podvody, je dobrej a ma hodne
 
 \begin_layout Section
 Random walk with varying probability
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Random-walk-with"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -554,6 +561,44 @@ name "sec:Initial-probability-derivation"
 \end_layout
 
 \begin_layout Standard
+The model of a random walk with varying probabilities described in Section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Random-walk-with"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ has two parameters, initial set winning probability 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ and the memory coefficient 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ Finding the optimal value of 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ is the main subject of this paper and is described in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Model-description-and"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Estimating the initial set winning probability is a major task by itself
  and represents one of the elementar problems in tennis modelling.
  For the purpose of this article an estimation based on bookmakers' odds
@@ -570,8 +615,8 @@ Closing odds means the last odds available before the match start.
 
  by Pinnacle Sports bookmaker for the results of a first set are used to
  estimate the probabilities of each player winning the first set.
- Such odds represent a very accurate estimation of the underlying winning
- probability and are considered as a baseline in the sports betting industry.
+ Such odds represent a good estimation of the underlying winning probability
+ and are considered as a baseline in the sports betting industry.
  The odds have to be trasformed into probabilities.
  A method described in KOURIM2015ddny 
 \begin_inset Note Note
@@ -620,11 +665,14 @@ Tady je jeste otazka, jestli chci vzit kurz na vitezstvi v zapase, udelat
 \end_layout
 
 \begin_layout Section
-Single 
-\begin_inset Formula $\lambda$
+Model description and fitting
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Model-description-and"
+
 \end_inset
 
- parameter
+
 \end_layout
 
 \begin_layout Standard
