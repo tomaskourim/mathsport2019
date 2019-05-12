@@ -239,17 +239,50 @@ cite{turban2010random}
 
 \begin_layout Standard
 The paper is organized as follow.
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TBD az to bude napsane.
-\end_layout
+ Next chapter introduces the type of random walk used for tennis modeling.
+ Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Data-description"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
+ provides general description of the data used, Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Initial-probability-derivation"
+plural "false"
+caps "false"
+noprefix "false"
 
+\end_inset
+
+ shows how to obtain starting probabilities.
+ In Chapter 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Model-description-and"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ the actual model is described and its performance is evaluated.
+ Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Conclusion"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ concludes this paper.
 \end_layout
 
 \begin_layout Section
@@ -920,7 +953,7 @@ noprefix "false"
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -1531,62 +1564,14 @@ p-values
 \end_layout
 
 \begin_layout Section
-Two 
-\begin_inset Formula $\lambda$
-\end_inset
-
- parameters
-\end_layout
-
-\begin_layout Standard
-From tables XX it can be seen that the separation into subgroups leads to
- more precise results.
- This suggests that the parameter 
-\begin_inset Formula $\lambda$
-\end_inset
-
- depends on the starting odds and should thus not be constant but depend
- on odds.
- This further implies that the parameter should not be the same for the
- favourite and outsider, rather that each should have his own parameter.
- Again, a process similar to the one from chapter XXX was invoked, but this
- time, two parameters, 
-\begin_inset Formula $\lambda_{f}$
-\end_inset
-
- and 
-\begin_inset Formula $\lambda_{o}$
-\end_inset
-
- were optimized.
- Then, they were tested against the real previously unseen data.
- The results are diaplayed in table XXX.
- Again, this was repeated for different subgroups as in chapter XXX.
- The results can be seen in tables XXX
-\end_layout
-
-\begin_layout Section
-\begin_inset Formula $\lambda$
-\end_inset
-
- as a function of probability and current state
-\end_layout
-
-\begin_layout Standard
-The final step is to estimate parameter 
-\begin_inset Formula $\lambda$
-\end_inset
-
- not only with respect to starting winning probability but also with respect
- to current state of the match.
- For that, the estimation of parameters was (again using MLE) done separetely
- for each stage of the match.
- The same subgroup division as in previous chapters is applied.
- The results can be seen in tables XXX.
-\end_layout
-
-\begin_layout Section
 Conclusion
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Conclusion"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1611,7 +1596,7 @@ The source code containing all functionality mentioned in this article is
  freely available as open source at GitHub (https://github.com/tomaskourim/mathsp
 ort2019) together with a database containg all data that was used in this
  paper.
- More detailed results can be also obtained from the same repository.
+ Some results can be also obtained from the same repository.
 \end_layout
 
 \begin_layout Standard
