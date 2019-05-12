@@ -16,8 +16,8 @@ def get_probabilities_from_odds(match_data: pd.DataFrame, odds_probability_type:
     return probabilities
 
 
-def predicted_player_won_set(match_data: pd.Series, set: int) -> bool:
-    return match_data[f"set{set}predicted_player"] > match_data[f"set{set}not_predicted_player"]
+def predicted_player_won_set(match_data: pd.Series, _set: int) -> bool:
+    return match_data[f"set{_set}predicted_player"] > match_data[f"set{_set}not_predicted_player"]
 
 
 def transform_home_favorite_single(match_data: pd.Series) -> pd.Series:
