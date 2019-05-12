@@ -104,10 +104,8 @@ def evaluate_single_lambda_tournaments(observations: pd.DataFrame) -> List[float
         print(f"\nEvaluating {tournament}")
         observations_current = observations[observations.tournament_name == tournament]
         result.append(evaluate_observations_single_lambda(observations_current))
-    print(f"\nEvaluating all set gourps together.")
-    result.append(evaluate_observations_single_lambda(observations))
 
-    print(f"\nEvaluating porbability groups.")
+    print(f"\nEvaluating probability groups.")
     for i in range(0, len(constants.PROBABILITY_BINS) - 1):
         lower_bound = constants.PROBABILITY_BINS[i]
         upper_bound = constants.PROBABILITY_BINS[i + 1]
@@ -116,6 +114,9 @@ def evaluate_single_lambda_tournaments(observations: pd.DataFrame) -> List[float
             (lower_bound <= observations.first_set_prob) & (observations.first_set_prob < upper_bound)]
         result.append(evaluate_observations_single_lambda(observations_current))
 
+    print(f"\nEvaluating all set groups together.")
+    result.append(evaluate_observations_single_lambda(observations))
+
     return result
 
 
@@ -123,9 +124,9 @@ def evaluate_single_lambda(c_lambda: float, matches_data: pd.DataFrame) -> pd.Da
     _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
 
     possible_sets = list(range(2, 2 * constants.SETS_TO_WIN))
-    result = pd.DataFrame(columns=constants.TOURNAMENTS + ["All set groups"] + constants.PROBABILITY_BINS[
-                                                                               1:len(constants.PROBABILITY_BINS)],
-                          index=possible_sets + ["All sets"])
+    result = pd.DataFrame(
+        columns=constants.TOURNAMENTS + constants.PROBABILITY_BINS[1:len(constants.PROBABILITY_BINS)] + [
+            "All groups"], index=possible_sets + ["All sets"])
 
     print("Starting evaluation:")
     for set_number in possible_sets:
@@ -157,7 +158,7 @@ def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int
     lambdas = {}
     # iterate over training sets
     years = matches_data.year.unique()
-    for year in range(first_year, last_year):
+    for year in range(first_year, last_year):  # TODO try different training/testing splits
         if year == years[len(years) - 1]:
             break
         # fit the model - find optimal lambda

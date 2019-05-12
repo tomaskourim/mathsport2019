@@ -1417,7 +1417,17 @@ Further division, i.e.
 \emph on
 p-values 
 \emph default
-of respective tests) can be seen on Figure
+of respective tests) can be seen on Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:p-values-of-hypothesis"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -1473,11 +1483,7 @@ First set winning probability
 \begin_inset Float figure
 wide false
 sideways false
-status open
-
-\begin_layout Plain Layout
-
-\end_layout
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -1522,29 +1528,6 @@ p-values
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-Although there does not seem to be any pattern among these subsets, this
- suggests that there might be a specific group of matches where the null
- hypothesis does not hold, i.e.
- the model does not fit well on those data.
-\end_layout
-
-\begin_layout Standard
-computed and empirical probabilities are the same is then tested.
- Results can be seen in table XXX.
-\end_layout
-
-\begin_layout Standard
-To further refine the results, the matches were divided into several groups.
- The first division was by the respective tournaments, the second by the
- game-winning odds and third was just selecting the top players.
- Results can be seen in tables XXXX.
-\end_layout
-
-\begin_layout Standard
-popsat proc pocitam favorita
 \end_layout
 
 \begin_layout Section
