@@ -1,2 +1,6 @@
 .idea
 *.lyx#
+__pycache__/
+*.lyx~
+*.gz
+*.7z
