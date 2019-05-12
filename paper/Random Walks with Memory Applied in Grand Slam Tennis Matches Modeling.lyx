@@ -640,7 +640,7 @@ cite{ja2015ddny}
 \end_layout
 
 \begin_layout Section
-Model description and fitting
+Model description and evaluation
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Model-description-and"
@@ -648,6 +648,10 @@ name "sec:Model-description-and"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Model description
 \end_layout
 
 \begin_layout Standard
@@ -780,28 +784,23 @@ best-of-five
 .
 \end_layout
 
-\begin_layout Standard
-Training set and a maximal likelihood estimate are then used to obtain the
- optimal value of parameter 
-\begin_inset Formula $\lambda$
-\end_inset
-
-.
+\begin_layout Subsection
+Model evaluation
 \end_layout
 
 \begin_layout Standard
-In order to find the correct 
-\begin_inset Formula $\lambda$
-\end_inset
-
-, the data is divided into training and testing sets.
+In order to verify the model's accuracy, several tests were performed.
+ First, the dataset was divided into training and testing sets.
  The division is done naturally by the order of games played.
  Given a specific time, past matches constitute to a training set, future
  matches to testing set.
- The classification and prediction is done on a yearly basis, the data from
- one previous year are considered as a training set and data from predicted
- year as testing set.
- Another approach is to consider data from all previous years, however previous
+ Sepcifcally, the split was done on a yearly basis, the data from one previous
+ year are considered as a training set and data from predicted year as testing
+ set (i.e.
+ 2010 was the first season used as testing data, 2017 was the last season
+ used as training set), creating 9 training/testing splits together.
+ Another approach to datasets splitting is to consider data from all previous
+ years as testing data and from one year as training data, however previous
  study shows that the difference between these two approaches is negligible
 \begin_inset ERT
 status open
@@ -816,6 +815,94 @@ cite{ja2016ddny}
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+Next step in model verification is the estimation of parameter 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ Training sets and maximal-likelihood estimates were used for this task.
+ The likelihood function is defined as 
+\begin_inset Formula 
+\[
+L=\prod_{i=1}^{N}(x_{i}p_{i}+(1-x_{i})(1-p_{i})),
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $N$
+\end_inset
+
+ is the number of sets 2 thru 5 played in the training dataset, 
+\begin_inset Formula $p_{i}$
+\end_inset
+
+ is Player A's winning probability in the 
+\begin_inset Formula $i-th$
+\end_inset
+
+ set obtained using the procedure described in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Random-walk-with"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ is the result of the 
+\begin_inset Formula $i-th$
+\end_inset
+
+ set, 
+\begin_inset Formula $x_{i}=1$
+\end_inset
+
+ if Player A won the 
+\begin_inset Formula $i-th$
+\end_inset
+
+ set, 
+\begin_inset Formula $x_{i}=0$
+\end_inset
+
+ otherwise.
+ For computational reasons the 
+\emph on
+log-likelihood 
+\emph default
+
+\begin_inset Formula $L_{l}=log(L)$
+\end_inset
+
+ was used, i.e.
+ the function 
+\begin_inset Formula 
+\[
+L_{l}=\sum_{i=1}^{N}log(x_{i}p_{i}+(1-x_{i})(1-p_{i}))
+\]
+
+\end_inset
+
+was maximized.
+ Numerical methods implemented in Python library SciPy were used to obtain
+ specific values of 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Finally, the model is used to predict set winning probabilities
 \end_layout
 
 \begin_layout Standard
