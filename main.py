@@ -12,6 +12,7 @@ import scipy.stats as stat
 import constants
 from data_operations import transform_home_favorite, get_probabilities_from_odds, predicted_player_won_set
 from database_operations import get_match_data
+from descriptive_statistics import analyze_data
 
 
 def log_likelihood_single_lambda(c_lambda: float, matches_data: pd.DataFrame, return_observations: bool = False) -> \
@@ -104,6 +105,7 @@ def evaluate_single_lambda_tournaments(observations: pd.DataFrame) -> List[float
         print(f"\nEvaluating {tournament}")
         observations_tournament = observations[observations.tournament_name == tournament]
         result.append(evaluate_observations_single_lambda(observations_tournament))
+    print(f"\nEvaluating all tournaments together.")
     result.append(evaluate_observations_single_lambda(observations))
     return result
 
@@ -129,11 +131,8 @@ def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame) -> pd.Data
     return result
 
 
-def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_probability_type: str,
-                     do_transform_home_favorite: bool):
-    # get matches, results and from database
-    matches_data = pd.DataFrame(get_match_data(odds_probability_type), columns=constants.COLUMN_NAMES)
-
+def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int, training_type: str,
+                     odds_probability_type: str, do_transform_home_favorite: bool):
     # transform data so that home <=> favorite. Originally, home player, i.e. the player listed first, is considered
     # predicted player. However, predicting the favorite seems reasonable.
     if do_transform_home_favorite:
@@ -171,7 +170,7 @@ def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_p
 
     # export results
     results_df = pd.concat(results)
-    results_df.to_excel("output.xlsx")
+    results_df.to_excel(f"output_favorite_first_{do_transform_home_favorite}.xlsx")
 
     pass
 
@@ -193,7 +192,7 @@ if __name__ == '__main__':
                         required=False)
     parser.add_argument("--do_transform_home_favorite",
                         help="Boolean specifying whether to use default player to predict or to transform data" +
-                             "so that favorite odds are always predicted.", required=False, default=True)
+                             "so that favorite odds are always predicted.", required=False, default='True')
 
     args = parser.parse_args()
 
@@ -207,7 +206,13 @@ if __name__ == '__main__':
     if args.fair_odds_parameter is not None:
         constants.FAIR_ODDS_PARAMETER = args.fair_odds_parameter
 
-    fit_and_evaluate(first_year, last_year, training_type, odds_probability_type, do_transform_home_favorite)
+    # get matches, results and odds from database
+    matches_data = pd.DataFrame(get_match_data(odds_probability_type), columns=constants.COLUMN_NAMES)
+
+    analyze_data(matches_data, odds_probability_type)
+
+    fit_and_evaluate(matches_data, first_year, last_year, training_type, odds_probability_type,
+                     do_transform_home_favorite)
 
     end_time = datetime.now()
-    print(f"Duration: {(end_time - start_time)}")
+    print(f"\nDuration: {(end_time - start_time)}")
