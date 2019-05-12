@@ -103,7 +103,7 @@ The contribution presents a model of a random walk with varying transition
  by increasing or decreasing its probability in the next step.
  This walk is applied to model Grand Slam tennis matches and fitted on their
  entire history since 2009.
- The suitability of the model is then thoroughly tested on many real datasets.
+ The suitability of the model is thoroughly tested on a number of real datasets.
  The model seems to be robust and describe well the majority of matches,
  making it an useful tool to produce precise 
 \emph on
@@ -179,7 +179,7 @@ cite{essa2018fullreport}
 \begin_layout Standard
 Tennis is also a sport more than suitable to be modeled using random walks
  or random processes in general, as it naturally consists of many such processes.
- A series of a tennis matches is a random walk, the sequence of sets withing
+ A series of tennis matches is a random walk, the sequence of sets within
  a match, games within a set, points within a game or even strokes within
  a point can be all considered a random process and modeled using a random
  walk.
@@ -194,13 +194,13 @@ Tennis is also a sport more than suitable to be modeled using random walks
 best-of-five
 \emph default
 , i.e.
- the man Grand Slam tournaments, are considered in this paper.
+ the men Grand Slam tournaments, are considered in this paper.
  In these matches, up to 5 steps of the random walk can be observed, making
  them more suitable than the 
 \emph on
-best-of-three games
+best-of-three 
 \emph default
-, where maximum 3 steps can occur.
+games, where maximum 3 steps can occur.
 \end_layout
 
 \begin_layout Standard
@@ -241,7 +241,7 @@ cite{turban2010random}
 \end_layout
 
 \begin_layout Standard
-The paper is organized as follow.
+The paper is organized as follows.
  Next chapter introduces the new type of random walk used for tennis modeling.
  Section 
 \begin_inset CommandInset ref
@@ -342,7 +342,7 @@ The walk evolves in a following way.
 , that is, 
 \begin_inset Formula 
 \[
-P(X_{1}=``right'')=p_{0}.
+P(X_{1}=``right")=p_{0}.
 \]
 
 \end_inset
@@ -354,7 +354,7 @@ P(X_{1}=``right'')=p_{0}.
  step is given by 
 \begin_inset Formula 
 \[
-X_{t-1}=``right''\Longrightarrow P(X_{t}=``right'')=\lambda p_{t-1}
+X_{t-1}=``right"\Longrightarrow P(X_{t}=``right")=\lambda p_{t-1}
 \]
 
 \end_inset
@@ -365,7 +365,7 @@ X_{t-1}=``right''\Longrightarrow P(X_{t}=``right'')=\lambda p_{t-1}
 \begin_layout Standard
 \begin_inset Formula 
 \[
-X_{t-1}=``left''\Longrightarrow P(X_{t}=``right'')=1-\lambda(1-p_{t-1})
+X_{t-1}=``left"\Longrightarrow P(X_{t}=``right")=1-\lambda(1-p_{t-1})
 \]
 
 \end_inset
@@ -375,11 +375,11 @@ X_{t-1}=``left''\Longrightarrow P(X_{t}=``right'')=1-\lambda(1-p_{t-1})
 \end_inset
 
  When the directions are formalized so that 
-\begin_inset Formula $``right''\approx1$
+\begin_inset Formula $``right"\approx1$
 \end_inset
 
  and 
-\begin_inset Formula $``left'\approx-1$
+\begin_inset Formula $``left"\approx-1$
 \end_inset
 
 , the formula for the 
@@ -753,7 +753,7 @@ noprefix "false"
 \end_inset
 
  is fixed for the entire dataset.
- In order to compute the second set winning probabilities
+ In order to compute the second set winning probability
 \begin_inset Foot
 status open
 
@@ -800,7 +800,7 @@ Model evaluation
 \begin_layout Standard
 In order to verify the model's accuracy, several tests were performed.
  First, the dataset was divided into training and testing sets.
- The division is done naturally by the order of games played.
+ The division can be done naturally by the order of games played.
  Given a specific time, past matches constitute to a training set, future
  matches to a testing set.
  For the purpose of this paper, the split was done on a yearly basis, the
@@ -808,9 +808,9 @@ In order to verify the model's accuracy, several tests were performed.
  winning probabilities in the following season, considered the testing set
  (i.e.
  2010 was the first season used as testing data, 2017 was the last season
- used as training set), making it 9 training/testing splits together.
+ used as training data), making it 9 training/testing splits together.
  Another approach to dataset splitting is to consider data from all previous
- years as testing data and from one future year as training data, however
+ years as testing data and from one future year as training data, however,
  previous study shows that the difference between these two approaches is
  negligible 
 \begin_inset ERT
@@ -910,11 +910,11 @@ was maximized.
 \end_inset
 
 .
- The optimal values of a 
+ The optimal values of the coefficient 
 \begin_inset Formula $\lambda$
 \end_inset
 
- coefficient can be seen in Table 
+ can be seen in Table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:Optimal-values-of"
@@ -931,7 +931,7 @@ noprefix "false"
 \begin_inset Float table
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -1157,7 +1157,7 @@ name "tab:Optimal-values-of"
 
 \end_inset
 
-Optimal values of coefficient 
+Optimal values of the coefficient 
 \begin_inset Formula $\lambda$
 \end_inset
 
@@ -1183,9 +1183,9 @@ Optimal values of coefficient
 \end_layout
 
 \begin_layout Standard
-Finally, the model is used to predict set winning probabilities of the unseen
- data from the training set using initial bookmaker derived odds, equation
- 
+Finally, the model was used to predict set winning probabilities of the
+ unseen data from the training set using initial bookmaker derived odds,
+ equation 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:suc_rew"
@@ -1209,7 +1209,7 @@ noprefix "false"
 \begin_inset Formula $\hat{\sigma}^{2}=\frac{1}{n}\sum_{i=1}^{N_{test}}p_{i}(1-p_{i})$
 \end_inset
 
- are computed and so is the observed Player A winning ratio 
+ were computed and so was the observed Player A winning ratio 
 \begin_inset Formula $\bar{x}=\frac{1}{n}\sum_{i=1}^{N_{test}}x_{i}$
 \end_inset
 
@@ -1231,15 +1231,15 @@ cite{billingsley1995probability}
 \begin_inset Formula $y$
 \end_inset
 
- has standard normal distribution
+ follows the standard normal distribution
 \begin_inset Formula 
 \[
-y=\frac{\sqrt{N_{test}}(\bar{x}-\hat{p})}{\hat{\sigma}}\thicksim N(0,\,1).
+y=\frac{\sqrt{N_{test}}(\bar{x}-\hat{p})}{\hat{\sigma}}\thicksim\mathcal{N}(0,\,1).
 \]
 
 \end_inset
 
-Now to verify the model accuracy, the the null hypothesis that the true
+Then ow to verify the model accuracy, the the null hypothesis that the true
  average Player A set winning probability 
 \begin_inset Formula $\bar{p}$
 \end_inset
@@ -1252,7 +1252,7 @@ Now to verify the model accuracy, the the null hypothesis that the true
 \begin_inset Formula $\bar{p}\neq\hat{p}$
 \end_inset
 
- is tested.
+ was tested.
  Formally, 
 \begin_inset Formula 
 \[
@@ -1313,14 +1313,15 @@ Up to 4 sets considered in each match, 9 yearly testing datasets.
  have to be created.
  This can be done primarily by testing the null hypothesis on many subsets
  created according to some real life based criteria.
- The natural way how to create such subsets is dividing the matches according
- to the 4 different tournaments.
+ The natural way how to create such subsets is dividing the matches to the
+ 4 different tournaments.
  This refining yields 180 subsets
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-4 sets in each match evaluated, 4+1 tournaments every year, 9 year for testing.
+4 sets in each match evaluated, 4+1 tournaments every year, 9 years for
+ testing.
 \end_layout
 
 \end_inset
@@ -1328,10 +1329,9 @@ status open
  altogether.
  Using 95% confidence level, only 6 of the 180 subsets have data strong
  enough to reject the null hypothesis.
- It is worth mentioning that the size of the datasets, especially for the
- fifth set, is only slightly above 20 observations for some datasets, which
- can interfere with the assumptions justifying the use of Central Limit
- Theorem.
+ It is worth mentioning that the size of some of the datasets regarding
+ fifth sets is only slightly above 20 observations, which can interfere
+ with the assumptions justifying the use of Central Limit Theorem.
 \end_layout
 
 \begin_layout Standard
@@ -1357,9 +1357,8 @@ noprefix "false"
 .
  In such a dataset it is not very difficult to estimate the average winning
  probability.
- The situation changes if always the bookmaker's favorite is considered
- for predictions (more details on who is the favorite and how to choose
- him in Section 
+ The situation changes if the bookmaker's favorite is considered for predictions
+ (more details on who is the favorite and how to choose him in Section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Data-description"
@@ -1387,7 +1386,7 @@ ty
  bookmaker odds should have similar development.
  The matches are divided into 5 groups, each containing 10 percentage points
  in first set winning probability.
- Expect for the biggest favorites (with first set winning probability over
+ Except for the biggest favorites (with first set winning probability over
  90%), this division seems reasonable.
  The data histogram can be seen on Figure 
 \begin_inset CommandInset ref
@@ -1567,7 +1566,8 @@ This paper describes the random walk with varying probabilities and its
  tested on a dataset containing all matches from seasons 2009-2018.
  The results show that the model is robust and performs well on the absolute
  majority of reasonable data subsets.
- This suggest that the model could be used as a tool to generate 
+ This suggest that the model could be used as a tool to generate precise
+ 
 \emph on
 in-play
 \emph default
@@ -1581,9 +1581,17 @@ Remarks
 
 \begin_layout Standard
 The source code containing all functionality mentioned in this article is
- freely available as open source at GitHub (https://github.com/tomaskourim/mathsp
-ort2019) together with a database containing all data that was used in this
- paper.
+ freely available as open source at GitHub
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://github.com/tomaskourim/mathsport2019
+\end_layout
+
+\end_inset
+
+ together with a database containing all data that was used in this paper.
  Some results can be also obtained from the same repository.
 \end_layout
 
