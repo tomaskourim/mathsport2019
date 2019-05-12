@@ -297,7 +297,7 @@ name "sec:Random-walk-with"
 \end_layout
 
 \begin_layout Standard
-Recently, a new type of a random walk with memory was introduced
+In 2010, Turban introduced
 \begin_inset ERT
 status open
 
@@ -305,20 +305,32 @@ status open
 
 
 \backslash
-cite{ja2017ddny}
+cite{turban2010random}
 \end_layout
 
 \end_inset
 
-.
- At every step, the transition probability is altered by a coefficient 
-\begin_inset Formula $\lambda$
+ a new version of a random walk with memory, where the memory is inroduced
+ using variable step size.
+ This idea was further extended by Kouřim
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2017ddny,ja2019teze}
+\end_layout
+
 \end_inset
 
- depending on the result of the last step.
- The transition probability of the next step thus implicitly depends on
- the entire history of the walk.
- The walk evolves in a following way.
+ and an alternative version of a random walk with memory was introduced,
+ where the memory affects the walk through varying transition probabilities.
+\end_layout
+
+\begin_layout Standard
+The walk evolves in a following way.
  Initial step is made following the result of a Bernouli random variable
  with probability parameter 
 \begin_inset Formula $p_{0}$
@@ -385,7 +397,7 @@ p_{t}=\lambda p_{t-1}+\frac{1}{2}(1-\lambda)(1-X_{t}).\label{eq:suc_punished}
 \begin_layout Standard
 This definition of a random walk means that the oposite direction is always
  prefered and that the walk tends to return back to the origin.
- Alternatively, opposite aproach can be applied and the same decision can
+ Alternatively, inverse aproach can be applied and the same decision can
  be supported.
  Formally, the expression for the 
 \begin_inset Formula $t-th$
@@ -403,57 +415,21 @@ p_{t}=\lambda p_{t-1}+\frac{1}{2}(1-\lambda)(1+X_{t}).\label{eq:suc_rew}
 \end_layout
 
 \begin_layout Standard
-Data analysis suggests that sports can be roughly divided into two categories.
- Sports played for a given period of time, such as soccer or hockey, and
- sports played until certain number of points is reached, such as tennis
- or volleybal.
- The first group evolves according to the expression given by 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:suc_punished"
-plural "false"
-caps "false"
-noprefix "false"
+For more details on the walk and its rigorous definition, see the original
+ papers 
+\begin_inset ERT
+status open
 
-\end_inset
+\begin_layout Plain Layout
 
-, whereas the second group follows pattern of 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:suc_rew"
-plural "false"
-caps "false"
-noprefix "false"
+
+\backslash
+cite{ja2017ddny,ja2019teze}
+\end_layout
 
 \end_inset
 
 .
- This work focuses on modeling tennis games and therefore only the random
- walk defined in 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:suc_rew"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
- will be further considered.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-kratke shrnuti tezi, DDnu, predstaveni novych variant, ktere nakonec budu
- potrebovat
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Section
@@ -487,7 +463,7 @@ om.
 status open
 
 \begin_layout Plain Layout
-Australian Open, Frech Open, The Wimbledon and US Open.
+Australian Open, French Open, The Wimbledon and US Open.
 \end_layout
 
 \end_inset
@@ -1297,7 +1273,7 @@ H_{0}:\bar{p}=\hat{p}
 
 \begin_inset Formula 
 \[
-H_{1:}\bar{p}\neq\hat{p}.
+H_{1}:\bar{p}\neq\hat{p}.
 \]
 
 \end_inset
@@ -1563,6 +1539,20 @@ p-values
 
 \end_layout
 
+\begin_layout Standard
+Overall, the model was tested on 360 different subsets and only 22 of them
+ (6.1%) provided enough evidence to reject 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ on 95% confidence level.
+ These subsets are distributed randomly there is no pattern among them,
+ indicating there is no systematic bias in the model.
+ The random walk with varying probabilities thus seems as a robust which
+ can be used to precisely predict set winning probabilities in men tennis
+ Grand Slam matches.
+\end_layout
+
 \begin_layout Section
 Conclusion
 \begin_inset CommandInset label
@@ -1576,15 +1566,18 @@ name "sec:Conclusion"
 
 \begin_layout Standard
 This paper describes the random walk with varying probabilites and its applicati
-on on real life tennis data.
- It is shown that a simple model is not explanatory enough for the real
- life problem and has to be improved.
- This is achieved using odds and state dependent 
-\begin_inset Formula $\lambda$
-\end_inset
-
- parameters affecting the course of the match.
- 
+on on Grand Slam tennis data.
+ A model describing the development of a single match is introduced and
+ tested on a dataset containing all matches from seasons 2009-2018.
+ The results show that the model is robust and performs well on various
+ data subsets.
+ To further verify the robustness of the model, produced predictions will
+ be compared agains real 
+\emph on
+in-play
+\emph default
+ odds provided by bookmakers.
+ This comparision will be part of a further study.
 \end_layout
 
 \begin_layout Section
