@@ -1,5 +1,5 @@
 .idea
 *.lyx#
 __pycache__/
-paper/Random Walks with Memory Applied in Grand Slam Tennis Matches Modeling.lyx~
+*.lyx~
 *.gz
