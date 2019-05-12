@@ -252,24 +252,6 @@ TBD az to bude napsane.
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-proc se vyplati modelovat tenis, jak jsem prisel k datum, jak s nim zachazim
-\end_layout
-
-\begin_layout Plain Layout
-co je tenis, proc ho predikovat - sazeni, podvody, je dobrej a ma hodne
- nahodnych procsu
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Section
 Random walk with varying probability
 \begin_inset CommandInset label
@@ -595,14 +577,14 @@ noprefix "false"
 
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Standard
 Estimating the initial set winning probability is a major task by itself
  and represents one of the elementar problems in tennis modelling.
  For the purpose of this article an estimation based on bookmakers' odds
- is used.
+ wiil be used.
  Specifically, the closing odds
 \begin_inset Foot
 status open
@@ -613,55 +595,48 @@ Closing odds means the last odds available before the match start.
 
 \end_inset
 
- by Pinnacle Sports bookmaker for the results of a first set are used to
- estimate the probabilities of each player winning the first set.
+ by Pinnacle Sports bookmaker for the first set result are used to estimate
+ the probabilities of each player winning the first set, i.e.
+ 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $1-p_{0}$
+\end_inset
+
+.
  Such odds represent a good estimation of the underlying winning probability
  and are considered as a baseline in the sports betting industry.
- The odds have to be trasformed into probabilities.
- A method described in KOURIM2015ddny 
-\begin_inset Note Note
+ The odds, however, have to be trasformed into probabilities.
+ A method described in 
+\begin_inset ERT
 status open
 
 \begin_layout Plain Layout
-zdroj
+
+
+\backslash
+cite{ja2015ddny}
 \end_layout
 
 \end_inset
 
- is used to obtain probabilities.
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Using maximal likelihood estimate the value XXX is selected as the parameter
- weighting regular and favourite based odds normalization.
-\end_layout
-
+ is used to obtain probabilities, using a parameter 
+\begin_inset Formula $t\in[0,\,1]$
 \end_inset
 
- Obtained first set winning probabilities are then used as the starting
- probability in the random walk.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Tady je jeste otazka, jestli chci vzit kurz na vitezstvi v zapase, udelat
- IID model a z nej vzit prst na prvni set (tak uz jsem to nekdy delal na
- DDny) nebo vzit rovnou kurz na 1.set.
- Kurz na zapas byva obecne presnejsi, nicmene bych to spis udelal pres ten
- set, protoze nejake IID modely jsou zas trochu mimo a nesouvisi uplne s
- tematem.
- Jedine, kdyby bylo potreba mit vetsi rozsah.
- 
-\end_layout
-
+ set to 
+\begin_inset Formula $t=0.5$
 \end_inset
 
+.
+ Obtained first set winning probabilities are then used as a given starting
+ probability 
+\begin_inset Formula $p_{0}$
+\end_inset
 
+ in the random walk.
 \end_layout
 
 \begin_layout Section
@@ -676,8 +651,47 @@ name "sec:Model-description-and"
 \end_layout
 
 \begin_layout Standard
-Analysis of tennis mathces shows that the odds of winning a set tend to
- increase after a set is won by a player, and decrease when the set is lost.
+Original inspiration of the random walk described in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Random-walk-with"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is based on intensive study of historical sport results and their development.
+ The data suggests that the probability of success (i.e.
+ scoring, winning a set or a point etc.) evolves according to the random
+ walk with varying probabilities.
+ Moreover, it follows from the data that sports can be very roughly divided
+ into two categories.
+ Sports played for a certain amount of time, such as soccer or ice-hockey,
+ evolve according to the walk defined by 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:suc_punished"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ On the other hand, sports where there is neccessary to achieve certain
+ number of points, such as tennis or volleybal, appear to follow the pattern
+ defined in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:suc_rew"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
  Therefore the random walk defined in 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -689,7 +703,94 @@ noprefix "false"
 \end_inset
 
  is used to model a tennis game.
- In order to find the correct 
+\end_layout
+
+\begin_layout Standard
+The model is used to predict the winning probabilities of sets 2 on and
+ is constructed in a following manner.
+ For each match, the first set winning probability of Player A
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Initially, the player on the first position in a database is considered
+ Player A.
+ It is an arbitrary choice made by www.oddsportal.com and/or respective tournament
+ organization comitees.
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ is given (see Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Initial-probability-derivation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) and a coefficient 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ is fixed for the entire dataset.
+ In order to compute the second set winning probabilities
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Winning probability of Player A is always considered as Player B winning
+ probability is just the complement.
+\end_layout
+
+\end_inset
+
+, the result of a first set is observed and second set winning probability
+ is computed using 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:suc_rew"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ This procedure is repeated for all remaining sets.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+There can be either 3, 4 or 5 sets played in total in a 
+\emph on
+best-of-five
+\emph default
+ tennis game.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Training set and a maximal likelihood estimate are then used to obtain the
+ optimal value of parameter 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In order to find the correct 
 \begin_inset Formula $\lambda$
 \end_inset
 
@@ -712,80 +813,6 @@ status open
 cite{ja2016ddny}
 \end_layout
 
-\end_inset
-
-.
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Two alternatives are considered, first the entire history is taken to be
- the training set, second only the previous year is taken as the training
- set.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The model is constructed in a following manner.
- Initially, the first set winning probability of Player A
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Initially, the player on the first position in a database is considered
- Player A.
- It is an arbitrary choice made by www.oddsportal.com and/or respective tournament
- organization comitees.
-\end_layout
-
-\end_inset
-
- is computed using bookmaker's odds (See Section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Initial-probability-derivation"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-).
- Then, the result of a first set is observed and second set winning probability
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Winning probability of Player A is always considered as Player B winning
- probability is just the complement.
-\end_layout
-
-\end_inset
-
- is computed.
- Second set result is observed and the procedure is repeated for all remaining
- sets.
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-There can be either 3, 4 or 5 sets played in total in a 
-\emph on
-best-of-five
-\emph default
- tennis game.
-\end_layout
-
-\end_inset
-
- Training set and a maximal likelihood estimate are then used to obtain
- the optimal value of parameter 
-\begin_inset Formula $\lambda$
 \end_inset
 
 .
