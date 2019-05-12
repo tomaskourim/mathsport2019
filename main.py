@@ -209,7 +209,7 @@ if __name__ == '__main__':
     # get matches, results and odds from database
     matches_data = pd.DataFrame(get_match_data(odds_probability_type), columns=constants.COLUMN_NAMES)
 
-    analyze_data(matches_data)
+    analyze_data(matches_data, odds_probability_type)
 
     fit_and_evaluate(matches_data, first_year, last_year, training_type, odds_probability_type,
                      do_transform_home_favorite)

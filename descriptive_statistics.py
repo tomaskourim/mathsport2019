@@ -1,9 +1,11 @@
 # functions to extract some descriptive statistics about the available tennis data set
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from data_operations import transform_home_favorite
+import constants
+from data_operations import transform_home_favorite, get_probabilities_from_odds
 
 
 def compute_results(matches_data: pd.DataFrame):
@@ -18,7 +20,7 @@ def compute_results(matches_data: pd.DataFrame):
     pass
 
 
-def analyze_data(matches_data: pd.DataFrame):
+def analyze_data(matches_data: pd.DataFrame, odds_probability_type: str):
     print(f"There were {len(matches_data)} with all necessary information in the dataset.")
     # total players, max, min, avg, med games played
     players = np.concatenate((np.array(matches_data.predicted_player), np.array(matches_data.not_predicted_player)))
@@ -38,8 +40,21 @@ def analyze_data(matches_data: pd.DataFrame):
     # result histogram
     print(f"Original player ordering from the database.")
     compute_results(matches_data)
+    # transform data to favorite first
+    matches_data = transform_home_favorite(matches_data)
     print(f"Transformed data, favorite first.")
-    compute_results(transform_home_favorite(matches_data))
+    compute_results(matches_data)
+
+    # create histogram for data analysis
+    # get probabilities from odds
+    probabilities = pd.DataFrame(get_probabilities_from_odds(matches_data, odds_probability_type))
+    matches_data = matches_data.assign(probability_predicted_player=probabilities[0],
+                                       probability_not_predicted_player=probabilities[1])
+
+    matches_data.probability_predicted_player.plot.hist(grid=True, rwidth=0.9, bins=constants.PROBABILITY_BINS)
+    plt.xlabel('First set favorite winning probability')
+    plt.title(r'Histogram of winning probabilities')
+    plt.show()
 
     # result histogram of groups
     # groups: by odds, selected players, by tournaments

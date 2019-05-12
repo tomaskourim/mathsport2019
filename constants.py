@@ -12,3 +12,5 @@ COLUMN_NAMES = ["id", "predicted_player", "not_predicted_player", "predicted_pla
                 "odds_predicted_player", "odds_not_predicted_player"]
 
 TOURNAMENTS = ["Australian Open", "French Open", "Wimbledon", "US Open"]
+
+PROBABILITY_BINS = [0.5, 0.6, 0.7, 0.8, 0.9, 1]
