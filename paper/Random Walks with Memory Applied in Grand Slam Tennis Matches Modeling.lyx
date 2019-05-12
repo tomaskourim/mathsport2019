@@ -923,10 +923,11 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="10" columns="2">
 <features tabularvalignment="middle">
-<column alignment="center" valignment="top">
+<column alignment="center" valignment="top" width="0pt">
 <column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
@@ -1287,47 +1288,51 @@ This approach has several drawbacks.
 \end_inset
 
  sets of respective matches.
- Using this approach, the null hypothesis seems to hold.
- The data allows to reject it (on a 95% confidence level) only on 2 out
- of 36
+\end_layout
+
+\begin_layout Standard
+Using this approach, there are 36 testing sets together
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-4 sets considered, 9 testing datasets in total.
+Up to 4 sets considered in each match, 9 yearly testing datasets.
 \end_layout
 
 \end_inset
 
- available subsets.
+.
+ On a 95% confidence level, only on 2 out of 36 available subsets provide
+ strong enough evidence to reject the null hypothesis.
  On the other hand, the null hypothesis is relatively weak.
  It only says that the prediction is correct on average.
  In order to verify the quality of the predictions, more detailed tests
  have to be created.
  This can be done primarily by testing the null hypothesis on many subsets
  created according to some real life based criteria.
- The natural way how to create such subsets is by the 4 tournaments.
- This refining yields 180
+ The natural way how to create such subsets is dividing the matches according
+ to the 4 different tournaments.
+ This refining yields 180 subsets altogether
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-4+1 tournaments every year times 4 sets evaluated times 9 year for testing.
+4+1 tournaments every year, 4 sets in each match evaluated, 9 year for testing.
 \end_layout
 
 \end_inset
 
- subsets.
- Once again the null hypothesis seems to hold on these subsets.
- Only 6 of them have data strong enough to reject the null hypothesis.
- Drawback of this approach is the size of the datasets.
- Especially for the fifth set data, there are often less than 30 observations,
- which can interfere with the assuptions justifying the use of Central Limit
- Theorem.
+.
+ Using 95% confidence level, only 6 of the 180 subsets have data strong
+ enough to reject the null hypothesis.
+ It is worth mentioning that the size of the datasets, especially for the
+ fifth set, is only slightly above 20 observations for some datasets, which
+ can interfere with the assuptions justifying the use of Central Limit Theorem.
 \end_layout
 
 \begin_layout Standard
-At this point it is important to realize the structure of the data.
+To further analyze the robustness of the model it is important to realize
+ the structure of the data.
  So far, the player whose winning probability was estimated, was chosen
  arbitrarily based on some external (more or less random) order.
  As such, the observed winning probability equal approximately to 
@@ -1347,7 +1352,7 @@ noprefix "false"
 .
  In such a dataset it is not very difficult to estimate the average winning
  probability.
- The situation changes dramatically if always the favorite is considered
+ The situation changes if always the bookmaker's favorite is considered
  for predictions (more details on who is the favorite and how to choose
  him in Section 
 \begin_inset CommandInset ref
@@ -1362,8 +1367,165 @@ noprefix "false"
 ).
  Performing the same tests as described in the previous paragraph the data
  allows to reject the null hypothesis (at 95% confidence level) on 5 subsets
- containing all tournaments and 13 subsets total.
- Although there does not seem to be any pattern among these subsets, this
+ containing all tournaments and 8 single tournament subsets (out of 180
+ subsets total).
+\end_layout
+
+\begin_layout Standard
+Finally, the testing data can be divided into groups using the initial probabili
+ty 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+.
+ Such a division is based on an assuption, that the matches with similar
+ bookmaker odds should have similar development.
+ The matches are divided into 5 groups, each containing 10 percentage points
+ in first set winning probability.
+ Expect for the biggist favorites (with first set winning probability over
+ 90%), this division seems reasonable.
+ The data histogram can be seen on Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:First-set-winning"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Out of the 180
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Further division, i.e.
+ by tournament and odds, was not performed as the resulting datasets would
+ not contain enough data.
+\end_layout
+
+\end_inset
+
+ newly created odds based subgroups, only 9 have data strong enough to reject
+ 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ on a 95% confidence level.
+ The results of hypothesis testing (the 
+\emph on
+p-values 
+\emph default
+of respective tests) can be seen on Figure
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename probabilities_histogram.png
+	width 100text%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:First-set-winning"
+
+\end_inset
+
+First set winning probability 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ histogram.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename hypothesis_testimg.PNG
+	width 100text%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\emph on
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:p-values-of-hypothesis"
+
+\end_inset
+
+p-values
+\emph default
+ of hypothesis tests for different testing sets.
+ Red are marked those allowing to reject 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ on 99% confidence level, orange on 95% and yellow on 90% confidence level.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Although there does not seem to be any pattern among these subsets, this
  suggests that there might be a specific group of matches where the null
  hypothesis does not hold, i.e.
  the model does not fit well on those data.
