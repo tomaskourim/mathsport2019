@@ -1487,12 +1487,12 @@ First set winning probability
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename hypothesis_testimg.PNG
+	filename hypothesis_testing.PNG
 	width 100text%
 
 \end_inset
