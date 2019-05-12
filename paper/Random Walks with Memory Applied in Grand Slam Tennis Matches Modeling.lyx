@@ -595,14 +595,14 @@ noprefix "false"
 
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Standard
 Estimating the initial set winning probability is a major task by itself
  and represents one of the elementar problems in tennis modelling.
  For the purpose of this article an estimation based on bookmakers' odds
- is used.
+ wiil be used.
  Specifically, the closing odds
 \begin_inset Foot
 status open
@@ -613,55 +613,48 @@ Closing odds means the last odds available before the match start.
 
 \end_inset
 
- by Pinnacle Sports bookmaker for the results of a first set are used to
- estimate the probabilities of each player winning the first set.
+ by Pinnacle Sports bookmaker for the first set result are used to estimate
+ the probabilities of each player winning the first set, i.e.
+ 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $1-p_{0}$
+\end_inset
+
+.
  Such odds represent a good estimation of the underlying winning probability
  and are considered as a baseline in the sports betting industry.
- The odds have to be trasformed into probabilities.
- A method described in KOURIM2015ddny 
-\begin_inset Note Note
+ The odds, however, have to be trasformed into probabilities.
+ A method described in 
+\begin_inset ERT
 status open
 
 \begin_layout Plain Layout
-zdroj
+
+
+\backslash
+cite{ja2015ddny}
 \end_layout
 
 \end_inset
 
- is used to obtain probabilities.
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Using maximal likelihood estimate the value XXX is selected as the parameter
- weighting regular and favourite based odds normalization.
-\end_layout
-
+ is used to obtain probabilities, using a parameter 
+\begin_inset Formula $t\in[0,\,1]$
 \end_inset
 
- Obtained first set winning probabilities are then used as the starting
- probability in the random walk.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Tady je jeste otazka, jestli chci vzit kurz na vitezstvi v zapase, udelat
- IID model a z nej vzit prst na prvni set (tak uz jsem to nekdy delal na
- DDny) nebo vzit rovnou kurz na 1.set.
- Kurz na zapas byva obecne presnejsi, nicmene bych to spis udelal pres ten
- set, protoze nejake IID modely jsou zas trochu mimo a nesouvisi uplne s
- tematem.
- Jedine, kdyby bylo potreba mit vetsi rozsah.
- 
-\end_layout
-
+ set to 
+\begin_inset Formula $t=0.5$
 \end_inset
 
+.
+ Obtained first set winning probabilities are then used as a given starting
+ probability 
+\begin_inset Formula $p_{0}$
+\end_inset
 
+ in the random walk.
 \end_layout
 
 \begin_layout Section
