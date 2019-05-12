@@ -275,13 +275,13 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    first_year = args.first_year
-    last_year = args.last_year
-    bookmaker = args.bookmaker
+    input_first_year = args.first_year
+    input_last_year = args.last_year
+    input_bookmaker = args.bookmaker
     if args.original_database_path is not None:
         ORIGINAL_DATABASE_PATH = args.original_database_path
 
-    prepare_database(first_year, last_year, bookmaker)
+    prepare_database(input_first_year, input_last_year, input_bookmaker)
 
     end_time = datetime.now()
     print(f"Duration: {(end_time - start_time)}")

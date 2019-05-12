@@ -16,8 +16,7 @@ from descriptive_statistics import analyze_data
 
 
 def log_likelihood_single_lambda(c_lambda: float, matches_data: pd.DataFrame, return_observations: bool = False) -> \
-        Tuple[
-            float, Optional[pd.DataFrame]]:
+        Tuple[float, Optional[pd.DataFrame]]:
     log_likelihood = 0
     if return_observations:
         observations = pd.DataFrame(
@@ -32,14 +31,14 @@ def log_likelihood_single_lambda(c_lambda: float, matches_data: pd.DataFrame, re
                                    "tournament_name": match_data[1].tournament_name,
                                    "year": match_data[1].year,
                                    "first_set_prob": match_data[1].probability_predicted_player}
-        for set in range(1, match_data[1]["predicted_player_sets"] + match_data[1]["not_predicted_player_sets"]):
+        for _set in range(1, match_data[1]["predicted_player_sets"] + match_data[1]["not_predicted_player_sets"]):
             p_set = c_lambda * p_set + 1 / 2 * (1 - c_lambda) * (
-                    1 + (1 if predicted_player_won_set(match_data[1], set) else -1))
-            result = 1 if predicted_player_won_set(match_data[1], set + 1) else 0
+                    1 + (1 if predicted_player_won_set(match_data[1], _set) else -1))
+            result = 1 if predicted_player_won_set(match_data[1], _set + 1) else 0
             log_likelihood = log_likelihood + np.log(p_set * result + (1 - p_set) * (1 - result))
             if return_observations:
                 set_observation = {
-                    "set_number": set + 1,
+                    "set_number": _set + 1,
                     "probability": p_set,
                     "result": result
                 }
@@ -207,23 +206,23 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    first_year = args.first_year
-    last_year = args.last_year
-    training_type = args.training_type
-    odds_probability_type = args.odds_probability_type
-    do_transform_home_favorite = args.do_transform_home_favorite == 'True'
+    input_first_year = args.first_year
+    input_last_year = args.last_year
+    input_training_type = args.training_type
+    input_odds_probability_type = args.odds_probability_type
+    input_do_transform_home_favorite = args.do_transform_home_favorite == 'True'
     if args.database_path is not None:
         constants.DATABASE_PATH = args.database_path
     if args.fair_odds_parameter is not None:
         constants.FAIR_ODDS_PARAMETER = args.fair_odds_parameter
 
     # get matches, results and odds from database
-    matches_data = pd.DataFrame(get_match_data(odds_probability_type), columns=constants.COLUMN_NAMES)
+    initial_matches_data = pd.DataFrame(get_match_data(input_odds_probability_type), columns=constants.COLUMN_NAMES)
 
-    fit_and_evaluate(matches_data, first_year, last_year, training_type, odds_probability_type,
-                     do_transform_home_favorite)
+    fit_and_evaluate(initial_matches_data, input_first_year, input_last_year, input_training_type,
+                     input_odds_probability_type, input_do_transform_home_favorite)
 
-    analyze_data(matches_data, odds_probability_type)
+    analyze_data(initial_matches_data, input_odds_probability_type)
 
     end_time = datetime.now()
     print(f"\nDuration: {(end_time - start_time)}")
