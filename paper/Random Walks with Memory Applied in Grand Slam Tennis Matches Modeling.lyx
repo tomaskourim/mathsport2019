@@ -899,17 +899,280 @@ was maximized.
 \end_inset
 
 .
+ The optimal values of a 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ coefficient can be seen in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Optimal-values-of"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-Finally, the model is used to predict set winning probabilities
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="10" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Year
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Optimal lambda
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2010
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8074
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2011
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8497
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2012
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8142
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2013
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9162
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2014
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8523
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2015
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8429
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2016
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8920
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2017
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8674
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2018
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8333
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Optimal-values-of"
+
+\end_inset
+
+Optimal values of coefficient 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ for respective years.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-In order to verify the quality of the hypothesis and the parameter value,
- the testing set is used.
- Teoretical probabilities of Player A winning sets 2 thru 5 are computed
- using initial bookmaker derived odds, 
+
+\end_layout
+
+\begin_layout Standard
+Finally, the model is used to predict set winning probabilities of the unseen
+ data from training set using initial bookmaker derived odds, 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:suc_rew"
@@ -923,8 +1186,9 @@ noprefix "false"
 \begin_inset Formula $\lambda$
 \end_inset
 
- obtained from the training set.
- Then, the average theoretical set winning probability of Player A 
+ obtained from the corresponding training set.
+ In order to verify the quality of the model, the average theoretical set
+ winning probability of Player A 
 \begin_inset Formula $\hat{p}=\frac{1}{n}\sum_{i=1}^{n}p_{i}$
 \end_inset
 
@@ -933,14 +1197,14 @@ noprefix "false"
 \end_inset
 
  are computed and so is the average observed Player A winning ratio 
-\begin_inset Formula $\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_{i}$
+\begin_inset Formula $\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_{i},$
 \end_inset
 
  (
 \begin_inset Formula $x_{i}=1$
 \end_inset
 
- when home player won the 
+ when Player A won the 
 \begin_inset Formula $i-th$
 \end_inset
 
@@ -974,8 +1238,8 @@ y=\frac{\sqrt{n}(\bar{x}-\hat{p})}{\hat{\sigma}}\thicksim N(0,\,1).
 
 \end_inset
 
-This can be used to test the null hypothesis that the average Player A set
- winning probability 
+Now to verify the model accuracy, the the null hypothesis that the true
+ average Player A set winning probability 
 \begin_inset Formula $\bar{p}$
 \end_inset
 
@@ -987,19 +1251,36 @@ This can be used to test the null hypothesis that the average Player A set
 \begin_inset Formula $\bar{p}\neq\hat{p}$
 \end_inset
 
-.
+ is tested.
+ Formally, 
+\begin_inset Formula 
+\[
+H_{0}:\bar{p}=\hat{p}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+H_{1:}\bar{p}\neq\hat{p}.
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 This approach has several drawbacks.
- One of the assumtions of the Lyapunov CLT is that the observed random variables
+ One of the assumtions of the CLT is that the observed random variables
  are independent.
  This is obviously not true in this case.
  Quite the opposite, the model assumes that the winning probability of a
- set depends on the winning probability of the previous set.
+ set directly depends on the winning probability of the previous set.
  This can be easilly solved by splitting the testing dataset into 4 subsets
  containing only results from single set of a match, i.e.
- set 2, 3, 4 and 5 (if they were played).
+ sets 2, 3, 4 and 5 (if they were played).
  The matches can be considered independent from each other and so can be
  the 
 \begin_inset Formula $i-th$
