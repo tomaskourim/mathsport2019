@@ -16,8 +16,7 @@ from descriptive_statistics import analyze_data
 
 
 def log_likelihood_single_lambda(c_lambda: float, matches_data: pd.DataFrame, return_observations: bool = False) -> \
-        Tuple[
-            float, Optional[pd.DataFrame]]:
+        Tuple[float, Optional[pd.DataFrame]]:
     log_likelihood = 0
     if return_observations:
         observations = pd.DataFrame(
