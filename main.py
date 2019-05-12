@@ -181,7 +181,7 @@ def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int
 
     # export results
     results_df = pd.concat(results)
-    results_df.to_excel(f"output_favorite_first_{do_transform_home_favorite}.xlsx")
+    results_df.to_excel(f"results/output_favorite_first_{do_transform_home_favorite}.xlsx")
 
     pass
 
