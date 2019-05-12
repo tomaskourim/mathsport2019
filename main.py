@@ -1,7 +1,7 @@
 # main file to run the algorithms
 import argparse
 from datetime import datetime
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 
 import math
 import numpy as np
@@ -14,8 +14,9 @@ from data_operations import transform_home_favorite, get_probabilities_from_odds
 from database_operations import get_match_data
 
 
-def log_likelihood_single_lambda(c_lambda: int, matches_data: pd.DataFrame, return_observations: bool = False) -> Tuple[
-    int, Optional[pd.DataFrame]]:
+def log_likelihood_single_lambda(c_lambda: float, matches_data: pd.DataFrame, return_observations: bool = False) -> \
+        Tuple[
+            float, Optional[pd.DataFrame]]:
     log_likelihood = 0
     if return_observations:
         observations = pd.DataFrame(
@@ -51,11 +52,11 @@ def log_likelihood_single_lambda(c_lambda: int, matches_data: pd.DataFrame, retu
 
 
 # just for the sake of minimization
-def negative_log_likelihood(c_lambda: int, matches_data: pd.DataFrame) -> int:
+def negative_log_likelihood(c_lambda: float, matches_data: pd.DataFrame) -> float:
     return - log_likelihood_single_lambda(c_lambda, matches_data)[0]
 
 
-def find_single_lambda(training_set: pd.DataFrame) -> Optional[int]:
+def find_single_lambda(training_set: pd.DataFrame) -> Optional[float]:
     opt_result = opt.minimize_scalar(negative_log_likelihood, bounds=(0, 1), method='bounded', args=training_set)
     if opt_result.success:
         print("Fitted successfully.")
@@ -64,7 +65,7 @@ def find_single_lambda(training_set: pd.DataFrame) -> Optional[int]:
         return None
 
 
-def evaluate_observations_single_lambda(observations: pd.DataFrame):
+def evaluate_observations_single_lambda(observations: pd.DataFrame) -> float:
     num_observations = len(observations)
     if num_observations == 0:
         print("No observations for current setting, skipping.")
@@ -94,34 +95,38 @@ def evaluate_observations_single_lambda(observations: pd.DataFrame):
 
     if probability_of_more_extreme < 0.01:
         print("Reject H0 on 99% level.")
-    pass
+    return probability_of_more_extreme
 
 
-def evaluate_single_lambda_tournaments(observations_set: pd.DataFrame):
+def evaluate_single_lambda_tournaments(observations: pd.DataFrame) -> List[float]:
+    result = []
     for tournament in constants.TOURNAMENTS:
         print(f"\nEvaluating {tournament}")
-        observations_set_tournament = observations_set[observations_set.tournament_name == tournament]
-        evaluate_observations_single_lambda(observations_set_tournament)
-    pass
+        observations_tournament = observations[observations.tournament_name == tournament]
+        result.append(evaluate_observations_single_lambda(observations_tournament))
+    result.append(evaluate_observations_single_lambda(observations))
+    return result
 
 
-def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame):
+def evaluate_single_lambda(c_lambda: int, matches_data: pd.DataFrame) -> pd.DataFrame:
     _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
 
+    possible_sets = list(range(2, 2 * constants.SETS_TO_WIN))
+    result = pd.DataFrame(columns=constants.TOURNAMENTS + ["All tournaments"],
+                          index=possible_sets + ["All sets"])
+
     print("Starting evaluation:")
-    for set_number in range(2, 2 * constants.SETS_TO_WIN):
+    for set_number in possible_sets:
         print('-----------------------------------------------------------')
         print(f"\nEvaluating set number {set_number}:")
         observations_set = observations[observations.set_number == set_number]
-        evaluate_observations_single_lambda(observations_set)
-        evaluate_single_lambda_tournaments(observations_set)
+        result.loc[set_number, :] = evaluate_single_lambda_tournaments(observations_set)
 
     print('-----------------------------------------------------------')
     print(f"\nEvaluating all sets together:")
-    evaluate_observations_single_lambda(observations)
-    evaluate_single_lambda_tournaments(observations)
+    result.loc["All sets", :] = evaluate_single_lambda_tournaments(observations)
 
-    pass
+    return result
 
 
 def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_probability_type: str,
@@ -139,6 +144,7 @@ def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_p
     matches_data = matches_data.assign(probability_predicted_player=probabilities[0],
                                        probability_not_predicted_player=probabilities[1])
 
+    results = {}
     # iterate over training sets
     years = matches_data.year.unique()
     for year in range(first_year, last_year):
@@ -161,9 +167,12 @@ def fit_and_evaluate(first_year: int, last_year: int, training_type: str, odds_p
 
         # apply the model - evaluate success rate
         testing_set = matches_data[matches_data["year"] == year + 1]
-        evaluate_single_lambda(c_lambda, testing_set)
+        results[year] = evaluate_single_lambda(c_lambda, testing_set)
 
     # export results
+    results_df = pd.concat(results)
+    results_df.to_excel("output.xlsx")
+
     pass
 
 
@@ -192,7 +201,7 @@ if __name__ == '__main__':
     last_year = args.last_year
     training_type = args.training_type
     odds_probability_type = args.odds_probability_type
-    do_transform_home_favorite = args.do_transform_home_favorite
+    do_transform_home_favorite = args.do_transform_home_favorite == 'True'
     if args.database_path is not None:
         constants.DATABASE_PATH = args.database_path
     if args.fair_odds_parameter is not None:
