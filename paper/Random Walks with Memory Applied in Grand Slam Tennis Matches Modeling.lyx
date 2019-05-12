@@ -125,7 +125,7 @@ Introduction
 \begin_layout Standard
 Tennis is one of the most popular sports both on professional and amateur
  level.
- Millions of people pursue tennis as their free time activity
+ Millions of people pursue tennis as their leisure time activity 
 \begin_inset ERT
 status open
 
@@ -141,9 +141,9 @@ cite{pac2019report}
  and same numbers hold also for the people following and watching the profession
 al tennis competitions.
  Tennis also plays a major role in the sports betting industry, which grows
- every year and becomes more and more important part of the global economy.
+ rapidly and becomes more and more important part of the global economy.
  In the Czech Republic only, the total sales in sports betting industry
- reached almost CZK 65 billion (2.9 billion USD) in 2017, representing 
+ reached CZK 64.5 billion (2.9 billion USD) in 2017, representing 
 \begin_inset Formula $1.3\%$
 \end_inset
 
@@ -161,10 +161,10 @@ cite{mf2017report}
 \end_inset
 
 .
- Such an increase attracts also many fraudsters.
+ The immense size of the betting market attracts also many fraudsters.
  The European Sports Security Association regularly reports on suspicious
- betting activities, the latest report (2018) contained 267 cases of suspicious
- betting activity, 178 (67%) in tennis 
+ betting activities, the latest report (2018) contained 267 cases of such
+ activity, 178 (67%) in tennis 
 \begin_inset ERT
 status open
 
@@ -183,21 +183,30 @@ cite{essa2018fullreport}
 \end_layout
 
 \begin_layout Standard
-Tennis is also a sport more than suitable to be modelled using random walks
+Tennis is also a sport more than suitable to be modeled using random walks
  or random processes in general, as it naturally consists of many such processes.
  A series of a tennis matches is a random walk, the sequence of sets withing
  a match, games within a set, points within a game or even strokes within
- a point can be all modeled using a random walk.
+ a point can be all considered a random process and modeled using a random
+ walk.
  Additionally, these walks are well described by the tennis rules and there
  exist lots of data describing these random processess (i.e.
- various tennis result databases provided freely by the tennis federation
- and many private subjects).
- In this paper, a sequence of sets is studied and considered.
- Matches played as a best-of-five, i.e.
+ various tennis result databases provided by the tennis federation as well
+ as many private subjects).
+ In this paper, the random walk consisting of a sequence of sets within
+ a match is studied.
+ Matches played as a 
+\emph on
+best-of-five
+\emph default
+, i.e.
  the man Grand Slam tournaments, are considered in this paper.
  In these matches, up to 5 steps of the random walk can be observed, making
- them more suitable than the best-of-three games, where maximum 3 steps
- can occur.
+ them more suitable than the 
+\emph on
+best-of-three games
+\emph default
+, where maximum 3 steps can occur.
 \end_layout
 
 \begin_layout Standard
@@ -216,7 +225,7 @@ cite{ja2017ddny}
 \end_inset
 
 , which is a modification of a random walk with varying step size introduced
- by Turban
+ by Turban 
 \begin_inset ERT
 status open
 
@@ -239,7 +248,7 @@ cite{turban2010random}
 
 \begin_layout Standard
 The paper is organized as follow.
- Next chapter introduces the type of random walk used for tennis modeling.
+ Next chapter introduces the new type of random walk used for tennis modeling.
  Section 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -297,7 +306,7 @@ name "sec:Random-walk-with"
 \end_layout
 
 \begin_layout Standard
-In 2010, Turban introduced
+In 2010, Turban described 
 \begin_inset ERT
 status open
 
@@ -312,7 +321,7 @@ cite{turban2010random}
 
  a new version of a random walk with memory, where the memory is inroduced
  using variable step size.
- This idea was further extended by Kouřim
+ This idea was further extended by Kouřim 
 \begin_inset ERT
 status open
 
@@ -332,7 +341,7 @@ cite{ja2017ddny,ja2019teze}
 \begin_layout Standard
 The walk evolves in a following way.
  Initial step is made following the result of a Bernouli random variable
- with probability parameter 
+ with starting probability parameter 
 \begin_inset Formula $p_{0}$
 \end_inset
 
@@ -344,14 +353,14 @@ P(X_{1}=``right'')=p_{0}.
 
 \end_inset
 
- Starting with the second step, the transition probability in a step 
-\begin_inset Formula $t$
+ From the second step on, the transition probability in the 
+\begin_inset Formula $t-th$
 \end_inset
 
- is given by 
+ step is given by 
 \begin_inset Formula 
 \[
-X_{t-1}=``right''\rightarrow P(X_{t}=``right'')=\lambda p_{t-1}
+X_{t-1}=``right''\Longrightarrow P(X_{t}=``right'')=\lambda p_{t-1}
 \]
 
 \end_inset
@@ -362,7 +371,7 @@ X_{t-1}=``right''\rightarrow P(X_{t}=``right'')=\lambda p_{t-1}
 \begin_layout Standard
 \begin_inset Formula 
 \[
-X_{t-1}=``left''\rightarrow P(X_{t}=``right'')=1-\lambda(1-p_{t-1})
+X_{t-1}=``left''\Longrightarrow P(X_{t}=``right'')=1-\lambda(1-p_{t-1})
 \]
 
 \end_inset
@@ -444,8 +453,9 @@ name "sec:Data-description"
 \end_layout
 
 \begin_layout Standard
-For the purpose of this study, a database containing the results and Pinnacle
- Sports
+For the purpose of this study, a database containing the results from all
+ Grand Slam tournaments from 2009 to 2018 and corresponding Pinnacle Sports
+ bookmaker's odds
 \begin_inset Foot
 status open
 
@@ -455,9 +465,8 @@ This bookmaker is considered leading in the sports betting industry.
 
 \end_inset
 
- bookmaker's odds from all Grand Slam tournaments from 2009 to 2018 was
- created based on the information publicly available from website www.oddsportal.c
-om.
+ was created based on the information publicly available from website www.oddspor
+tal.com.
  There are 4 Grand Slam
 \begin_inset Foot
 status open
@@ -483,9 +492,9 @@ Australian Open, French Open, The Wimbledon and US Open.
 \end_inset
 
  games together.
- However, for the sake of completeness, the games where either one of the
- players retired were omitted from the dataset and so were the matches where
- no bookmaker's odds were available.
+ However, the games where either one of the players retired were omitted
+ from the dataset and so were the matches where no bookmaker's odds were
+ available.
  Together there were 
 \begin_inset Formula $4255$
 \end_inset
@@ -496,15 +505,15 @@ Australian Open, French Open, The Wimbledon and US Open.
 
  players.
  The most active player was Novak Djokovic, who participated in 188 matches.
- On average, each player played 19.7 matches, with the median value 8 matches
- played.
- The most common result is 3:0, occurring 2138 times, on the other hand,
+ On average, each player played 19.7 matches, with the median value of 8
+ matches played.
+ The most common result was 3:0, occurring 2138 times, on the other hand,
  5 sets were played only 808 times.
 \end_layout
 
 \begin_layout Standard
 The order in which the players are listed is rather random.
- The first listed player
+ The first listed players
 \begin_inset Foot
 status open
 
@@ -517,11 +526,11 @@ Such player/team would be normally considered as ``home'', however, as there
 
 \end_inset
 
- won total 2201, just slightly over half of all matches.
+ won 2201 in total, just slightly over the half.
  On the other hand, if the bookmaker's favorite (i.e.
  the player with better odds or the first listed player in case the odds
  are even) is considered, the situation changes significantly.
- The favorite won 3307 matches in total, mostly 3:0, and lost 311 times
+ The favorites won 3307 matches in total, mostly 3:0, and lost 311 times
  0:3, 347 times 1:3 and 290 times 2:3.
  It suggests that bookmaker's odds can be used as a probability estimate,
  which is in accordance with previous results, for example 
@@ -563,7 +572,7 @@ noprefix "false"
 
 \end_inset
 
- has two parameters, initial set winning probability 
+ takes two parameters, initial set winning probability 
 \begin_inset Formula $p_{0}$
 \end_inset
 
@@ -599,7 +608,7 @@ Estimating the initial set winning probability is a major task by itself
 status open
 
 \begin_layout Plain Layout
-Closing odds means the last odds available before the match start.
+Closing odds means the last odds available before the match started.
 \end_layout
 
 \end_inset
@@ -635,7 +644,7 @@ cite{ja2015ddny}
 \begin_inset Formula $t\in[0,\,1]$
 \end_inset
 
- set to 
+ set to the value 
 \begin_inset Formula $t=0.5$
 \end_inset
 
@@ -675,13 +684,13 @@ noprefix "false"
 \end_inset
 
  is based on intensive study of historical sport results and their development.
- The data suggests that the probability of success (i.e.
+ The data suggest that the probability of success (i.e.
  scoring, winning a set or a point etc.) evolves according to the random
  walk with varying probabilities.
  Moreover, it follows from the data that sports can be very roughly divided
  into two categories.
  Sports played for a certain amount of time, such as soccer or ice-hockey,
- evolve according to the walk defined by 
+ evolve according to the walk defined by expression 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:suc_punished"
@@ -694,7 +703,7 @@ noprefix "false"
 .
  On the other hand, sports where there is necessary to achieve certain number
  of points, such as tennis or volleyball, appear to follow the pattern defined
- in 
+ in equation 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:suc_rew"
@@ -705,40 +714,37 @@ noprefix "false"
 \end_inset
 
 .
- Therefore the random walk defined in 
+ Therefore the later approach is used to model a tennis game.
+\end_layout
+
+\begin_layout Standard
+The model is used to predict the winning probabilities of sets 2 through
+ 5 and is constructed in a following manner.
+ For each match, the first set winning probability of Player A
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The player which is listed first in the database, see Section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:suc_rew"
+reference "sec:Data-description"
 plural "false"
 caps "false"
 noprefix "false"
 
 \end_inset
 
- is used to model a tennis game.
-\end_layout
-
-\begin_layout Standard
-The model is used to predict the winning probabilities of sets 2 on and
- is constructed in a following manner.
- For each match, the first set winning probability of Player A
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Initially, the player on the first position in a database is considered
- Player A.
- It is an arbitrary choice made by www.oddsportal.com and/or respective tournament
- organization committees.
+ for details.
 \end_layout
 
 \end_inset
 
- 
+, 
 \begin_inset Formula $p_{0}$
 \end_inset
 
- is given (see Section 
+, is given (see Section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Initial-probability-derivation"
@@ -764,8 +770,8 @@ Winning probability of Player A is always considered as Player B winning
 
 \end_inset
 
-, the result of a first set is observed and second set winning probability
- is computed using 
+, the result of the first set is observed and second set winning probability
+ is computed using equation 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:suc_rew"
@@ -776,7 +782,7 @@ noprefix "false"
 \end_inset
 
 .
- This procedure is repeated for all remaining sets.
+ This procedure is repeated for all remaining sets played.
 \begin_inset Foot
 status open
 
@@ -790,7 +796,7 @@ best-of-five
 
 \end_inset
 
-.
+
 \end_layout
 
 \begin_layout Subsection
@@ -802,15 +808,17 @@ In order to verify the model's accuracy, several tests were performed.
  First, the dataset was divided into training and testing sets.
  The division is done naturally by the order of games played.
  Given a specific time, past matches constitute to a training set, future
- matches to testing set.
- Specifically, the split was done on a yearly basis, the data from one previous
- year are considered as a training set and data from predicted year as testing
+ matches to a testing set.
+ For the purpose of this paper, the split was done on a yearly basis, the
+ data from one previous tennis season were used as a training set to predict
+ winning probabilities in the following season, constituing the testing
  set (i.e.
  2010 was the first season used as testing data, 2017 was the last season
- used as training set), creating 9 training/testing splits together.
- Another approach to datasets splitting is to consider data from all previous
- years as testing data and from one year as training data, however previous
- study shows that the difference between these two approaches is negligible
+ used as training set), making it 9 training/testing splits together.
+ Another approach to dataset splitting is to consider data from all previous
+ years as testing data and from one future year as training data, however
+ previous study shows that the difference between these two approaches is
+ negligible 
 \begin_inset ERT
 status open
 
@@ -836,13 +844,13 @@ Next step in model verification is the estimation of parameter
  The likelihood function is defined as 
 \begin_inset Formula 
 \[
-L=\prod_{i=1}^{N}(x_{i}p_{i}+(1-x_{i})(1-p_{i})),
+L=\prod_{i=1}^{N_{train}}(x_{i}p_{i}+(1-x_{i})(1-p_{i})),
 \]
 
 \end_inset
 
 where 
-\begin_inset Formula $N$
+\begin_inset Formula $N_{train}$
 \end_inset
 
  is the number of sets 2 thru 5 played in the training dataset, 
@@ -853,7 +861,7 @@ where
 \begin_inset Formula $i-th$
 \end_inset
 
- set obtained using the procedure described in 
+ set obtained using equation 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Random-walk-with"
@@ -863,7 +871,7 @@ noprefix "false"
 
 \end_inset
 
-, and 
+ for each match, and 
 \begin_inset Formula $x_{i}$
 \end_inset
 
@@ -896,7 +904,7 @@ log-likelihood
  the function 
 \begin_inset Formula 
 \[
-L_{l}=\sum_{i=1}^{N}log(x_{i}p_{i}+(1-x_{i})(1-p_{i}))
+L_{l}=\sum_{i=1}^{N_{train}}log(x_{i}p_{i}+(1-x_{i})(1-p_{i}))
 \]
 
 \end_inset
@@ -1182,7 +1190,8 @@ Optimal values of coefficient
 
 \begin_layout Standard
 Finally, the model is used to predict set winning probabilities of the unseen
- data from training set using initial bookmaker derived odds, 
+ data from the training set using initial bookmaker derived odds, equation
+ 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:suc_rew"
@@ -1192,37 +1201,25 @@ noprefix "false"
 
 \end_inset
 
- and parameter 
+ and memory parameter 
 \begin_inset Formula $\lambda$
 \end_inset
 
  obtained from the corresponding training set.
  In order to verify the quality of the model, the average theoretical set
  winning probability of Player A 
-\begin_inset Formula $\hat{p}=\frac{1}{n}\sum_{i=1}^{n}p_{i}$
+\begin_inset Formula $\hat{p}=\frac{1}{n}\sum_{i=1}^{N_{test}}p_{i}$
 \end_inset
 
  and its variance 
-\begin_inset Formula $\hat{\sigma}^{2}=\frac{1}{n}\sum_{i=1}^{n}p_{i}(1-p_{i})$
+\begin_inset Formula $\hat{\sigma}^{2}=\frac{1}{n}\sum_{i=1}^{N_{test}}p_{i}(1-p_{i})$
 \end_inset
 
- are computed and so is the average observed Player A winning ratio 
-\begin_inset Formula $\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_{i},$
+ are computed and so is the observed Player A winning ratio 
+\begin_inset Formula $\bar{x}=\frac{1}{n}\sum_{i=1}^{N_{test}}x_{i}$
 \end_inset
 
- (
-\begin_inset Formula $x_{i}=1$
-\end_inset
-
- when Player A won the 
-\begin_inset Formula $i-th$
-\end_inset
-
- set, 
-\begin_inset Formula $x_{i}=0$
-\end_inset
-
- otherwise).
+.
  Using the Lyapunov variant of Central Limit Theorem 
 \begin_inset ERT
 status open
@@ -1243,7 +1240,7 @@ cite{billingsley1995probability}
  has standard normal distribution
 \begin_inset Formula 
 \[
-y=\frac{\sqrt{n}(\bar{x}-\hat{p})}{\hat{\sigma}}\thicksim N(0,\,1).
+y=\frac{\sqrt{N_{test}}(\bar{x}-\hat{p})}{\hat{\sigma}}\thicksim N(0,\,1).
 \]
 
 \end_inset
@@ -1282,14 +1279,17 @@ H_{1}:\bar{p}\neq\hat{p}.
 \end_layout
 
 \begin_layout Standard
-This approach has several drawbacks.
- One of the assumptions of the CLT is that the observed random variables
+One of the assumptions of the CLT is that the observed random variables
  are independent.
- This is obviously not true in this case.
+ This is obviously not true in the case when 
+\begin_inset Formula $N_{test}$
+\end_inset
+
+ contains all sets from the testing data.
  Quite the opposite, the model assumes that the winning probability of a
  set directly depends on the winning probability of the previous set.
  This can be easily solved by splitting the testing dataset into 4 subsets
- containing only results from single set of a match, i.e.
+ containing only results from single set of each match, i.e.
  sets 2, 3, 4 and 5 (if they were played).
  The matches can be considered independent from each other and so can be
  the 
@@ -1300,7 +1300,7 @@ This approach has several drawbacks.
 \end_layout
 
 \begin_layout Standard
-Using this approach, there are 36 testing sets together
+Using this approach, there are 36 testing sets
 \begin_inset Foot
 status open
 
@@ -1310,8 +1310,8 @@ Up to 4 sets considered in each match, 9 yearly testing datasets.
 
 \end_inset
 
-.
- On a 95% confidence level, only on 2 out of 36 available subsets provide
+ together.
+ On a 95% confidence level, only on 2 out of the 36 available subsets provide
  strong enough evidence to reject the null hypothesis.
  On the other hand, the null hypothesis is relatively weak.
  It only says that the prediction is correct on average.
@@ -1321,17 +1321,17 @@ Up to 4 sets considered in each match, 9 yearly testing datasets.
  created according to some real life based criteria.
  The natural way how to create such subsets is dividing the matches according
  to the 4 different tournaments.
- This refining yields 180 subsets altogether
+ This refining yields 180 subsets
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-4+1 tournaments every year, 4 sets in each match evaluated, 9 year for testing.
+4 sets in each match evaluated, 4+1 tournaments every year, 9 year for testing.
 \end_layout
 
 \end_inset
 
-.
+ altogether.
  Using 95% confidence level, only 6 of the 180 subsets have data strong
  enough to reject the null hypothesis.
  It is worth mentioning that the size of the datasets, especially for the
@@ -1343,9 +1343,10 @@ status open
 \begin_layout Standard
 To further analyze the robustness of the model it is important to realize
  the structure of the data.
- So far, the player whose winning probability was estimated, was chosen
+ So far, the player, whose winning probability was estimated, was chosen
  arbitrarily based on some external (more or less random) order.
- As such, the observed winning probability equal approximately to 
+ As such, the observed winning probability in every subset equals approximately
+ to 
 \begin_inset Formula $\frac{1}{2}$
 \end_inset
 
@@ -1388,7 +1389,7 @@ ty
 \end_inset
 
 .
- Such a division is based on an assumption, that the matches with similar
+ Such a division is based on an assumption that the matches with similar
  bookmaker odds should have similar development.
  The matches are divided into 5 groups, each containing 10 percentage points
  in first set winning probability.
@@ -1417,13 +1418,13 @@ Further division, i.e.
 
 \end_inset
 
- newly created odds based subgroups, only 9 have data strong enough to reject
+ newly created odds-based subgroups, only 9 have data strong enough to reject
  
 \begin_inset Formula $H_{0}$
 \end_inset
 
  on a 95% confidence level.
- The results of hypothesis testing (the 
+ The entire results of the hypothesis testing (the 
 \emph on
 p-values 
 \emph default
@@ -1547,11 +1548,11 @@ Overall, the model was tested on 360 different subsets and only 22 of them
 \end_inset
 
  on 95% confidence level.
- These subsets are distributed randomly there is no pattern among them,
+ These subsets are distributed randomly and there is no pattern among them,
  indicating there is no systematic bias in the model.
- The random walk with varying probabilities thus seems as a robust which
- can be used to precisely predict set winning probabilities in men tennis
- Grand Slam matches.
+ The random walk with varying probabilities thus seems to be a robust model
+ which can be used to precisely predict set winning probabilities in men
+ tennis Grand Slam matches.
 \end_layout
 
 \begin_layout Section
@@ -1570,15 +1571,14 @@ This paper describes the random walk with varying probabilities and its
  application on Grand Slam tennis data.
  A model describing the development of a single match is introduced and
  tested on a dataset containing all matches from seasons 2009-2018.
- The results show that the model is robust and performs well on various
- data subsets.
- To further verify the robustness of the model, produced predictions will
- be compared against real 
+ The results show that the model is robust and performs well on the absolute
+ majority of reasonable data subsets.
+ This suggest that the model could be used as a tool to generate 
 \emph on
 in-play
 \emph default
- odds provided by bookmakers.
- This comparison will be part of a further study.
+ odds during the matches or to directly compete against the odds currently
+ provided by the bookmakers.
 \end_layout
 
 \begin_layout Section
