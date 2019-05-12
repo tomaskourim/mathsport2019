@@ -105,6 +105,7 @@ def evaluate_single_lambda_tournaments(observations: pd.DataFrame) -> List[float
         print(f"\nEvaluating {tournament}")
         observations_tournament = observations[observations.tournament_name == tournament]
         result.append(evaluate_observations_single_lambda(observations_tournament))
+    print(f"\nEvaluating all tournaments together.")
     result.append(evaluate_observations_single_lambda(observations))
     return result
 
@@ -214,4 +215,4 @@ if __name__ == '__main__':
                      do_transform_home_favorite)
 
     end_time = datetime.now()
-    print(f"Duration: {(end_time - start_time)}")
+    print(f"\nDuration: {(end_time - start_time)}")
