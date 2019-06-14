@@ -142,8 +142,8 @@ def evaluate_single_lambda(c_lambda: float, matches_data: pd.DataFrame) -> pd.Da
     return result
 
 
-def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int, training_type: str,
-                     odds_probability_type: str, do_transform_home_favorite: bool):
+def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int, odds_probability_type: str,
+                     do_transform_home_favorite: bool):
     # transform data so that home <=> favorite. Originally, home player, i.e. the player listed first, is considered
     # predicted player. However, predicting the favorite seems reasonable.
     if do_transform_home_favorite:
@@ -195,12 +195,10 @@ if __name__ == '__main__':
     start_time = datetime.now()
 
     parser = argparse.ArgumentParser(
-        description="Prepares a relevant, lightweight database for the purpose of this project out of a much larger \
-        and complex database available to the author.")
+        description="Main script of the paper. Computes odds using random walks with memory and evaluates them against \
+        real Grand Slam tennis matches and their results.")
     parser.add_argument("--first_year", help="The first tennis season to be considered", default=2009, required=False)
     parser.add_argument("--last_year", help="The last tennis season to be considered", default=2018, required=False)
-    parser.add_argument("--training_type", help="Whether to learn from one previous season only or from all",
-                        default='all', required=False)
     parser.add_argument("--odds_probability_type", help="How to get probabilities from odds",
                         default='1.set', required=False)
     parser.add_argument("--database_path", help="Path to the original database", required=False)
@@ -214,7 +212,6 @@ if __name__ == '__main__':
 
     input_first_year = args.first_year
     input_last_year = args.last_year
-    input_training_type = args.training_type
     input_odds_probability_type = args.odds_probability_type
     input_do_transform_home_favorite = args.do_transform_home_favorite == "True"
     if args.database_path is not None:
@@ -225,8 +222,8 @@ if __name__ == '__main__':
     # get matches, results and odds from database
     initial_matches_data = pd.DataFrame(get_match_data(input_odds_probability_type), columns=constants.COLUMN_NAMES)
 
-    fit_and_evaluate(initial_matches_data, input_first_year, input_last_year, input_training_type,
-                     input_odds_probability_type, input_do_transform_home_favorite)
+    fit_and_evaluate(initial_matches_data, input_first_year, input_last_year, input_odds_probability_type,
+                     input_do_transform_home_favorite)
 
     analyze_data(initial_matches_data, input_odds_probability_type)
 
