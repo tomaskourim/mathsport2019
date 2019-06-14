@@ -4,3 +4,4 @@ __pycache__/
 *.lyx~
 *.gz
 *.7z
+live_betting/credentials.json
