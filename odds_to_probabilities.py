@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from constants import EVEN_ODDS_PROBABILITY
+from config import EVEN_ODDS_PROBABILITY
 
 
 def get_first_set_odds_from_fulltime(odds: np.ndarray, fair_odds_parameter: float) -> np.ndarray:
