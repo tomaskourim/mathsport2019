@@ -12,6 +12,8 @@ if __name__ == '__main__':
     # login
     book.login()
     # get matches with betting potential
+    tournaments = book.get_inplay_tournaments()
+    print(tournaments)
     # compute internal odds
     # observe matches and wait for betting opportunity
     # if possible, bet
