@@ -1,7 +1,8 @@
 import time
-from typing import Tuple, List
+from typing import List
 
 import pandas as pd
+from selenium.webdriver.remote.webelement import WebElement
 
 from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import CREDENTIALS_PATH
@@ -19,10 +20,20 @@ class Tipsport(Bookmaker):
         click_id(self._driver, "btnLogin")
         time.sleep(30)  # some time in seconds for the website to load
 
-    def get_inplay_tournaments(self) -> List[Tuple[str, str]]:
+    def get_tournaments(self) -> pd.DataFrame():
+        self._driver.get("https://www.tipsport.cz/kurzy/tenis-43#superSportId=43")
+        time.sleep(30)  # some time in seconds for the website to load
+        elements = self._driver.find_elements_by_xpath("//h2[contains(text(),'Tenis')]")
+        return self.obtain_tournaments_from_webelems(elements)
+
+    def get_inplay_tournaments(self) -> pd.DataFrame():
         self._driver.get("https://www.tipsport.cz/live")
         time.sleep(30)  # some time in seconds for the website to load
         elements = self._driver.find_elements_by_xpath("//span[contains(text(),'Tenis')]")
+        return self.obtain_tournaments_from_webelems(elements)
+
+    @staticmethod
+    def obtain_tournaments_from_webelems(elements: List[WebElement]) -> pd.DataFrame():
         texts = []
         for e in elements:
             texts.append(e.text)
@@ -49,17 +60,17 @@ class Tipsport(Bookmaker):
 
             if "tráva" in text:
                 tournament["surface"] = "grass"
-                text = text.replace(" - tráva ", "")
+                text = text.replace(" - tráva", "")
             elif "antuka" in text:
                 tournament["surface"] = "clay"
-                text = text.replace(" - antuka ", "")
+                text = text.replace(" - antuka", "")
             elif "tvrdý povrch" in text:
                 tournament["surface"] = "hard"
-                text = text.replace(" - tvrdý povrch ", "")
+                text = text.replace(" - tvrdý povrch", "")
             else:
                 continue
 
-            tournament["tournament_name"] = text
+            tournament["tournament_name"] = text.strip()
             tournaments = tournaments.append(tournament, ignore_index=True)
 
         return tournaments
