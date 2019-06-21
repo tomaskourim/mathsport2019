@@ -1,8 +1,8 @@
+import json
 import time
 from typing import List
 
 import pandas as pd
-from selenium.webdriver.remote.webelement import WebElement
 
 from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import CREDENTIALS_PATH
@@ -23,20 +23,31 @@ class Tipsport(Bookmaker):
     def get_tournaments(self) -> pd.DataFrame():
         self._driver.get("https://www.tipsport.cz/kurzy/tenis-43#superSportId=43")
         time.sleep(30)  # some time in seconds for the website to load
-        elements = self._driver.find_elements_by_xpath("//h2[contains(text(),'Tenis')]")
-        return self.obtain_tournaments_from_webelems(elements)
+        elements = self._driver.find_elements_by_xpath("//div[@class='colCompetition']")
+        texts = []
+        tournament_year_ids = []
+        tournament_ids = []
+        for e in elements:
+            texts.append(e.find_element_by_xpath(".//h2").text)
+            tournament_year_ids.append(e.get_attribute("data-competition-annual-id"))
+            tournament_ids.append(json.loads(e.get_attribute("data-model"))['id'])
+
+        tournaments = self.obtain_tournaments_from_texts(texts)
+        tournaments["tournament_year_ids"] = tournament_year_ids
+        tournaments["tournament_ids"] = tournament_ids
+        return tournaments
 
     def get_inplay_tournaments(self) -> pd.DataFrame():
         self._driver.get("https://www.tipsport.cz/live")
         time.sleep(30)  # some time in seconds for the website to load
         elements = self._driver.find_elements_by_xpath("//span[contains(text(),'Tenis')]")
-        return self.obtain_tournaments_from_webelems(elements)
-
-    @staticmethod
-    def obtain_tournaments_from_webelems(elements: List[WebElement]) -> pd.DataFrame():
         texts = []
         for e in elements:
             texts.append(e.text)
+        return self.obtain_tournaments_from_texts(texts)
+
+    @staticmethod
+    def obtain_tournaments_from_texts(texts: List[str]) -> pd.DataFrame():
         tournaments = pd.DataFrame(columns=["sex", "type", "surface", "tournament_name"])
         for text in texts:  # the page is constantly reloading and the original elements are then no longer attached
             tournament = {}
@@ -47,7 +58,7 @@ class Tipsport(Bookmaker):
                 tournament["sex"] = "women"
                 text = text.replace(", Tenis ženy - ", "")
             else:
-                continue
+                tournament["sex"] = None
 
             if "dvouhra" in text:
                 tournament["type"] = "singles"
@@ -55,8 +66,11 @@ class Tipsport(Bookmaker):
             elif "čtyřhra" in text:
                 tournament["type"] = "doubles"
                 text = text.replace("čtyřhra", "")
+            elif "družstva" in text:
+                tournament["type"] = "teams"
+                text = text.replace("družstva", "")
             else:
-                continue
+                tournament["type"] = None
 
             if "tráva" in text:
                 tournament["surface"] = "grass"
@@ -68,7 +82,7 @@ class Tipsport(Bookmaker):
                 tournament["surface"] = "hard"
                 text = text.replace(" - tvrdý povrch", "")
             else:
-                continue
+                tournament["surface"] = None
 
             tournament["tournament_name"] = text.strip()
             tournaments = tournaments.append(tournament, ignore_index=True)
