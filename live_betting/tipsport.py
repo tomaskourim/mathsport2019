@@ -12,6 +12,7 @@ from live_betting.utils import load_fb_credentials, write_id, click_id
 class Tipsport(Bookmaker):
     def __init__(self):
         Bookmaker.__init__(self, "https://www.tipsport.cz/")
+        self.tennis_id = 43
 
     def login(self):
         username, password = load_fb_credentials(CREDENTIALS_PATH)
@@ -40,7 +41,8 @@ class Tipsport(Bookmaker):
     def get_inplay_tournaments(self) -> pd.DataFrame():
         self._driver.get("https://www.tipsport.cz/live")
         time.sleep(30)  # some time in seconds for the website to load
-        elements = self._driver.find_elements_by_xpath("//span[contains(text(),'Tenis')]")
+        elements = self._driver.find_elements_by_xpath(
+            f"//div[@data-id='{self.tennis_id}']//span[@class='nameMatchesGroup']")
         texts = []
         for e in elements:
             texts.append(e.text)
@@ -50,6 +52,8 @@ class Tipsport(Bookmaker):
     def obtain_tournaments_from_texts(texts: List[str]) -> pd.DataFrame():
         tournaments = pd.DataFrame(columns=["sex", "type", "surface", "tournament_name"])
         for text in texts:  # the page is constantly reloading and the original elements are then no longer attached
+            if len(text) == 0:
+                continue
             tournament = {}
             if "muži" in text:
                 tournament["sex"] = "men"
