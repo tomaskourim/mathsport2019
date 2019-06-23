@@ -14,7 +14,7 @@ class Tipsport(Bookmaker):
         Bookmaker.__init__(self, "https://www.tipsport.cz/")
         self.tennis_id = 43
         self.tennis_tournament_base_url = "https://www.tipsport.cz/kurzy/a/a/a-"
-        self.time_to_sleep = 15  # seconds to wait after page loading
+        self.seconds_to_sleep = 15  # seconds to wait after page loading
 
     def login(self):
         username, password = load_fb_credentials(CREDENTIALS_PATH)
@@ -25,7 +25,7 @@ class Tipsport(Bookmaker):
 
     def get_tournaments(self) -> pd.DataFrame():
         self._driver.get("https://www.tipsport.cz/kurzy/tenis-43#superSportId=43")
-        time.sleep(self.time_to_sleep)  # some time in seconds for the website to load
+        time.sleep(self.seconds_to_sleep)  # some time in seconds for the website to load
         elements = self._driver.find_elements_by_xpath("//div[@class='colCompetition']")
         texts = []
         tournament_year_ids = []
@@ -42,7 +42,7 @@ class Tipsport(Bookmaker):
 
     def get_inplay_tournaments(self) -> pd.DataFrame():
         self._driver.get("https://www.tipsport.cz/live")
-        time.sleep(self.time_to_sleep)  # some time in seconds for the website to load
+        time.sleep(self.seconds_to_sleep)  # some time in seconds for the website to load
         elements = self._driver.find_elements_by_xpath(
             f"//div[@data-id='{self.tennis_id}']//span[@class='nameMatchesGroup']")
         texts = []
@@ -52,7 +52,7 @@ class Tipsport(Bookmaker):
 
     @staticmethod
     def obtain_tournaments_from_texts(texts: List[str]) -> pd.DataFrame():
-        tournaments = pd.DataFrame(columns=["sex", "type", "surface", "tournament_name"])
+        tournaments = pd.DataFrame(columns=["sex", "type", "surface", "name"])
         for text in texts:  # the page is constantly reloading and the original elements are then no longer attached
             if len(text) == 0:
                 continue
@@ -97,7 +97,7 @@ class Tipsport(Bookmaker):
 
     def get_matches_tournament(self, tournament):
         self._driver.get("".join([self.tennis_tournament_base_url, str(tournament["tournament_id"])]))
-        time.sleep(self.time_to_sleep)
+        time.sleep(self.seconds_to_sleep)
         elements = self._driver.find_elements_by_xpath("//div[@class='rowMatchWrapper']")
         home = []
         away = []
