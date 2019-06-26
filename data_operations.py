@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 
-from constants import FAIR_ODDS_PARAMETER, COLUMN_NAMES
+from config import FAIR_ODDS_PARAMETER, COLUMN_NAMES
 from odds_to_probabilities import probabilities_from_odds
 
 

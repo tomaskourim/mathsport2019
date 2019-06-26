@@ -4,7 +4,7 @@ import sqlite3
 from sqlite3 import Error
 from typing import Optional
 
-from constants import DATABASE_PATH
+from config import DATABASE_PATH
 
 
 def create_connection(db_file: str) -> sqlite3.Connection:

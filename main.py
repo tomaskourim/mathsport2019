@@ -9,7 +9,8 @@ import pandas as pd
 import scipy.optimize as opt
 import scipy.stats as stat
 
-import constants
+import config
+from config import TOURNAMENTS, PROBABILITY_BINS, SETS_TO_WIN, COLUMN_NAMES
 from data_operations import transform_home_favorite, get_probabilities_from_odds, predicted_player_won_set
 from database_operations import get_match_data
 from descriptive_statistics import analyze_data
@@ -100,15 +101,15 @@ def evaluate_observations_single_lambda(observations: pd.DataFrame) -> float:
 
 def evaluate_single_lambda_tournaments(observations: pd.DataFrame) -> List[float]:
     result = []
-    for tournament in constants.TOURNAMENTS:
+    for tournament in TOURNAMENTS:
         print(f"\nEvaluating {tournament}")
         observations_current = observations[observations.tournament_name == tournament]
         result.append(evaluate_observations_single_lambda(observations_current))
 
     print(f"\nEvaluating probability groups.")
-    for i in range(0, len(constants.PROBABILITY_BINS) - 1):
-        lower_bound = constants.PROBABILITY_BINS[i]
-        upper_bound = constants.PROBABILITY_BINS[i + 1]
+    for i in range(0, len(PROBABILITY_BINS) - 1):
+        lower_bound = PROBABILITY_BINS[i]
+        upper_bound = PROBABILITY_BINS[i + 1]
         print(f"\nEvaluating: {lower_bound} <= probability < {upper_bound}")
         observations_current = observations[
             (lower_bound <= observations.first_set_prob) & (observations.first_set_prob < upper_bound)]
@@ -123,9 +124,9 @@ def evaluate_single_lambda_tournaments(observations: pd.DataFrame) -> List[float
 def evaluate_single_lambda(c_lambda: float, matches_data: pd.DataFrame) -> pd.DataFrame:
     _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
 
-    possible_sets = list(range(2, 2 * constants.SETS_TO_WIN))
+    possible_sets = list(range(2, 2 * SETS_TO_WIN))
     result = pd.DataFrame(
-        columns=constants.TOURNAMENTS + constants.PROBABILITY_BINS[1:len(constants.PROBABILITY_BINS)] + [
+        columns=TOURNAMENTS + PROBABILITY_BINS[1:len(PROBABILITY_BINS)] + [
             "All groups"], index=possible_sets + ["All sets"])
 
     print("Starting evaluation:")
@@ -142,8 +143,8 @@ def evaluate_single_lambda(c_lambda: float, matches_data: pd.DataFrame) -> pd.Da
     return result
 
 
-def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int, training_type: str,
-                     odds_probability_type: str, do_transform_home_favorite: bool):
+def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int, odds_probability_type: str,
+                     do_transform_home_favorite: bool):
     # transform data so that home <=> favorite. Originally, home player, i.e. the player listed first, is considered
     # predicted player. However, predicting the favorite seems reasonable.
     if do_transform_home_favorite:
@@ -195,12 +196,10 @@ if __name__ == '__main__':
     start_time = datetime.now()
 
     parser = argparse.ArgumentParser(
-        description="Prepares a relevant, lightweight database for the purpose of this project out of a much larger \
-        and complex database available to the author.")
+        description="Main script of the paper. Computes odds using random walks with memory and evaluates them against \
+        real Grand Slam tennis matches and their results.")
     parser.add_argument("--first_year", help="The first tennis season to be considered", default=2009, required=False)
     parser.add_argument("--last_year", help="The last tennis season to be considered", default=2018, required=False)
-    parser.add_argument("--training_type", help="Whether to learn from one previous season only or from all",
-                        default='all', required=False)
     parser.add_argument("--odds_probability_type", help="How to get probabilities from odds",
                         default='1.set', required=False)
     parser.add_argument("--database_path", help="Path to the original database", required=False)
@@ -214,19 +213,18 @@ if __name__ == '__main__':
 
     input_first_year = args.first_year
     input_last_year = args.last_year
-    input_training_type = args.training_type
     input_odds_probability_type = args.odds_probability_type
     input_do_transform_home_favorite = args.do_transform_home_favorite == "True"
     if args.database_path is not None:
-        constants.DATABASE_PATH = args.database_path
+        config.DATABASE_PATH = args.database_path
     if args.fair_odds_parameter is not None:
-        constants.FAIR_ODDS_PARAMETER = args.fair_odds_parameter
+        config.FAIR_ODDS_PARAMETER = args.fair_odds_parameter
 
     # get matches, results and odds from database
-    initial_matches_data = pd.DataFrame(get_match_data(input_odds_probability_type), columns=constants.COLUMN_NAMES)
+    initial_matches_data = pd.DataFrame(get_match_data(input_odds_probability_type), columns=COLUMN_NAMES)
 
-    fit_and_evaluate(initial_matches_data, input_first_year, input_last_year, input_training_type,
-                     input_odds_probability_type, input_do_transform_home_favorite)
+    fit_and_evaluate(initial_matches_data, input_first_year, input_last_year, input_odds_probability_type,
+                     input_do_transform_home_favorite)
 
     analyze_data(initial_matches_data, input_odds_probability_type)
 
