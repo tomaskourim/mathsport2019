@@ -11,22 +11,22 @@ from live_betting.utils import load_fb_credentials, write_id, click_id
 
 class Tipsport(Bookmaker):
     def __init__(self):
-        Bookmaker.__init__(self, "https://www.tipsport.cz/")
+        Bookmaker.__init__(self, "https://www.tipsport.cz", "Tipsport")
         self.tennis_id = 43
         self.tennis_tournament_base_url = "https://www.tipsport.cz/kurzy/a/a/a-"
-        self.seconds_to_sleep = 15  # seconds to wait after page loading
 
     def login(self):
         username, password = load_fb_credentials(CREDENTIALS_PATH)
-        write_id(self._driver, "userNameId", username)
-        write_id(self._driver, "passwordId", password)
-        click_id(self._driver, "btnLogin")
-        time.sleep(30)  # some time in seconds for the website to load
+        write_id(self.driver, "userNameId", username)
+        write_id(self.driver, "passwordId", password)
+        click_id(self.driver, "btnLogin")
+        time.sleep(self.seconds_to_sleep)  # some time in seconds for the website to load
 
     def get_tournaments(self) -> pd.DataFrame():
-        self._driver.get("https://www.tipsport.cz/kurzy/tenis-43#superSportId=43")
+        self.driver.get("https://www.tipsport.cz/kurzy/tenis-43#superSportId=43")
         time.sleep(self.seconds_to_sleep)  # some time in seconds for the website to load
-        elements = self._driver.find_elements_by_xpath("//div[@class='colCompetition']")
+        self.scroll_to_botton()
+        elements = self.driver.find_elements_by_xpath("//div[@class='colCompetition']")
         texts = []
         tournament_year_ids = []
         tournament_ids = []
@@ -36,14 +36,14 @@ class Tipsport(Bookmaker):
             tournament_ids.append(json.loads(e.get_attribute("data-model"))['id'])
 
         tournaments = self.obtain_tournaments_from_texts(texts)
-        tournaments["tournament_year_id"] = tournament_year_ids
-        tournaments["tournament_id"] = tournament_ids
+        tournaments["tournament_bookmaker_year_id"] = tournament_year_ids
+        tournaments["tournament_bookmaker_id"] = tournament_ids
         return tournaments
 
     def get_inplay_tournaments(self) -> pd.DataFrame():
-        self._driver.get("https://www.tipsport.cz/live")
+        self.driver.get("https://www.tipsport.cz/live")
         time.sleep(self.seconds_to_sleep)  # some time in seconds for the website to load
-        elements = self._driver.find_elements_by_xpath(
+        elements = self.driver.find_elements_by_xpath(
             f"//div[@data-id='{self.tennis_id}']//span[@class='nameMatchesGroup']")
         texts = []
         for e in elements:
@@ -96,9 +96,9 @@ class Tipsport(Bookmaker):
         return tournaments
 
     def get_matches_tournament(self, tournament):
-        self._driver.get("".join([self.tennis_tournament_base_url, str(tournament["tournament_id"])]))
+        self.driver.get("".join([self.tennis_tournament_base_url, str(tournament.tournament_bookmaker_id)]))
         time.sleep(self.seconds_to_sleep)
-        elements = self._driver.find_elements_by_xpath("//div[@class='rowMatchWrapper']")
+        elements = self.driver.find_elements_by_xpath("//div[@class='rowMatchWrapper']")
         home = []
         away = []
         matchid = []

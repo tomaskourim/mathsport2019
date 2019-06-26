@@ -41,7 +41,7 @@ CREATE TABLE tournament (
     type    TOURNAMENT_TYPE NOT NULL,
     surface SURFACE         NOT NULL,
     "year"  INTEGER         NOT NULL,
-    UNIQUE (name, sex, year)
+    UNIQUE (name, sex, type, year)
 );
 
 CREATE TABLE tournament_bookmaker (

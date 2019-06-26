@@ -220,7 +220,7 @@ def prepare_database(first_year: int, last_year: int, bookmaker: str):
             `tiebreak4away`	INTEGER, \
             `tiebreak5home`	INTEGER, \
             `tiebreak5away`	INTEGER, \
-            PRIMARY KEY(`id`) \
+            PRIMARY KEY(`id`), \
             FOREIGN KEY(`id_tournament`) REFERENCES tournaments(`id`) \
         );"
 
@@ -235,7 +235,7 @@ def prepare_database(first_year: int, last_year: int, bookmaker: str):
             `odds_away`	REAL, \
             `date`	TEXT NOT NULL, \
             `utime`	INTEGER NOT NULL, \
-            PRIMARY KEY(`id`) \
+            PRIMARY KEY(`id`), \
             FOREIGN KEY(`id_match`) REFERENCES matches(`id`) \
         );"
 
