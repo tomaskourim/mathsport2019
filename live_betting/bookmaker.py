@@ -4,8 +4,8 @@ from live_betting.config_betting import WEBDRIVER_PATH
 
 
 class Bookmaker:
-    def __init__(self, url):
-        self._home_url = url
+    def __init__(self, home_url):
+        self._home_url = home_url
         self._driver = webdriver.Chrome(executable_path=WEBDRIVER_PATH)
         self._driver.maximize_window()
         self._driver.get(self._home_url)
