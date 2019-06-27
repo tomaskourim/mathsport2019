@@ -43,6 +43,12 @@ class Bookmaker:
             last_height = new_height
         time.sleep(self.seconds_to_sleep)  # some time in seconds for the website to load
 
+    def get_tournaments(self):
+        pass
+
+    def get_matches_tournament(self, tournament):
+        pass
+
 
 def scroll_pixels(self, pixels: int):
     self.driver.execute_script(f"window.scrollTo(0, {pixels})")

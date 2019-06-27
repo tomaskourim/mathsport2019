@@ -33,7 +33,7 @@ class Tipsport(Bookmaker):
         for e in elements:
             texts.append(e.find_element_by_xpath(".//h2").text)
             tournament_year_ids.append(e.get_attribute("data-competition-annual-id"))
-            tournament_ids.append(json.loads(e.get_attribute("data-model"))['id'])
+            tournament_ids.append(str(json.loads(e.get_attribute("data-model"))['id']))
 
         tournaments = self.obtain_tournaments_from_texts(texts)
         tournaments["tournament_bookmaker_year_id"] = tournament_year_ids
@@ -90,7 +90,7 @@ class Tipsport(Bookmaker):
             else:
                 tournament["surface"] = None
 
-            tournament["name"] = text.strip()
+            tournament["tournament_name"] = text.strip()
             tournaments = tournaments.append(tournament, ignore_index=True)
 
         return tournaments
@@ -113,7 +113,8 @@ class Tipsport(Bookmaker):
             if len(players_splitted) != 2:
                 players_splitted = players.split("-")
             if len(players_splitted) != 2:
-                print(f"Impossible to find two players in tournament {tournament['name']}. Found text: {players}")
+                print(
+                    f"Impossible to find two players in tournament {tournament.tournament_name}. Found text: {players}")
                 continue
             home.append(players_splitted[0])
             away.append(players_splitted[1])
@@ -122,5 +123,5 @@ class Tipsport(Bookmaker):
             expected_start_date.append(start_date)
             expected_start_time.append(start_time)
         matches = pd.DataFrame(zip(home, away, matchid, expected_start_date, expected_start_time),
-                               columns=["home", "away", "matchid", "start_date", "start_time"])
+                               columns=["home", "away", "bookmaker_matchid", "start_date", "start_time"])
         return matches
