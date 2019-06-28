@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 import pandas as pd
@@ -39,8 +40,8 @@ def save_match_bookmaker(params: list) -> tuple:
 
 def get_save_tournaments(book: Bookmaker) -> pd.DataFrame:
     tournaments = book.get_tournaments()
-    print("------------------------------------------------------\nPrematch")
-    print(tournaments)
+    logging.info("------------------------------------------------------\nPrematch")
+    logging.info(tournaments)
 
     book_id = book.database_id
     year = datetime.now().year
@@ -60,7 +61,7 @@ def get_save_tournaments(book: Bookmaker) -> pd.DataFrame:
             params = [db_returned[0], book_id, tournament.tournament_bookmaker_id,
                       tournament.tournament_bookmaker_year_id]
             save_tournament_bookmaker(params)
-            print(f"Processed tournament {tournament.tournament_name}")
+            logging.info(f"Processed tournament {tournament.tournament_name}")
         else:
             raise db_returned
 
@@ -104,7 +105,7 @@ def save_matches(matches: pd.DataFrame, tournament_id: int, book_id: int):
 
 def process_tournaments_save_matches(book: Bookmaker, tournaments: pd.DataFrame):
     for i, tournament in tournaments.iterrows():
-        # print("------------------------------------------------------")
+        logging.info("------------------------------------------------------")
         try:
             matches = book.get_matches_tournament(tournament)
             if len(matches) > 0:
@@ -113,8 +114,8 @@ def process_tournaments_save_matches(book: Bookmaker, tournaments: pd.DataFrame)
                 if type(tournament_id) != tuple:
                     continue
                 save_matches(matches, tournament_id[0], book.database_id)
-            print(f"Matches from tournament {tournament.tournament_name} processed and saved.")
+            logging.info(f"Matches from tournament {tournament.tournament_name} processed and saved.")
         except StaleElementReferenceException as error:
-            print(f"Imposible to parse tournament {tournament.tournament_name}. Error: {error}")
+            logging.warning(f"Imposible to parse tournament {tournament.tournament_name}. Error: {error}")
             continue
     pass

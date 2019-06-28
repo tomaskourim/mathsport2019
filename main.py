@@ -1,5 +1,6 @@
 # main file to run the algorithms
 import argparse
+import logging
 from datetime import datetime
 from typing import Optional, Tuple, List
 
@@ -59,7 +60,7 @@ def negative_log_likelihood(c_lambda: float, matches_data: pd.DataFrame) -> floa
 def find_single_lambda(training_set: pd.DataFrame) -> Optional[float]:
     opt_result = opt.minimize_scalar(negative_log_likelihood, bounds=(0, 1), method='bounded', args=training_set)
     if opt_result.success:
-        print("Fitted successfully.")
+        logging.info("Fitted successfully.")
         return opt_result.x
     else:
         return None
@@ -68,12 +69,12 @@ def find_single_lambda(training_set: pd.DataFrame) -> Optional[float]:
 def evaluate_observations_single_lambda(observations: pd.DataFrame) -> float:
     num_observations = len(observations)
     if num_observations == 0:
-        print("No observations for current setting, skipping.")
+        logging.warning("No observations for current setting, skipping.")
         return 1
     x_mean = sum(observations.result) / num_observations
     mu_hat = sum(observations.probability) / num_observations
     var_hat = sum(observations.probability * (1 - observations.probability)) / num_observations
-    print(f"Observations: {len(observations)}. Observed value: {x_mean}, expected value: {mu_hat}, \
+    logging.info(f"Observations: {len(observations)}. Observed value: {x_mean}, expected value: {mu_hat}, \
             standard deviation: {math.sqrt(var_hat)}")
     expected_distribution = stat.norm()
 
@@ -82,39 +83,39 @@ def evaluate_observations_single_lambda(observations: pd.DataFrame) -> float:
     cdf_observed = expected_distribution.cdf(observed_value)
     probability_of_more_extreme = min(cdf_observed, 1 - cdf_observed) * 2
 
-    print(f"Cumulative distribution function at observed value F({observed_value}) = {cdf_observed}.")
-    print(f"Probability of more extreme value: {probability_of_more_extreme}.")
+    logging.info(f"Cumulative distribution function at observed value F({observed_value}) = {cdf_observed}.")
+    logging.info(f"Probability of more extreme value: {probability_of_more_extreme}.")
 
     if probability_of_more_extreme < 0.1:
-        print("Reject H0 on 90% level.")
+        logging.info("Reject H0 on 90% level.")
     else:
-        print("Cannot reject H0.")
+        logging.info("Cannot reject H0.")
 
     if probability_of_more_extreme < 0.05:
-        print("Reject H0 on 95% level.")
+        logging.info("Reject H0 on 95% level.")
 
     if probability_of_more_extreme < 0.01:
-        print("Reject H0 on 99% level.")
+        logging.info("Reject H0 on 99% level.")
     return probability_of_more_extreme
 
 
 def evaluate_single_lambda_tournaments(observations: pd.DataFrame) -> List[float]:
     result = []
     for tournament in config.TOURNAMENTS:
-        print(f"\nEvaluating {tournament}")
+        logging.info(f"\nEvaluating {tournament}")
         observations_current = observations[observations.tournament_name == tournament]
         result.append(evaluate_observations_single_lambda(observations_current))
 
-    print(f"\nEvaluating probability groups.")
+    logging.info(f"\nEvaluating probability groups.")
     for i in range(0, len(config.PROBABILITY_BINS) - 1):
         lower_bound = config.PROBABILITY_BINS[i]
         upper_bound = config.PROBABILITY_BINS[i + 1]
-        print(f"\nEvaluating: {lower_bound} <= probability < {upper_bound}")
+        logging.info(f"\nEvaluating: {lower_bound} <= probability < {upper_bound}")
         observations_current = observations[
             (lower_bound <= observations.first_set_prob) & (observations.first_set_prob < upper_bound)]
         result.append(evaluate_observations_single_lambda(observations_current))
 
-    print(f"\nEvaluating all set groups together.")
+    logging.info(f"\nEvaluating all set groups together.")
     result.append(evaluate_observations_single_lambda(observations))
 
     return result
@@ -128,15 +129,15 @@ def evaluate_single_lambda(c_lambda: float, matches_data: pd.DataFrame) -> pd.Da
         columns=config.TOURNAMENTS + config.PROBABILITY_BINS[1:len(config.PROBABILITY_BINS)] + [
             "All groups"], index=possible_sets + ["All sets"])
 
-    print("Starting evaluation:")
+    logging.info("Starting evaluation:")
     for set_number in possible_sets:
-        print('-----------------------------------------------------------')
-        print(f"\nEvaluating set number {set_number}:")
+        logging.info('-----------------------------------------------------------')
+        logging.info(f"\nEvaluating set number {set_number}:")
         observations_set = observations[observations.set_number == set_number]
         result.loc[set_number, :] = evaluate_single_lambda_tournaments(observations_set)
 
-    print('-----------------------------------------------------------')
-    print(f"\nEvaluating all sets together:")
+    logging.info('-----------------------------------------------------------')
+    logging.info(f"\nEvaluating all sets together:")
     result.loc["All sets", :] = evaluate_single_lambda_tournaments(observations)
 
     return result
@@ -162,18 +163,18 @@ def fit_and_evaluate(matches_data: pd.DataFrame, first_year: int, last_year: int
         if year == years[len(years) - 1]:
             break
         # fit the model - find optimal lambda
-        print('----------------------------------------------------------------------------------------------')
-        print('----------------------------------------------------------------------------------------------')
-        print(year)
+        logging.info('----------------------------------------------------------------------------------------------')
+        logging.info('----------------------------------------------------------------------------------------------')
+        logging.info(year)
         training_set = matches_data[matches_data["year"] == year]
         if len(training_set) == 0:
             continue
         c_lambda = find_single_lambda(training_set)  # lambda is a Python keyword
         if c_lambda is None:
-            print(f"Unable to find optimal lambda in year {year}")
+            logging.error(f"Unable to find optimal lambda in year {year}")
             continue
 
-        print(f"Optimal lambda is: {c_lambda}. Value of corresponding log-likelihood is: "
+        logging.info(f"Optimal lambda is: {c_lambda}. Value of corresponding log-likelihood is: "
               f"{log_likelihood_single_lambda(c_lambda, training_set)[0]}")
 
         # apply the model - evaluate success rate
@@ -228,4 +229,4 @@ if __name__ == '__main__':
     analyze_data(initial_matches_data, input_odds_probability_type)
 
     end_time = datetime.now()
-    print(f"\nDuration: {(end_time - start_time)}")
+    logging.info(f"\nDuration: {(end_time - start_time)}")

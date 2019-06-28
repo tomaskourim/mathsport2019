@@ -1,4 +1,5 @@
 import argparse
+import logging
 from datetime import datetime
 
 from live_betting.bookmaker import Bookmaker
@@ -18,6 +19,7 @@ def scan_update(book: Bookmaker):
 
 if __name__ == '__main__':
     start_time = datetime.now()
+    logging.basicConfig(level=logging.DEBUG)
     parser = argparse.ArgumentParser(
         description="")
 
@@ -44,12 +46,12 @@ if __name__ == '__main__':
     start_time_run = datetime.now()
     scan_update(main_book)
     end_time = datetime.now()
-    print(f"\nDuration first run: {(end_time - start_time_run)}")
+    logging.info(f"\nDuration first run: {(end_time - start_time_run)}")
 
-    start_time_run = datetime.now()
-    scan_update(main_book)
-    end_time = datetime.now()
-    print(f"\nDuration second run: {(end_time - start_time_run)}")
+    # start_time_run = datetime.now()
+    # scan_update(main_book)
+    # end_time = datetime.now()
+    # logging.info(f"\nDuration second run: {(end_time - start_time_run)}")
 
     # for matches about to start, get first set odds & save to DB
     # regularly repeat (especially to update starting times)
@@ -60,8 +62,8 @@ if __name__ == '__main__':
     # in-play
     # get tournaments & pair with prematch
     # tournaments = book.get_inplay_tournaments()
-    # print("------------------------------------------------------\nLive")
-    # print(tournaments)
+    # logging.info("------------------------------------------------------\nLive")
+    # logging.info(tournaments)
 
     # for each tournament, get matches & pair with prematch
     # for each match, get 1.set odds & compute probabilities
@@ -77,4 +79,4 @@ if __name__ == '__main__':
     # evaluate betting
     main_book.close()
     end_time = datetime.now()
-    print(f"\nDuration: {(end_time - start_time)}")
+    logging.info(f"\nDuration: {(end_time - start_time)}")

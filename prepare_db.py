@@ -1,6 +1,7 @@
 # This is a support file used only for one time extraction of a database from a larger and more complex database
 
 import argparse
+import logging
 import os
 import re
 from datetime import datetime
@@ -91,7 +92,7 @@ def get_matches(tournament: list, first_year: int) -> list:
 
     # check for data inconsistencies
     if len(matches) != 127:
-        print(len(matches), tournament)
+        logging.error(len(matches), tournament)
 
     cleaned_matches = []
     for mat in matches:
@@ -284,4 +285,4 @@ if __name__ == '__main__':
     prepare_database(input_first_year, input_last_year, input_bookmaker)
 
     end_time = datetime.now()
-    print(f"Duration: {(end_time - start_time)}")
+    logging.info(f"Duration: {(end_time - start_time)}")

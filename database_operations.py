@@ -1,5 +1,5 @@
 # support file to manipulate with SQLite and Postgresql database
-
+import logging
 import sqlite3
 from configparser import ConfigParser
 from typing import Optional
@@ -37,7 +37,7 @@ def create_connection(db_file: str) -> sqlite3.Connection:
         conn = sqlite3.connect(db_file)
         return conn
     except sqlite3.Error as e:
-        print(e)
+        logging.error(e)
 
     return None
 
@@ -61,7 +61,7 @@ def execute_sql(db_path: str, query: str, param: Optional[str],
         if modifying:
             conn.commit()
     except (Exception, sqlite3.DatabaseError) as error:
-        print("Sql exception:", error)
+        logging.error("Sql exception:", error)
     finally:
         if conn is not None:
             cur.close()
@@ -89,7 +89,7 @@ def execute_many_sql(db_path: str, query: str, param: Optional[str],
         if modifying:
             conn.commit()
     except (Exception, sqlite3.DatabaseError) as error:
-        print("Sql exception:", error)
+        logging.error("Sql exception:", error)
     finally:
         if conn is not None:
             cur.close()
@@ -125,7 +125,7 @@ def execute_sql_postgres(query: str, param: Optional, modifying: bool = False, r
         if modifying:
             conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
-        print("Sql exception:", error)
+        logging.error("Sql exception:", error)
         return_value = error
     finally:
         if cur is not None:
