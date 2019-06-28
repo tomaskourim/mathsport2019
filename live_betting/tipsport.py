@@ -17,6 +17,7 @@ class Tipsport(Bookmaker):
         Bookmaker.__init__(self, "https://www.tipsport.cz", "Tipsport")
         self.tennis_id = 43
         self.tennis_tournament_base_url = "https://www.tipsport.cz/kurzy/a/a/a-"
+        self.tennis_match_base_url = "https://www.tipsport.cz/tenis-2"
 
     def login(self):
         username, password = load_fb_credentials(CREDENTIALS_PATH)
