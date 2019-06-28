@@ -1,9 +1,11 @@
+import datetime
 import json
 import logging
 import time
 from typing import List
 
 import pandas as pd
+import pytz
 
 from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import CREDENTIALS_PATH
@@ -103,8 +105,7 @@ class Tipsport(Bookmaker):
         home = []
         away = []
         matchid = []
-        expected_start_date = []
-        expected_start_time = []
+        start_time_utc = []
         for e in elements:
             base_info = e.find_element_by_xpath("./div")
             players = base_info.get_attribute("data-matchname")
@@ -120,9 +121,11 @@ class Tipsport(Bookmaker):
             home.append(players_splitted[0])
             away.append(players_splitted[1])
             matchid.append(base_info.get_attribute("data-matchid"))
-            start_date, start_time = e.find_elements_by_xpath(".//div[@class='actualState']")[1].text.split(" ")
-            expected_start_date.append(start_date)
-            expected_start_time.append(start_time)
-        matches = pd.DataFrame(zip(home, away, matchid, expected_start_date, expected_start_time),
-                               columns=["home", "away", "bookmaker_matchid", "start_date", "start_time"])
+            starting_time = datetime.datetime.strptime(
+                e.find_elements_by_xpath(".//div[@class='actualState']")[1].text, '%d.%m.%Y %H:%M')
+            starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
+            start_time_utc.append(starting_time)
+
+        matches = pd.DataFrame(zip(home, away, matchid, start_time_utc),
+                               columns=["home", "away", "bookmaker_matchid", "start_time_utc"])
         return matches

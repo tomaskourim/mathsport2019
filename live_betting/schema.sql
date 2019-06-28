@@ -54,12 +54,11 @@ CREATE TABLE tournament_bookmaker (
 );
 
 CREATE TABLE matches (
-    id            BIGSERIAL NOT NULL PRIMARY KEY,
-    home          VARCHAR   NOT NULL,
-    away          VARCHAR   NOT NULL,
-    start_date    DATE      NOT NULL,
-    start_time    TIME      NOT NULL,
-    tournament_id BIGINT    NOT NULL REFERENCES tournament(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    id             BIGSERIAL   NOT NULL PRIMARY KEY,
+    home           VARCHAR     NOT NULL,
+    away           VARCHAR     NOT NULL,
+    start_time_utc TIMESTAMPTZ NOT NULL,
+    tournament_id  BIGINT      NOT NULL REFERENCES tournament(id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (home, away, tournament_id)
 );
 

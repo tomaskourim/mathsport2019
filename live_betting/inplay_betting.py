@@ -17,9 +17,13 @@ def scan_update(book: Bookmaker):
     pass
 
 
+def get_starting_matches():
+    pass
+
+
 if __name__ == '__main__':
     start_time = datetime.now()
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(
         description="")
 
@@ -44,6 +48,9 @@ if __name__ == '__main__':
     # book.login()
     # get matches with betting potential
     start_time_run = datetime.now()
+    
+    starting_matches=get_starting_matches()
+    
     scan_update(main_book)
     end_time = datetime.now()
     logging.info(f"\nDuration first run: {(end_time - start_time_run)}")
