@@ -14,7 +14,8 @@ class Bookmaker:
         self.driver.maximize_window()
         self.driver.get(self._home_url)
         self.SCROLL_PAUSE_TIME = 0.5
-        self.seconds_to_sleep = 15  # seconds to wait after page loading
+        self.seconds_to_sleep = 5  # seconds to wait after page loading
+        self.short_seconds_to_sleep = 2
         self.database_id = self.get_book_id()
 
     def close(self):

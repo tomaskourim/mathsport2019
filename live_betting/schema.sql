@@ -98,5 +98,6 @@ CREATE TABLE odds (
     match_part         MATCHPART NOT NULL,
     odd1               FLOAT     NOT NULL,
     odd2               FLOAT     NOT NULL,
-    FOREIGN KEY (bookmaker_id, match_bookmaker_id) REFERENCES matches_bookmaker(bookmaker_id, match_bookmaker_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (bookmaker_id, match_bookmaker_id) REFERENCES matches_bookmaker(bookmaker_id, match_bookmaker_id) ON DELETE CASCADE ON UPDATE CASCAD,
+    UNIQUE (bookmaker_id, match_bookmaker_id,odds_type,match_part)
 )

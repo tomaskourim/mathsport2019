@@ -2,7 +2,7 @@ import argparse
 import datetime
 import logging
 import threading
-import time
+from typing import List
 
 import pytz
 
@@ -23,7 +23,7 @@ def scan_update(book: Bookmaker):
     pass
 
 
-def get_starting_matches():
+def get_starting_matches() -> List[tuple]:
     utc_time = pytz.utc.localize(datetime.datetime.utcnow())
     limit_start_time = utc_time + datetime.timedelta(minutes=TIME_TO_MATCHSTART_MINUTES)
     query = "SELECT match_bookmaker_id FROM \
@@ -34,10 +34,12 @@ def get_starting_matches():
     return execute_sql_postgres(query, params, False, True)
 
 
-def handle_match(id):
-    logging.info(f"{id} Handling match:{id}")
-    time.sleep(5)
-    logging.info(f"{id} Second handling match: {id}")
+def handle_match(bookmaker_matchid: str):
+    logging.info(f"Handling match:{bookmaker_matchid}")
+    book = Tipsport()
+    book.handle_match(bookmaker_matchid)
+
+    logging.info(f"Finished handling match: {bookmaker_matchid}")
 
     pass
 
@@ -50,6 +52,7 @@ if __name__ == '__main__':
 
     starting_matches_ids = get_starting_matches()
     for bookmaker_match_id_tuple in starting_matches_ids:
+        # handle_match(bookmaker_match_id_tuple[0])
         thread = threading.Thread(target=handle_match, args=(bookmaker_match_id_tuple[0],))
         thread.start()
         logging.info(f"{bookmaker_match_id_tuple[0]} Main thread handling match: {bookmaker_match_id_tuple[0]}")

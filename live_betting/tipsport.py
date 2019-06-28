@@ -9,6 +9,7 @@ import pytz
 
 from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import CREDENTIALS_PATH
+from live_betting.inplay_operations import save_first_set_odds
 from live_betting.utils import load_fb_credentials, write_id, click_id
 
 
@@ -17,7 +18,8 @@ class Tipsport(Bookmaker):
         Bookmaker.__init__(self, "https://www.tipsport.cz", "Tipsport")
         self.tennis_id = 43
         self.tennis_tournament_base_url = "https://www.tipsport.cz/kurzy/a/a/a-"
-        self.tennis_match_base_url = "https://www.tipsport.cz/tenis-2"
+        self.tennis_match_base_url = "https://www.tipsport.cz/tenis-"
+        self.tennis_match_live_base_url = "https://www.tipsport.cz/live/tenis/"
 
     def login(self):
         username, password = load_fb_credentials(CREDENTIALS_PATH)
@@ -99,7 +101,7 @@ class Tipsport(Bookmaker):
 
         return tournaments
 
-    def get_matches_tournament(self, tournament):
+    def get_matches_tournament(self, tournament: pd.DataFrame) -> pd.DataFrame:
         self.driver.get("".join([self.tennis_tournament_base_url, str(tournament.tournament_bookmaker_id)]))
         time.sleep(self.seconds_to_sleep)
         elements = self.driver.find_elements_by_xpath("//div[@class='rowMatchWrapper']")
@@ -130,3 +132,48 @@ class Tipsport(Bookmaker):
         matches = pd.DataFrame(zip(home, away, matchid, start_time_utc),
                                columns=["home", "away", "bookmaker_matchid", "start_time_utc"])
         return matches
+
+    def handle_match(self, bookmaker_matchid: str):
+        self.handle_prematch(self, bookmaker_matchid)
+
+    def handle_prematch(self, self1, bookmaker_matchid):
+        self.driver.get("".join([self.tennis_match_base_url, bookmaker_matchid]))
+        time.sleep(self.seconds_to_sleep)
+        click_id(self.driver, "matchName" + bookmaker_matchid)
+        time.sleep(self.short_seconds_to_sleep)
+
+        last_odds = (None, None)
+        while ~self.match_started():
+            current_odds = self.get_first_set_odds()
+            if current_odds != last_odds:
+                save_first_set_odds(current_odds, self.database_id, bookmaker_matchid)
+                last_odds = current_odds
+            self.wait_half_to_matchstart()
+            self.driver.refresh()
+            time.sleep(self.short_seconds_to_sleep)
+            click_id(self.driver, "matchName" + bookmaker_matchid)
+            time.sleep(self.short_seconds_to_sleep)
+        pass
+
+    def get_first_set_odds(self) -> tuple:
+        elem_base = self.driver.find_element_by_xpath("//span[@title='Vítěz 1. setu']")
+        elem_kurzy = elem_base.find_elements_by_xpath("./../../..//div[@class='tdEventCells']//span")
+        kurzy = (elem_kurzy[1].text, elem_kurzy[3].text)
+        return kurzy
+
+    def match_started(self) -> bool:
+        elem_base = self.driver.find_element_by_xpath("//span[@title='Vítěz 1. setu']")
+        elem_kurzy = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
+        if "disabled" in elem_kurzy[0].get_attribute("class") and "disabled" in elem_kurzy[1].get_attribute("class"):
+            logging.error(f"Match started at: {datetime.datetime.now()}")
+            return True
+        return False
+
+    def wait_half_to_matchstart(self):
+        starting_time = datetime.datetime.strptime(
+            self.driver.find_elements_by_xpath("//div[@class='actualState']")[1].text, '%d.%m.%Y %H:%M')
+        starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
+        utc_time = pytz.utc.localize(datetime.datetime.utcnow())
+        seconds_to_sleep = (starting_time - utc_time).total_seconds() / 2
+        time.sleep(seconds_to_sleep)
+        pass
