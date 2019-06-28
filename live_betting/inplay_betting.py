@@ -19,7 +19,7 @@ def scan_update(book: Bookmaker):
 
 if __name__ == '__main__':
     start_time = datetime.now()
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.ERROR)
     parser = argparse.ArgumentParser(
         description="")
 
@@ -79,4 +79,4 @@ if __name__ == '__main__':
     # evaluate betting
     main_book.close()
     end_time = datetime.now()
-    logging.info(f"\nDuration: {(end_time - start_time)}")
+    logging.error(f"\nDuration: {(end_time - start_time)}")
