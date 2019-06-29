@@ -8,11 +8,12 @@ import numpy as np
 import pandas as pd
 import pytz
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.remote.webelement import WebElement
 
 from config import FAIR_ODDS_PARAMETER
 from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import CREDENTIALS_PATH, MINUTES_PER_GAME
-from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set, home_won_set
+from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set, home_won_set, save_bet
 from live_betting.utils import load_fb_credentials, write_id, click_id
 from odds_to_probabilities import probabilities_from_odds
 
@@ -179,14 +180,17 @@ class Tipsport(Bookmaker):
             time.sleep(self.short_seconds_to_sleep)
         return current_odds
 
+    def get_base_odds_element(self, set_number: int) -> WebElement:
+        return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
+
     def get_set_odds(self, set_number: int) -> tuple:
-        elem_base = self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
+        elem_base = self.get_base_odds_element(set_number)
         elem_odds = elem_base.find_elements_by_xpath("./../../..//div[@class='tdEventCells']//span")
         odds = (elem_odds[1].text, elem_odds[3].text)
         return odds
 
     def match_started(self) -> bool:
-        elem_base = self.driver.find_element_by_xpath("//span[@title='Vítěz 1. setu']")
+        elem_base = self.get_base_odds_element(1)
         elem_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
         starting_time = self.get_starting_time()
         utc_time = pytz.utc.localize(datetime.datetime.utcnow())
@@ -221,7 +225,7 @@ class Tipsport(Bookmaker):
 
         # bet on next set
         home_probability = self.bet_set(home_probability, set_odds, last_set_score, current_set_score, c_lambda,
-                                        bookmaker_matchid)
+                                        bookmaker_matchid, set_number)
         return home_probability
 
     def match_finished(self):
@@ -231,16 +235,16 @@ class Tipsport(Bookmaker):
         except NoSuchElementException:
             return False
 
-    def bet_set(self, home_probability: float, set_odds, last_set_score, current_set_score, c_lambda,
-                bookmaker_matchid):
+    def bet_set(self, home_probability: float, set_odds: tuple, last_set_score: tuple, current_set_score: tuple,
+                c_lambda: float, bookmaker_matchid: str, set_number: int):
 
         home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
                 1 + (1 if home_won_set(current_set_score, last_set_score) else -1))
         # bet if possible
         if home_probability > 1 / set_odds[0]:
-            self.bet('home', bookmaker_matchid)
+            self.bet('home', bookmaker_matchid, set_number, set_odds[0], home_probability)
         if (1 - home_probability) > 1 / set_odds[1]:
-            self.bet('away', bookmaker_matchid)
+            self.bet('away', bookmaker_matchid, set_number, set_odds[1], 1 - home_probability)
 
         return home_probability
 
@@ -280,6 +284,18 @@ class Tipsport(Bookmaker):
         away_games = int(away_raw.split('\n')[set_number])
         return (home_sets, away_sets), (home_games, away_games)
 
-    def bet(self, param, bookmaker_matchid):
-        # save bet
+    def bet(self, bet_type: str, bookmaker_matchid: str, set_number: int, odd: float, probability: float):
+        if bet_type == 'home':
+            odd_index = 0
+        elif bet_type == 'away':
+            odd_index = 1
+        else:
+            raise Exception(f"Unexpected bet type: {bet_type}")
+        elem_base = self.get_base_odds_element(set_number)
+        elem_odds = elem_base.find_elements_by_xpath("../..//div[@class='tdEventCells']/div")[odd_index]
+        elem_odds.click()
+        time.sleep(self.short_seconds_to_sleep)
+        click_id(self.driver, 'submitButton')
+        time.sleep(self.seconds_to_sleep)
+        save_bet(self.database_id, bookmaker_matchid, bet_type, "".join(['set', str(set_number)]), odd, probability)
         pass

@@ -52,3 +52,7 @@ def evaluate_bet_on_set(last_set_score, current_set_score, book_id, bookmaker_ma
         query = "UPDATE bet SET result = %s WHERE bookmaker_id='%s' AND match_bookmaker_id='%s' AND match_part=%s"
         execute_sql_postgres(query, [won, book_id, bookmaker_matchid, "".join(['set', str(set_number)])], True)
     pass
+
+
+def save_bet(database_id, bookmaker_matchid, bet_type, param, odd, probability):
+    pass
