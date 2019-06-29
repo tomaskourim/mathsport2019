@@ -2,6 +2,7 @@ import argparse
 import datetime
 import logging
 import threading
+import time
 from typing import List
 
 import pytz
@@ -29,24 +30,44 @@ def get_starting_matches() -> List[tuple]:
     query = "SELECT match_bookmaker_id FROM \
                 (SELECT * FROM matches WHERE start_time_utc > %s AND start_time_utc < %s) AS matches \
                 JOIN \
-                matches_bookmaker ON matches.id = match_id"  # TODO except already in-play
+                matches_bookmaker ON matches.id = match_id \
+                EXCEPT \
+                SELECT match_bookmaker_id FROM inplay"
     params = [utc_time, limit_start_time]
     return execute_sql_postgres(query, params, False, True)
 
 
-def handle_match(bookmaker_matchid: str):
+def insert_inplay(bookmaker_matchid, book_id):
+    query = "INSERT INTO inplay (bookmaker_id, match_bookmaker_id) VALUES (%s, %s)"
+    execute_sql_postgres(query, [book_id, bookmaker_matchid], True)
+    pass
+
+
+def remove_inplay(bookmaker_matchid, book_id):
+    query = "DELETE FROM inplay WHERE bookmaker_id=%s AND  match_bookmaker_id=%s"
+    execute_sql_postgres(query, [str(book_id), str(bookmaker_matchid)], True)
+    pass
+
+
+def handle_match(bookmaker_matchid: str, ):
     logging.info(f"Handling match:{bookmaker_matchid}")
     book = Tipsport()
-    book.handle_match(bookmaker_matchid)
+    try:
+        insert_inplay(bookmaker_matchid, book.database_id)
+        book.handle_match(bookmaker_matchid, 1)
+    except Exception as error:
+        logging.error(error)
+    finally:
+        remove_inplay(bookmaker_matchid, book.database_id)
+        book.close()
 
     logging.info(f"Finished handling match: {bookmaker_matchid}")
-
     pass
 
 
 if __name__ == '__main__':
     start_time = datetime.datetime.now()
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.ERROR)
     parser = argparse.ArgumentParser(
         description="")
 
@@ -56,6 +77,7 @@ if __name__ == '__main__':
         thread = threading.Thread(target=handle_match, args=(bookmaker_match_id_tuple[0],))
         thread.start()
         logging.info(f"{bookmaker_match_id_tuple[0]} Main thread handling match: {bookmaker_match_id_tuple[0]}")
+        time.sleep(15)
 
     logging.info(f"Main thread finish")
 
@@ -114,4 +136,4 @@ if __name__ == '__main__':
     # evaluate betting
     main_book.close()
     end_time = datetime.datetime.now()
-    logging.info(f"\nDuration: {(end_time - start_time)}")
+    logging.error(f"\nDuration: {(end_time - start_time)}")

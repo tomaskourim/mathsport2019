@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS inplay;
 DROP TABLE IF EXISTS odds;
 DROP TABLE IF EXISTS matches_bookmaker;
 DROP TABLE IF EXISTS matches;
@@ -98,6 +99,14 @@ CREATE TABLE odds (
     match_part         MATCHPART NOT NULL,
     odd1               FLOAT     NOT NULL,
     odd2               FLOAT     NOT NULL,
-    FOREIGN KEY (bookmaker_id, match_bookmaker_id) REFERENCES matches_bookmaker(bookmaker_id, match_bookmaker_id) ON DELETE CASCADE ON UPDATE CASCAD,
-    UNIQUE (bookmaker_id, match_bookmaker_id,odds_type,match_part)
+    FOREIGN KEY (bookmaker_id, match_bookmaker_id) REFERENCES matches_bookmaker(bookmaker_id, match_bookmaker_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE (bookmaker_id, match_bookmaker_id, odds_type, match_part)
+);
+
+CREATE TABLE inplay (
+    id                 BIGSERIAL NOT NULL PRIMARY KEY,
+    bookmaker_id       BIGINT    NOT NULL,
+    match_bookmaker_id VARCHAR   NOT NULL,
+    FOREIGN KEY (bookmaker_id, match_bookmaker_id) REFERENCES matches_bookmaker(bookmaker_id, match_bookmaker_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE (bookmaker_id, match_bookmaker_id)
 )
