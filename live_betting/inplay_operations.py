@@ -54,5 +54,8 @@ def evaluate_bet_on_set(last_set_score, current_set_score, book_id, bookmaker_ma
     pass
 
 
-def save_bet(database_id, bookmaker_matchid, bet_type, param, odd, probability):
+def save_bet(book_id, bookmaker_matchid, bet_type, match_part, odd, probability):
+    query = "INSERT INTO bet (bookmaker_id, match_bookmaker_id, bet_type, match_part, odd, probability) \
+                VALUES (%s, %s, %s, %s, %s, %s)"
+    execute_sql_postgres(query, [book_id, bookmaker_matchid, bet_type, match_part, odd, probability], True)
     pass
