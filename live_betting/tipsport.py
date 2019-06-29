@@ -25,6 +25,8 @@ class Tipsport(Bookmaker):
         self.tennis_tournament_base_url = "https://www.tipsport.cz/kurzy/a/a/a-"
         self.tennis_match_base_url = "https://www.tipsport.cz/tenis-"
         self.tennis_match_live_base_url = "https://www.tipsport.cz/live/tenis/"
+        self.base_bet_amount = 50
+        self.minimal_bet_amount = 5
 
     def login(self):
         username, password = load_fb_credentials(CREDENTIALS_PATH)
@@ -292,10 +294,19 @@ class Tipsport(Bookmaker):
         else:
             raise Exception(f"Unexpected bet type: {bet_type}")
         elem_base = self.get_base_odds_element(set_number)
-        elem_odds = elem_base.find_elements_by_xpath("../..//div[@class='tdEventCells']/div")[odd_index]
+        elems_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
+        elem_odds = elems_odds[odd_index]
         elem_odds.click()
         time.sleep(self.short_seconds_to_sleep)
+        write_id(self.driver, 'amountPaid',
+                 str(max(self.minimal_bet_amount, round(probability * self.base_bet_amount))))
         click_id(self.driver, 'submitButton')
         time.sleep(self.seconds_to_sleep)
-        save_bet(self.database_id, bookmaker_matchid, bet_type, "".join(['set', str(set_number)]), odd, probability)
+        try:
+            self.driver.find_element_by_xpath("//td[@class='ticketMessage successfullySaved']")
+            click_id(self.driver, 'removeAllBets')
+            save_bet(self.database_id, bookmaker_matchid, bet_type, "".join(['set', str(set_number)]), odd, probability)
+        except NoSuchElementException:
+            logging.error(f"Unable to place bet \
+                {self.database_id, bookmaker_matchid, bet_type, ''.join(['set', str(set_number)]), odd, probability}")
         pass

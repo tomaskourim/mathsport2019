@@ -14,8 +14,14 @@ def write_xpath(driver: webdriver, xpath: str, text: str):
 
 
 def write_id(driver: webdriver, element_id: str, text: str):
-    driver.find_element_by_id(element_id).send_keys(text)
+    elem = driver.find_element_by_id(element_id)
+    elem.clear()
+    elem.send_keys(text)
 
 
 def click_id(driver: webdriver, element_id: str):
     driver.find_element_by_id(element_id).click()
+
+
+def click_xpath(driver: webdriver, xpath: str):
+    driver.find_element_by_xpath(xpath).click()
