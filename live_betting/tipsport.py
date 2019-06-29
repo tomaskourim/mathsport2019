@@ -12,7 +12,7 @@ from selenium.common.exceptions import NoSuchElementException
 from config import FAIR_ODDS_PARAMETER
 from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import CREDENTIALS_PATH, MINUTES_PER_GAME
-from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set
+from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set, home_won_set
 from live_betting.utils import load_fb_credentials, write_id, click_id
 from odds_to_probabilities import probabilities_from_odds
 
@@ -219,6 +219,7 @@ class Tipsport(Bookmaker):
         set_odds = self.get_set_odds(set_number + 1)
         save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number + 1)
 
+        # bet on next set
         home_probability = self.bet_set(home_probability, set_odds, last_set_score, current_set_score, c_lambda,
                                         bookmaker_matchid)
         return home_probability
@@ -230,11 +231,18 @@ class Tipsport(Bookmaker):
         except NoSuchElementException:
             return False
 
-    def bet_set(self, home_probability: float, set_odds, last_set_state, current_set_state, c_lambda,
+    def bet_set(self, home_probability: float, set_odds, last_set_score, current_set_score, c_lambda,
                 bookmaker_matchid):
+
+        home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
+                1 + (1 if home_won_set(current_set_score, last_set_score) else -1))
         # bet if possible
-        # save bet
-        pass
+        if home_probability > 1 / set_odds[0]:
+            self.bet('home', bookmaker_matchid)
+        if (1 - home_probability) > 1 / set_odds[1]:
+            self.bet('away', bookmaker_matchid)
+
+        return home_probability
 
     def wait_for_set_end(self, set_number: int, last_set_state: tuple) -> tuple:
 
@@ -271,3 +279,7 @@ class Tipsport(Bookmaker):
         home_games = int(home_raw.split('\n')[set_number])
         away_games = int(away_raw.split('\n')[set_number])
         return (home_sets, away_sets), (home_games, away_games)
+
+    def bet(self, param, bookmaker_matchid):
+        # save bet
+        pass
