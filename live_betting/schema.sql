@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS bet;
 DROP TABLE IF EXISTS inplay;
 DROP TABLE IF EXISTS odds;
 DROP TABLE IF EXISTS matches_bookmaker;
@@ -11,6 +12,8 @@ DROP TYPE IF EXISTS SEX;
 DROP TYPE IF EXISTS SURFACE;
 DROP TYPE IF EXISTS ODDSTYPE;
 DROP TYPE IF EXISTS MATCHPART;
+DROP TYPE IF EXISTS BETTYPE;
+
 
 CREATE TABLE bookmaker (
     id       BIGSERIAL NOT NULL PRIMARY KEY,
@@ -109,4 +112,22 @@ CREATE TABLE inplay (
     match_bookmaker_id VARCHAR   NOT NULL,
     FOREIGN KEY (bookmaker_id, match_bookmaker_id) REFERENCES matches_bookmaker(bookmaker_id, match_bookmaker_id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (bookmaker_id, match_bookmaker_id)
+);
+
+CREATE TYPE BETTYPE AS ENUM (
+    'home',
+    'away'
+    );
+
+
+CREATE TABLE bet (
+    id                 BIGSERIAL NOT NULL PRIMARY KEY,
+    bookmaker_id       BIGINT    NOT NULL,
+    match_bookmaker_id VARCHAR   NOT NULL,
+    bet_type           BETTYPE   NOT NULL,
+    match_part         MATCHPART NOT NULL,
+    odd                FLOAT     NOT NULL,
+    result             BOOLEAN,
+    FOREIGN KEY (bookmaker_id, match_bookmaker_id) REFERENCES matches_bookmaker(bookmaker_id, match_bookmaker_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE (bookmaker_id, match_bookmaker_id, bet_type, match_part)
 )
