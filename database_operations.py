@@ -136,7 +136,7 @@ def execute_sql_postgres(query: str, param: Optional, modifying: bool = False, r
     return return_value
 
 
-def get_match_data(odds_probability_type: str) -> list:
+def get_match_data(odds_probability_type: str, database_path: str = DATABASE_PATH) -> list:
     sql = "SELECT matches.id, matches.home, matches.away, matches.home_sets, matches.away_sets, \
             matches.set1home, matches.set1away, matches.set2home, matches.set2away, matches.set3home, matches.set3away,\
             matches.set4home, matches.set4away, matches.set5home, matches.set5away, tournaments.name, tournaments.year,\
@@ -150,5 +150,5 @@ def get_match_data(odds_probability_type: str) -> list:
                 (SELECT * FROM home_away WHERE match_part= ? ) AS home_away \
                 ON matches.id=home_away.id_match)"
 
-    match_data = execute_sql(DATABASE_PATH, sql, odds_probability_type)
+    match_data = execute_sql(database_path, sql, odds_probability_type)
     return match_data
