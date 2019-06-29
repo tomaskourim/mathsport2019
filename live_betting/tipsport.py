@@ -4,13 +4,17 @@ import logging
 import time
 from typing import List
 
+import numpy as np
 import pandas as pd
 import pytz
+from selenium.common.exceptions import NoSuchElementException
 
+from config import FAIR_ODDS_PARAMETER
 from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import CREDENTIALS_PATH
-from live_betting.inplay_operations import save_first_set_odds
+from live_betting.inplay_operations import save_set_odds
 from live_betting.utils import load_fb_credentials, write_id, click_id
+from odds_to_probabilities import probabilities_from_odds
 
 
 class Tipsport(Bookmaker):
@@ -133,30 +137,51 @@ class Tipsport(Bookmaker):
                                columns=["home", "away", "bookmaker_matchid", "start_time_utc"])
         return matches
 
-    def handle_match(self, bookmaker_matchid: str):
-        self.handle_prematch(self, bookmaker_matchid)
+    def handle_match(self, bookmaker_matchid: str, c_lambda: float):
+        starting_odds = self.handle_prematch(bookmaker_matchid)
+        home_probability = probabilities_from_odds(np.asarray(starting_odds), "1.set", FAIR_ODDS_PARAMETER)[0]
+        self.handle_inplay(bookmaker_matchid, home_probability, c_lambda)
 
-    def handle_prematch(self, self1, bookmaker_matchid):
+    def handle_inplay(self, bookmaker_matchid: str, home_probability: float, c_lambda: float):
+        self.driver.get("".join([self.tennis_match_live_base_url, bookmaker_matchid]))
+        time.sleep(self.seconds_to_sleep)
+
+        set_number = 1
+        last_set_state = (0, 0)
+
+        # while match not finished
+        while ~self.match_finished():
+            # wait for the set to finish
+            current_set_state = self.wait_for_set_end(set_number, last_set_state)
+            home_probability = self.evaluate_and_bet(last_set_state, current_set_state, c_lambda, bookmaker_matchid,
+                                                     set_number, home_probability)
+            last_set_state = current_set_state
+            set_number = set_number + 1
+
+        pass
+
+    def handle_prematch(self, bookmaker_matchid) -> tuple:
         self.driver.get("".join([self.tennis_match_base_url, bookmaker_matchid]))
         time.sleep(self.seconds_to_sleep)
         click_id(self.driver, "matchName" + bookmaker_matchid)
         time.sleep(self.short_seconds_to_sleep)
 
         last_odds = (None, None)
+        current_odds = (None, None)
         while ~self.match_started():
-            current_odds = self.get_first_set_odds()
+            current_odds = self.get_set_odds(1)
             if current_odds != last_odds:
-                save_first_set_odds(current_odds, self.database_id, bookmaker_matchid)
+                save_set_odds(current_odds, self.database_id, bookmaker_matchid, 1)
                 last_odds = current_odds
             self.wait_half_to_matchstart()
             self.driver.refresh()
             time.sleep(self.short_seconds_to_sleep)
             click_id(self.driver, "matchName" + bookmaker_matchid)
             time.sleep(self.short_seconds_to_sleep)
-        pass
+        return current_odds
 
-    def get_first_set_odds(self) -> tuple:
-        elem_base = self.driver.find_element_by_xpath("//span[@title='Vítěz 1. setu']")
+    def get_set_odds(self, set_number: int) -> tuple:
+        elem_base = self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
         elem_kurzy = elem_base.find_elements_by_xpath("./../../..//div[@class='tdEventCells']//span")
         kurzy = (elem_kurzy[1].text, elem_kurzy[3].text)
         return kurzy
@@ -164,16 +189,57 @@ class Tipsport(Bookmaker):
     def match_started(self) -> bool:
         elem_base = self.driver.find_element_by_xpath("//span[@title='Vítěz 1. setu']")
         elem_kurzy = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
-        if "disabled" in elem_kurzy[0].get_attribute("class") and "disabled" in elem_kurzy[1].get_attribute("class"):
-            logging.error(f"Match started at: {datetime.datetime.now()}")
-            return True
+        starting_time = self.get_starting_time()
+        utc_time = pytz.utc.localize(datetime.datetime.utcnow())
+        if starting_time - utc_time < datetime.timedelta(seconds=30):
+            if "disabled" in elem_kurzy[0].get_attribute("class") and "disabled" in elem_kurzy[1].get_attribute(
+                    "class"):
+                logging.error(f"Match started at: {datetime.datetime.now()}")
+                return True
         return False
 
     def wait_half_to_matchstart(self):
+        starting_time = self.get_starting_time()
+        utc_time = pytz.utc.localize(datetime.datetime.utcnow())
+        seconds_to_sleep = max((starting_time - utc_time).total_seconds() / 2, self.seconds_to_sleep)
+        time.sleep(seconds_to_sleep)
+        pass
+
+    def get_starting_time(self) -> datetime:
         starting_time = datetime.datetime.strptime(
             self.driver.find_elements_by_xpath("//div[@class='actualState']")[1].text, '%d.%m.%Y %H:%M')
         starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
-        utc_time = pytz.utc.localize(datetime.datetime.utcnow())
-        seconds_to_sleep = (starting_time - utc_time).total_seconds() / 2
-        time.sleep(seconds_to_sleep)
+        return starting_time
+
+    def evaluate_and_bet(self, last_set_state, current_set_state, c_lambda, bookmaker_matchid, set_number,
+                         home_probability: float):
+        # evaluate last bet
+        if set_number > 1:
+            self.evaluate_bet(last_set_state, current_set_state)
+        # save odds for next set
+        set_odds = self.get_set_odds(set_number + 1)
+        save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number + 1)
+
+        self.bet_set(home_probability, set_odds, last_set_state, current_set_state, c_lambda, bookmaker_matchid)
+        return set_odds
+
+    def match_finished(self):
+        try:
+            self.driver.find_element_by_xpath("//div[@title='Ukončeno']")
+            return True
+        except NoSuchElementException:
+            return False
+
+    def evaluate_bet(self, last_set_state, current_set_state):
+        pass
+
+    def bet_set(self, home_probability: float, set_odds, last_set_state, current_set_state, c_lambda,
+                bookmaker_matchid):
+        # bet if possible
+        # save bet
+        pass
+
+    def wait_for_set_end(self, set_number, last_set_state):
+        # while True:
+        #     # cur_set_state=
         pass
