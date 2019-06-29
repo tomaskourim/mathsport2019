@@ -127,6 +127,7 @@ CREATE TABLE bet (
     bet_type           BETTYPE   NOT NULL,
     match_part         MATCHPART NOT NULL,
     odd                FLOAT     NOT NULL,
+    probability        FLOAT     NOT NULL,
     result             BOOLEAN,
     FOREIGN KEY (bookmaker_id, match_bookmaker_id) REFERENCES matches_bookmaker(bookmaker_id, match_bookmaker_id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (bookmaker_id, match_bookmaker_id, bet_type, match_part)
