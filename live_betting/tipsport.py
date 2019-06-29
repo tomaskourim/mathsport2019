@@ -2,7 +2,7 @@ import datetime
 import json
 import logging
 import time
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -12,7 +12,7 @@ from selenium.common.exceptions import NoSuchElementException
 from config import FAIR_ODDS_PARAMETER
 from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import CREDENTIALS_PATH, MINUTES_PER_GAME
-from live_betting.inplay_operations import save_set_odds
+from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set
 from live_betting.utils import load_fb_credentials, write_id, click_id
 from odds_to_probabilities import probabilities_from_odds
 
@@ -147,15 +147,14 @@ class Tipsport(Bookmaker):
         time.sleep(self.seconds_to_sleep)
 
         set_number = 1
-        last_set_state = (0, 0)
-
+        last_set_score = (0, 0)
         # while match not finished
         while ~self.match_finished():
             # wait for the set to finish
-            current_set_state = self.wait_for_set_end(set_number, last_set_state)
-            home_probability = self.evaluate_and_bet(last_set_state, current_set_state, c_lambda, bookmaker_matchid,
+            current_set_score = self.wait_for_set_end(set_number, last_set_score)
+            home_probability = self.evaluate_and_bet(last_set_score, current_set_score, c_lambda, bookmaker_matchid,
                                                      set_number, home_probability)
-            last_set_state = current_set_state
+            last_set_score = current_set_score
             set_number = set_number + 1
 
         pass
@@ -211,17 +210,18 @@ class Tipsport(Bookmaker):
         starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
         return starting_time
 
-    def evaluate_and_bet(self, last_set_state, current_set_state, c_lambda, bookmaker_matchid, set_number,
-                         home_probability: float):
+    def evaluate_and_bet(self, last_set_score: tuple, current_set_score: tuple, c_lambda: float, bookmaker_matchid: str,
+                         set_number: int, home_probability: float) -> float:
         # evaluate last bet
         if set_number > 1:
-            self.evaluate_bet(last_set_state, current_set_state)
+            evaluate_bet_on_set(last_set_score, current_set_score, self.database_id, bookmaker_matchid, set_number)
         # save odds for next set
         set_odds = self.get_set_odds(set_number + 1)
         save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number + 1)
 
-        self.bet_set(home_probability, set_odds, last_set_state, current_set_state, c_lambda, bookmaker_matchid)
-        return set_odds
+        home_probability = self.bet_set(home_probability, set_odds, last_set_score, current_set_score, c_lambda,
+                                        bookmaker_matchid)
+        return home_probability
 
     def match_finished(self):
         try:
@@ -230,16 +230,13 @@ class Tipsport(Bookmaker):
         except NoSuchElementException:
             return False
 
-    def evaluate_bet(self, last_set_state, current_set_state):
-        pass
-
     def bet_set(self, home_probability: float, set_odds, last_set_state, current_set_state, c_lambda,
                 bookmaker_matchid):
         # bet if possible
         # save bet
         pass
 
-    def wait_for_set_end(self, set_number: int, last_set_state: tuple):
+    def wait_for_set_end(self, set_number: int, last_set_state: tuple) -> tuple:
 
         while True:
             try:
@@ -251,13 +248,13 @@ class Tipsport(Bookmaker):
             if last_set_state != set_score:
                 return set_score
             elif max(game_score) < 5:
-                time.sleep((5 - max(game_score)) * MINUTES_PER_GAME * 60)  # wait minumal number of games to play
+                time.sleep((5 - max(game_score)) * MINUTES_PER_GAME * 60)  # wait minimal number of games to play
             elif game_score[0] == 5 and game_score[1] == 5:
                 time.sleep(MINUTES_PER_GAME * 60)  # wait 1 game
             else:
                 time.sleep(MINUTES_PER_GAME * 15)  # wait quarter of game
 
-    def get_score_with_video(self, set_number):
+    def get_score_with_video(self, set_number: int) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
         raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
         set_score = raw_text[:3].split(':')
         set_score = [int(x) for x in set_score]
@@ -265,7 +262,7 @@ class Tipsport(Bookmaker):
         game_score = [int(x) for x in game_score]
         return tuple(set_score), tuple(game_score)
 
-    def get_score_without_video(self, set_number):
+    def get_score_without_video(self, set_number: int) -> Tuple[Tuple[int, int], Tuple[int, int]]:
         elems = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
         home_raw = elems[1].text
         away_raw = elems[2].text

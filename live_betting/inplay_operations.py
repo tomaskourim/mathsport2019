@@ -22,3 +22,25 @@ def save_set_odds(odds: tuple, bookmaker_id: int, bookmaker_matchid: str, set_nu
     else:
         raise db_returned
     pass
+
+
+def evaluate_bet_on_set(last_set_score, current_set_score, book_id, bookmaker_matchid, set_number):
+    query = "SELECT * FROM bet WHERE bookmaker_id='%s' AND match_bookmaker_id='%s' AND match_part=%s"
+    placed_bet = execute_sql_postgres(query, [book_id, bookmaker_matchid, "".join(['set', str(set_number)])])
+    if placed_bet is not None:
+        if placed_bet[6] is not None:
+            raise Exception(f"Evaluating bet that is already \
+                    evaluated: {[book_id, bookmaker_matchid, ''.join(['set', str(set_number)])]}")
+        if current_set_score[0] > last_set_score[0] and current_set_score[1] == last_set_score[1]:
+            home = True
+        elif current_set_score[1] > last_set_score[1] and current_set_score[0] == last_set_score[0]:
+            home = False
+        else:
+            raise Exception(f"Unexpected scores: {last_set_score}, {current_set_score}")
+        if (home and placed_bet[3] == 'home') or (~home and placed_bet[3] == 'away'):
+            won = True
+        else:
+            won = False
+        query = "UPDATE bet SET result = %s WHERE bookmaker_id='%s' AND match_bookmaker_id='%s' AND match_part=%s"
+        execute_sql_postgres(query, [won, book_id, bookmaker_matchid, "".join(['set', str(set_number)])], True)
+    pass
