@@ -79,8 +79,8 @@ def update_match_start(match: pd.Series, tournament_id: int):
             f'Updating starting time. Original time {db_returned[0]}. New time {match.start_time_utc}. Match: {match}')
         query = "UPDATE matches SET start_time_utc = %s WHERE tournament_id=%s AND home=%s AND away=%s"
         time_params = [match.start_time_utc]
-        params = time_params.extend(params)
-        execute_sql_postgres(query, params, True)
+        time_params.extend(params)
+        execute_sql_postgres(query, time_params, True)
     pass
 
 
