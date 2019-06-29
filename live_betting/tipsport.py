@@ -11,7 +11,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from config import FAIR_ODDS_PARAMETER
 from live_betting.bookmaker import Bookmaker
-from live_betting.config_betting import CREDENTIALS_PATH
+from live_betting.config_betting import CREDENTIALS_PATH, MINUTES_PER_GAME
 from live_betting.inplay_operations import save_set_odds
 from live_betting.utils import load_fb_credentials, write_id, click_id
 from odds_to_probabilities import probabilities_from_odds
@@ -182,17 +182,17 @@ class Tipsport(Bookmaker):
 
     def get_set_odds(self, set_number: int) -> tuple:
         elem_base = self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
-        elem_kurzy = elem_base.find_elements_by_xpath("./../../..//div[@class='tdEventCells']//span")
-        kurzy = (elem_kurzy[1].text, elem_kurzy[3].text)
-        return kurzy
+        elem_odds = elem_base.find_elements_by_xpath("./../../..//div[@class='tdEventCells']//span")
+        odds = (elem_odds[1].text, elem_odds[3].text)
+        return odds
 
     def match_started(self) -> bool:
         elem_base = self.driver.find_element_by_xpath("//span[@title='Vítěz 1. setu']")
-        elem_kurzy = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
+        elem_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
         starting_time = self.get_starting_time()
         utc_time = pytz.utc.localize(datetime.datetime.utcnow())
         if starting_time - utc_time < datetime.timedelta(seconds=30):
-            if "disabled" in elem_kurzy[0].get_attribute("class") and "disabled" in elem_kurzy[1].get_attribute(
+            if "disabled" in elem_odds[0].get_attribute("class") and "disabled" in elem_odds[1].get_attribute(
                     "class"):
                 logging.error(f"Match started at: {datetime.datetime.now()}")
                 return True
@@ -225,7 +225,7 @@ class Tipsport(Bookmaker):
 
     def match_finished(self):
         try:
-            self.driver.find_element_by_xpath("//div[@title='Ukončeno']")
+            self.driver.find_element_by_xpath("//span[@class='removalCountdownText']")
             return True
         except NoSuchElementException:
             return False
@@ -239,7 +239,38 @@ class Tipsport(Bookmaker):
         # save bet
         pass
 
-    def wait_for_set_end(self, set_number, last_set_state):
-        # while True:
-        #     # cur_set_state=
-        pass
+    def wait_for_set_end(self, set_number: int, last_set_state: tuple):
+
+        while True:
+            try:
+                # with live video stream
+                set_score, game_score = self.get_score_with_video(set_number)
+            except NoSuchElementException:
+                # w/out live video stream
+                set_score, game_score = self.get_score_without_video(set_number)
+            if last_set_state != set_score:
+                return set_score
+            elif max(game_score) < 5:
+                time.sleep((5 - max(game_score)) * MINUTES_PER_GAME * 60)  # wait minumal number of games to play
+            elif game_score[0] == 5 and game_score[1] == 5:
+                time.sleep(MINUTES_PER_GAME * 60)  # wait 1 game
+            else:
+                time.sleep(MINUTES_PER_GAME * 15)  # wait quarter of game
+
+    def get_score_with_video(self, set_number):
+        raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
+        set_score = raw_text[:3].split(':')
+        set_score = [int(x) for x in set_score]
+        game_score = raw_text.split(' - ')[1].split(' ')[set_number - 1].split(':')
+        game_score = [int(x) for x in game_score]
+        return tuple(set_score), tuple(game_score)
+
+    def get_score_without_video(self, set_number):
+        elems = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
+        home_raw = elems[1].text
+        away_raw = elems[2].text
+        home_sets = int(home_raw.split('\n')[0])
+        away_sets = int(away_raw.split('\n')[0])
+        home_games = int(home_raw.split('\n')[set_number])
+        away_games = int(away_raw.split('\n')[set_number])
+        return (home_sets, away_sets), (home_games, away_games)

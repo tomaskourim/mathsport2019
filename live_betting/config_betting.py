@@ -2,3 +2,5 @@ WEBDRIVER_PATH = "C:\\Users\\1\\odrive\\Dropbox\\Tip\\Java moje\\chromedriver.ex
 CREDENTIALS_PATH = "credentials.json"
 
 TIME_TO_MATCHSTART_MINUTES = 20
+
+MINUTES_PER_GAME = 2
