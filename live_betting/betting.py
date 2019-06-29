@@ -79,41 +79,35 @@ def get_clambda() -> float:
     probabilities = pd.DataFrame(get_probabilities_from_odds(matches_data, odds_probability_type))
     matches_data = matches_data.assign(probability_predicted_player=probabilities[0],
                                        probability_not_predicted_player=probabilities[1])
-    training_set = matches_data[matches_data["year"] == datetime.datetime.utcnow().year-1]
+    training_set = matches_data[matches_data["year"] == datetime.datetime.utcnow().year - 1]
     c_lambda = find_single_lambda(training_set)
     return c_lambda
 
 
 if __name__ == '__main__':
-    start_time = datetime.datetime.now()
     logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(
         description="")
 
-    # get lambda coefficient from somewhere (asi z optimalizace 2018)
+    # get lambda coefficient
     clambda = get_clambda()
     # initialize bookmaker bettor
     main_book = Tipsport()
 
-    # get matches about to start, start new thread for each, process
-    starting_matches_ids = get_starting_matches()
-    logging.error(f"Matches to start: {len(starting_matches_ids)}")
-    for bookmaker_match_id_tuple in starting_matches_ids:
-        # handle_match(bookmaker_match_id_tuple[0])
-        thread = threading.Thread(target=handle_match, args=(bookmaker_match_id_tuple[0], clambda))
-        thread.start()
-        logging.info(f"Main thread handling match: {bookmaker_match_id_tuple[0]}")
-        time.sleep(30)
-
-    # update database
-    start_time_run = datetime.datetime.now()
-
-    scan_update(main_book)
-    end_time = datetime.datetime.now()
-    logging.error(f"\nDuration update run: {(end_time - start_time_run)}")
-
     # regularly repeat
+    while True: # TODO use Flask and cron or something more reasonable then while true
+        # get matches about to start, start new thread for each, process
+        starting_matches_ids = get_starting_matches()
+        logging.error(f"Matches to start: {len(starting_matches_ids)}")
+        for bookmaker_match_id_tuple in starting_matches_ids:
+            thread = threading.Thread(target=handle_match, args=(bookmaker_match_id_tuple[0], clambda))
+            thread.start()
+            logging.info(f"Main thread handling match: {bookmaker_match_id_tuple[0]}")
+            time.sleep(30)
 
-    main_book.close()
-    end_time = datetime.datetime.now()
-    logging.error(f"\nDuration: {(end_time - start_time)}")
+        # update database
+        start_time_run = datetime.datetime.now()
+        scan_update(main_book)
+        end_time = datetime.datetime.now()
+        logging.error(f"\nDuration update run: {(end_time - start_time_run)}")
+        time.sleep(60)  # wait a minute
