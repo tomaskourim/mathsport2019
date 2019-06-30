@@ -249,7 +249,7 @@ class Tipsport(Bookmaker):
                 last_set_score = current_set_score
                 set_number = set_number + 1
             except Exception as error:
-                logging.error(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
+                logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
         pass
 
