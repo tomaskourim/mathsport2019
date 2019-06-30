@@ -145,8 +145,8 @@ class Tipsport(Bookmaker):
         starting_odds = self.handle_prematch(bookmaker_matchid)
         logging.info(f"Finished prematch handling of match {bookmaker_matchid}. Starting odds is {starting_odds}.")
         home_probability = probabilities_from_odds(np.asarray(starting_odds), "1.set", FAIR_ODDS_PARAMETER)[0]
-        logging.info(
-            f"Finished probability calculation of match {bookmaker_matchid}. Starting home probability is {home_probability}.")
+        logging.info(f"Finished probability calculation of match {bookmaker_matchid}. \
+                        Starting home probability is {home_probability}.")
         self.handle_inplay(bookmaker_matchid, home_probability, c_lambda)
 
     def handle_prematch(self, bookmaker_matchid) -> tuple:
@@ -239,7 +239,7 @@ class Tipsport(Bookmaker):
         last_set_score = (0, 0)
         errors_in_match = 0
         # while match not finished
-        while (not self.match_finished()) and errors_in_match < 5:
+        while (not self.match_finished(bookmaker_matchid)) and errors_in_match < 5:
             # wait for the set to finish
             try:
                 current_set_score = self.wait_for_set_end(set_number, last_set_score)
@@ -253,9 +253,10 @@ class Tipsport(Bookmaker):
                 errors_in_match = errors_in_match + 1
         pass
 
-    def match_finished(self):
+    def match_finished(self, bookmaker_matchid: str) -> bool:
         try:
             self.driver.find_element_by_xpath("//span[@class='removalCountdownText']")
+            logging.info(f"Match {bookmaker_matchid} finished.")
             return True
         except NoSuchElementException:
             return False
