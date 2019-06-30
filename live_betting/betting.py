@@ -92,10 +92,20 @@ def get_clambda() -> float:
     return c_lambda
 
 
+def clear_inplay():
+    query = "DELETE FROM inplay"
+    execute_sql_postgres(query, None, True)
+    logging.info("Table inplay cleared.")
+    pass
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
     parser = argparse.ArgumentParser(
         description="")
+
+    # in case it crashed with inplay games
+    clear_inplay()
 
     # get lambda coefficient
     clambda = get_clambda()
