@@ -11,6 +11,7 @@ import scipy.optimize as opt
 import scipy.stats as stat
 
 import config
+from config import TOURNAMENTS, PROBABILITY_BINS, SETS_TO_WIN, COLUMN_NAMES
 from data_operations import transform_home_favorite, get_probabilities_from_odds, predicted_player_won_set
 from database_operations import get_match_data
 from descriptive_statistics import analyze_data
@@ -124,9 +125,9 @@ def evaluate_single_lambda_tournaments(observations: pd.DataFrame) -> List[float
 def evaluate_single_lambda(c_lambda: float, matches_data: pd.DataFrame) -> pd.DataFrame:
     _, observations = log_likelihood_single_lambda(c_lambda, matches_data, True)
 
-    possible_sets = list(range(2, 2 * config.SETS_TO_WIN))
+    possible_sets = list(range(2, 2 * SETS_TO_WIN))
     result = pd.DataFrame(
-        columns=config.TOURNAMENTS + config.PROBABILITY_BINS[1:len(config.PROBABILITY_BINS)] + [
+        columns=TOURNAMENTS + PROBABILITY_BINS[1:len(PROBABILITY_BINS)] + [
             "All groups"], index=possible_sets + ["All sets"])
 
     logging.info("Starting evaluation:")
@@ -221,7 +222,7 @@ if __name__ == '__main__':
         config.FAIR_ODDS_PARAMETER = args.fair_odds_parameter
 
     # get matches, results and odds from database
-    initial_matches_data = pd.DataFrame(get_match_data(input_odds_probability_type), columns=config.COLUMN_NAMES)
+    initial_matches_data = pd.DataFrame(get_match_data(input_odds_probability_type), columns=COLUMN_NAMES)
 
     fit_and_evaluate(initial_matches_data, input_first_year, input_last_year, input_odds_probability_type,
                      input_do_transform_home_favorite)
