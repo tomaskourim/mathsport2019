@@ -5,3 +5,4 @@ __pycache__/
 *.gz
 *.7z
 live_betting/credentials.json
+live_betting/database.ini
