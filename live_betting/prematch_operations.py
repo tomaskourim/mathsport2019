@@ -91,7 +91,7 @@ def save_matches(matches: pd.DataFrame, tournament_id: int, book_id: int):
         params = match[["home", "away", "start_time_utc"]].tolist()
         params.append(tournament_id)
         db_returned = save_match(params)
-        if type(db_returned) == IntegrityError:
+        if type(db_returned) == IntegrityError or type(db_returned) == psycopg2.errors.UniqueViolation:
             if 'duplicate key value violates unique constraint' in db_returned.args[0]:
                 update_match_start(match, tournament_id)
                 continue

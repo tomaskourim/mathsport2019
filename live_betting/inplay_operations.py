@@ -1,3 +1,4 @@
+import psycopg2
 from psycopg2._psycopg import IntegrityError
 
 from database_operations import execute_sql_postgres
@@ -9,7 +10,7 @@ def save_set_odds(odds: tuple, bookmaker_id: int, bookmaker_matchid: str, set_nu
     set_to_save = f"set{set_number}"
     params = [bookmaker_id, bookmaker_matchid, 'home_away', set_to_save, odds[0], odds[1]]
     db_returned = execute_sql_postgres(query, params, True)
-    if type(db_returned) == IntegrityError:
+    if type(db_returned) == IntegrityError or type(db_returned) == psycopg2.errors.UniqueViolation:
         if 'duplicate key value violates unique constraint' in db_returned.args[0]:
             query = "UPDATE odds SET odd1 = %s, odd2 = %s WHERE \
                 bookmaker_id  = %s AND match_bookmaker_id = %s AND odds_type = %s AND match_part = %s"
