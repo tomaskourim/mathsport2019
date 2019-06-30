@@ -6,7 +6,7 @@ import pandas as pd
 
 from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import CREDENTIALS_PATH
-from live_betting.utils import load_fb_credentials, write_id, click_id
+from live_betting.utils import load_credentials, write_id, click_id
 
 
 class Tipsport(Bookmaker):
