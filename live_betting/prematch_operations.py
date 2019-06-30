@@ -1,5 +1,5 @@
+import datetime
 import logging
-from datetime import datetime
 
 import pandas as pd
 from psycopg2._psycopg import IntegrityError
@@ -21,7 +21,7 @@ def save_tournament(params: list) -> tuple:
 
 
 def save_match(params: list) -> tuple:
-    query = f"INSERT INTO matches (home, away, start_date, start_time, tournament_id) VALUES ({', '.join(['%s'] * 5)}) \
+    query = f"INSERT INTO matches (home, away, start_time_utc, tournament_id) VALUES ({', '.join(['%s'] * 4)}) \
                     RETURNING id"
     return execute_sql_postgres(query, params, True)
 
@@ -44,7 +44,7 @@ def get_save_tournaments(book: Bookmaker) -> pd.DataFrame:
     logging.info(tournaments)
 
     book_id = book.database_id
-    year = datetime.now().year
+    year = datetime.datetime.now().year
 
     for i, tournament in tournaments.iterrows():
         if tournament['sex'] is None or tournament['type'] is None or tournament['surface'] is None:
@@ -69,23 +69,25 @@ def get_save_tournaments(book: Bookmaker) -> pd.DataFrame:
 
 
 def update_match_start(match: pd.Series, tournament_id: int):
-    query = "SELECT start_date, start_time FROM matches WHERE tournament_id=%s AND home=%s AND away=%s"
+    query = "SELECT start_time_utc FROM matches WHERE tournament_id=%s AND home=%s AND away=%s"
     params = [tournament_id, match.home, match.away]
     db_returned = execute_sql_postgres(query, params)
-    if datetime.strptime(match.start_time, '%H:%M').time() == db_returned[1] and datetime.strptime(
-            match.start_date, '%d.%m.%Y').date() == db_returned[0]:
+    if match.start_time_utc == db_returned[0]:
         pass
     else:
-        query = "UPDATE matches SET start_date = %s, start_time = %s WHERE tournament_id=%s AND home=%s AND away=%s"
-        time_params = [match.start_date, match.start_time]
-        params = time_params.extend(params)
-        execute_sql_postgres(query, params, True)
+        logging.info(
+            f'Updating starting time. Original time {db_returned[0]}. New time {match.start_time_utc}. Match: {match}')
+        query = "UPDATE matches SET start_time_utc = %s WHERE tournament_id=%s AND home=%s AND away=%s"
+        time_params = [match.start_time_utc]
+        time_params.extend(params)
+        execute_sql_postgres(query, time_params, True)
     pass
 
 
 def save_matches(matches: pd.DataFrame, tournament_id: int, book_id: int):
     for i, match in matches.iterrows():
-        params = match[["home", "away", "start_date", "start_time"]].tolist()
+
+        params = match[["home", "away", "start_time_utc"]].tolist()
         params.append(tournament_id)
         db_returned = save_match(params)
         if type(db_returned) == IntegrityError:

@@ -1,8 +1,15 @@
 import argparse
+import datetime
 import logging
-from datetime import datetime
+import threading
+import time
+from typing import List
 
+import pytz
+
+from database_operations import execute_sql_postgres
 from live_betting.bookmaker import Bookmaker
+from live_betting.config_betting import TIME_TO_MATCHSTART_MINUTES
 from live_betting.prematch_operations import get_save_tournaments, process_tournaments_save_matches
 from live_betting.tipsport import Tipsport
 
@@ -17,13 +24,62 @@ def scan_update(book: Bookmaker):
     pass
 
 
+def get_starting_matches() -> List[tuple]:
+    utc_time = pytz.utc.localize(datetime.datetime.utcnow())
+    limit_start_time = utc_time + datetime.timedelta(minutes=TIME_TO_MATCHSTART_MINUTES)
+    query = "SELECT match_bookmaker_id FROM \
+                (SELECT * FROM matches WHERE start_time_utc > %s AND start_time_utc < %s) AS matches \
+                JOIN \
+                matches_bookmaker ON matches.id = match_id \
+                EXCEPT \
+                SELECT match_bookmaker_id FROM inplay"
+    params = [utc_time, limit_start_time]
+    return execute_sql_postgres(query, params, False, True)
+
+
+def insert_inplay(bookmaker_matchid, book_id):
+    query = "INSERT INTO inplay (bookmaker_id, match_bookmaker_id) VALUES (%s, %s)"
+    execute_sql_postgres(query, [book_id, bookmaker_matchid], True)
+    pass
+
+
+def remove_inplay(bookmaker_matchid, book_id):
+    query = "DELETE FROM inplay WHERE bookmaker_id=%s AND  match_bookmaker_id=%s"
+    execute_sql_postgres(query, [str(book_id), str(bookmaker_matchid)], True)
+    pass
+
+
+def handle_match(bookmaker_matchid: str, ):
+    logging.info(f"Handling match:{bookmaker_matchid}")
+    book = Tipsport()
+    try:
+        insert_inplay(bookmaker_matchid, book.database_id)
+        book.handle_match(bookmaker_matchid, 1)
+    except Exception as error:
+        logging.error(error)
+    finally:
+        remove_inplay(bookmaker_matchid, book.database_id)
+        book.close()
+
+    logging.info(f"Finished handling match: {bookmaker_matchid}")
+    pass
+
+
 if __name__ == '__main__':
-    start_time = datetime.now()
-    logging.basicConfig(level=logging.ERROR)
+    start_time = datetime.datetime.now()
+    logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(
         description="")
 
-    # TODO use logging
+    starting_matches_ids = get_starting_matches()
+    for bookmaker_match_id_tuple in starting_matches_ids:
+        # handle_match(bookmaker_match_id_tuple[0])
+        thread = threading.Thread(target=handle_match, args=(bookmaker_match_id_tuple[0],))
+        thread.start()
+        logging.info(f"{bookmaker_match_id_tuple[0]} Main thread handling match: {bookmaker_match_id_tuple[0]}")
+        time.sleep(15)
+
+    logging.info(f"Main thread finish")
 
     # crone 1x za N minut.
     # Podivam, jeslti mam neco v live nebo jestli mi zacina zapas. Kdyz ne, pustim update databaze.
@@ -43,14 +99,15 @@ if __name__ == '__main__':
     # login
     # book.login()
     # get matches with betting potential
-    start_time_run = datetime.now()
+    start_time_run = datetime.datetime.now()
+
     scan_update(main_book)
-    end_time = datetime.now()
+    end_time = datetime.datetime.now()
     logging.info(f"\nDuration first run: {(end_time - start_time_run)}")
 
-    # start_time_run = datetime.now()
+    # start_time_run = datetime.datetime.now()
     # scan_update(main_book)
-    # end_time = datetime.now()
+    # end_time = datetime.datetime.now()
     # logging.info(f"\nDuration second run: {(end_time - start_time_run)}")
 
     # for matches about to start, get first set odds & save to DB
@@ -78,5 +135,5 @@ if __name__ == '__main__':
     # save all odds, bets and results
     # evaluate betting
     main_book.close()
-    end_time = datetime.now()
-    logging.error(f"\nDuration: {(end_time - start_time)}")
+    end_time = datetime.datetime.now()
+    logging.info(f"\nDuration: {(end_time - start_time)}")
