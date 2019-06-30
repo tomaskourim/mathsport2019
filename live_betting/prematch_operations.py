@@ -2,6 +2,7 @@ import datetime
 import logging
 
 import pandas as pd
+import psycopg2
 from psycopg2._psycopg import IntegrityError
 from selenium.common.exceptions import StaleElementReferenceException
 
@@ -52,7 +53,7 @@ def get_save_tournaments(book: Bookmaker) -> pd.DataFrame:
         params = tournament[['tournament_name', 'sex', 'type', 'surface']].tolist()
         params.append(year)
         db_returned = save_tournament(params)
-        if type(db_returned) == IntegrityError:
+        if type(db_returned) == IntegrityError or type(db_returned) == psycopg2.errors.UniqueViolation:
             if 'duplicate key value violates unique constraint' in db_returned.args[0]:
                 continue
             else:
@@ -90,7 +91,7 @@ def save_matches(matches: pd.DataFrame, tournament_id: int, book_id: int):
         params = match[["home", "away", "start_time_utc"]].tolist()
         params.append(tournament_id)
         db_returned = save_match(params)
-        if type(db_returned) == IntegrityError:
+        if type(db_returned) == IntegrityError or type(db_returned) == psycopg2.errors.UniqueViolation:
             if 'duplicate key value violates unique constraint' in db_returned.args[0]:
                 update_match_start(match, tournament_id)
                 continue

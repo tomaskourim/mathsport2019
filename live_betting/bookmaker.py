@@ -1,6 +1,7 @@
 import time
 
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 from database_operations import execute_sql_postgres
 from live_betting.config_betting import WEBDRIVER_PATH
@@ -10,7 +11,14 @@ class Bookmaker:
     def __init__(self, home_url, name):
         self._home_url = home_url
         self.name = name
-        self.driver = webdriver.Chrome(executable_path=WEBDRIVER_PATH)
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("start-maximized")
+        options.add_argument("disable-infobars")
+        options.add_argument("--disable-extensions")
+        options.add_argument("window-size=1920,1080")
+        self.driver = webdriver.Chrome(chrome_options=options, executable_path=WEBDRIVER_PATH)
         self.driver.maximize_window()
         self.driver.get(self._home_url)
         self.SCROLL_PAUSE_TIME = 0.5
