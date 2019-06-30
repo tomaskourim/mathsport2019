@@ -142,66 +142,56 @@ class Tipsport(Bookmaker):
 
     def handle_match(self, bookmaker_matchid: str, c_lambda: float):
         starting_odds = self.handle_prematch(bookmaker_matchid)
+        logging.info(f"Finished prematch handling of match {bookmaker_matchid}. Starting odds is {starting_odds}.")
         home_probability = probabilities_from_odds(np.asarray(starting_odds), "1.set", FAIR_ODDS_PARAMETER)[0]
+        logging.info(
+            f"Finished optimization of match {bookmaker_matchid}. Starting home probability is {home_probability}.")
         self.handle_inplay(bookmaker_matchid, home_probability, c_lambda)
 
-    def handle_inplay(self, bookmaker_matchid: str, home_probability: float, c_lambda: float):
-        self.driver.get("".join([self.tennis_match_live_base_url, bookmaker_matchid]))
-        time.sleep(self.seconds_to_sleep)
-
-        set_number = 1
-        last_set_score = (0, 0)
-        # while match not finished
-        while ~self.match_finished():
-            # wait for the set to finish
-            current_set_score = self.wait_for_set_end(set_number, last_set_score)
-            home_probability = self.evaluate_and_bet(last_set_score, current_set_score, c_lambda, bookmaker_matchid,
-                                                     set_number, home_probability)
-            last_set_score = current_set_score
-            set_number = set_number + 1
-
-        pass
-
     def handle_prematch(self, bookmaker_matchid) -> tuple:
-        self.driver.get("".join([self.tennis_match_base_url, bookmaker_matchid]))
-        time.sleep(self.seconds_to_sleep)
-        click_id(self.driver, "matchName" + bookmaker_matchid)
-        time.sleep(self.short_seconds_to_sleep)
-
         last_odds = (None, None)
         current_odds = (None, None)
-        while ~self.match_started():
+        self.driver.get("".join([self.tennis_match_base_url, bookmaker_matchid]))
+        time.sleep(self.seconds_to_sleep)
+        if ~self.open_odds_menu(bookmaker_matchid):
+            logging.error(f"Unable to open odds menu at beginning, match {bookmaker_matchid}")
+            return current_odds
+
+        while ~self.match_started(bookmaker_matchid):
             current_odds = self.get_set_odds(1)
             if current_odds != last_odds:
                 save_set_odds(current_odds, self.database_id, bookmaker_matchid, 1)
                 last_odds = current_odds
             self.wait_half_to_matchstart()
             self.driver.refresh()
-            time.sleep(self.short_seconds_to_sleep)
-            click_id(self.driver, "matchName" + bookmaker_matchid)
-            time.sleep(self.short_seconds_to_sleep)
+            time.sleep(self.seconds_to_sleep / 2)
+            if ~self.open_odds_menu(bookmaker_matchid):
+                logging.error(f"Unable to open odds menu in loop, match {bookmaker_matchid}")
+                break
         return current_odds
 
-    def get_base_odds_element(self, set_number: int) -> WebElement:
-        return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
+    def match_started(self, bookmaker_matchid) -> bool:
+        utc_time = pytz.utc.localize(datetime.datetime.utcnow())
+        try:
+            elem_base = self.get_base_odds_element(1)
+            elem_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
+            starting_time = self.get_starting_time()
+        except NoSuchElementException:
+            logging.error(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
+            return True
+
+        if starting_time - utc_time < datetime.timedelta(seconds=30):
+            if "disabled" in elem_odds[0].get_attribute("class") and "disabled" in elem_odds[1].get_attribute(
+                    "class"):
+                logging.error(f"Match started at UTC: {utc_time}")
+                return True
+        return False
 
     def get_set_odds(self, set_number: int) -> tuple:
         elem_base = self.get_base_odds_element(set_number)
         elem_odds = elem_base.find_elements_by_xpath("./../../..//div[@class='tdEventCells']//span")
         odds = (elem_odds[1].text, elem_odds[3].text)
         return odds
-
-    def match_started(self) -> bool:
-        elem_base = self.get_base_odds_element(1)
-        elem_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
-        starting_time = self.get_starting_time()
-        utc_time = pytz.utc.localize(datetime.datetime.utcnow())
-        if starting_time - utc_time < datetime.timedelta(seconds=30):
-            if "disabled" in elem_odds[0].get_attribute("class") and "disabled" in elem_odds[1].get_attribute(
-                    "class"):
-                logging.error(f"Match started at: {datetime.datetime.now()}")
-                return True
-        return False
 
     def wait_half_to_matchstart(self):
         starting_time = self.get_starting_time()
@@ -210,25 +200,54 @@ class Tipsport(Bookmaker):
         time.sleep(seconds_to_sleep)
         pass
 
+    def open_odds_menu(self, bookmaker_matchid: str) -> bool:
+        try:
+            click_id(self.driver, "matchName" + bookmaker_matchid)
+            time.sleep(self.short_seconds_to_sleep / 2)
+            return True
+        except NoSuchElementException:
+            logging.error(f"Unable to click on odds element in match {bookmaker_matchid}. Trying again.")
+            self.driver.refresh()
+            time.sleep(self.seconds_to_sleep)
+            try:
+                click_id(self.driver, "matchName" + bookmaker_matchid)
+                time.sleep(self.short_seconds_to_sleep / 2)
+                return True
+            except NoSuchElementException:
+                return False
+        pass
+
+    def get_base_odds_element(self, set_number: int) -> WebElement:
+        return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
+
     def get_starting_time(self) -> datetime:
         starting_time = datetime.datetime.strptime(
             self.driver.find_elements_by_xpath("//div[@class='actualState']")[1].text, '%d.%m.%Y %H:%M')
         starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
         return starting_time
 
-    def evaluate_and_bet(self, last_set_score: tuple, current_set_score: tuple, c_lambda: float, bookmaker_matchid: str,
-                         set_number: int, home_probability: float) -> float:
-        # evaluate last bet
-        if set_number > 1:
-            evaluate_bet_on_set(last_set_score, current_set_score, self.database_id, bookmaker_matchid, set_number)
-        # save odds for next set
-        set_odds = self.get_set_odds(set_number + 1)
-        save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number + 1)
+    # inplay operations
+    def handle_inplay(self, bookmaker_matchid: str, home_probability: float, c_lambda: float):
+        self.driver.get("".join([self.tennis_match_live_base_url, bookmaker_matchid]))
+        time.sleep(self.seconds_to_sleep)
 
-        # bet on next set
-        home_probability = self.bet_set(home_probability, set_odds, last_set_score, current_set_score, c_lambda,
-                                        bookmaker_matchid, set_number)
-        return home_probability
+        set_number = 1
+        last_set_score = (0, 0)
+        errors_in_match = 0
+        # while match not finished
+        while ~self.match_finished() and errors_in_match < 5:
+            # wait for the set to finish
+            try:
+                current_set_score = self.wait_for_set_end(set_number, last_set_score)
+                home_probability = self.evaluate_and_bet(last_set_score, current_set_score, c_lambda, bookmaker_matchid,
+                                                         set_number, home_probability)
+                logging.error(f"Handled set{set_number} in match {bookmaker_matchid}.")
+                last_set_score = current_set_score
+                set_number = set_number + 1
+            except Exception as error:
+                logging.error(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
+                errors_in_match = errors_in_match + 1
+        pass
 
     def match_finished(self):
         try:
@@ -237,21 +256,7 @@ class Tipsport(Bookmaker):
         except NoSuchElementException:
             return False
 
-    def bet_set(self, home_probability: float, set_odds: tuple, last_set_score: tuple, current_set_score: tuple,
-                c_lambda: float, bookmaker_matchid: str, set_number: int):
-
-        home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
-                1 + (1 if home_won_set(current_set_score, last_set_score) else -1))
-        # bet if possible
-        if home_probability > 1 / set_odds[0]:
-            self.bet('home', bookmaker_matchid, set_number, set_odds[0], home_probability)
-        if (1 - home_probability) > 1 / set_odds[1]:
-            self.bet('away', bookmaker_matchid, set_number, set_odds[1], 1 - home_probability)
-
-        return home_probability
-
     def wait_for_set_end(self, set_number: int, last_set_state: tuple) -> tuple:
-
         while True:
             try:
                 # with live video stream
@@ -267,6 +272,33 @@ class Tipsport(Bookmaker):
                 time.sleep(MINUTES_PER_GAME * 60)  # wait 1 game
             else:
                 time.sleep(MINUTES_PER_GAME * 15)  # wait quarter of game
+
+    def evaluate_and_bet(self, last_set_score: tuple, current_set_score: tuple, c_lambda: float, bookmaker_matchid: str,
+                         set_number: int, home_probability: float) -> float:
+        # evaluate last bet
+        if set_number > 1:
+            evaluate_bet_on_set(last_set_score, current_set_score, self.database_id, bookmaker_matchid, set_number)
+        # save odds for next set
+        set_odds = self.get_set_odds(set_number + 1)
+        save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number + 1)
+
+        # bet on next set
+        home_probability = self.bet_set(home_probability, set_odds, last_set_score, current_set_score, c_lambda,
+                                        bookmaker_matchid, set_number)
+        return home_probability
+
+    def bet_set(self, home_probability: float, set_odds: tuple, last_set_score: tuple, current_set_score: tuple,
+                c_lambda: float, bookmaker_matchid: str, set_number: int):
+
+        home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
+                1 + (1 if home_won_set(current_set_score, last_set_score) else -1))
+        # bet if possible
+        if home_probability > 1 / set_odds[0]:
+            self.bet('home', bookmaker_matchid, set_number, set_odds[0], home_probability)
+        if (1 - home_probability) > 1 / set_odds[1]:
+            self.bet('away', bookmaker_matchid, set_number, set_odds[1], 1 - home_probability)
+
+        return home_probability
 
     def get_score_with_video(self, set_number: int) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
         raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
