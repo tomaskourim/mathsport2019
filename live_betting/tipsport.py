@@ -146,7 +146,7 @@ class Tipsport(Bookmaker):
         logging.info(f"Finished prematch handling of match {bookmaker_matchid}. Starting odds is {starting_odds}.")
         home_probability = probabilities_from_odds(np.asarray(starting_odds), "1.set", FAIR_ODDS_PARAMETER)[0]
         logging.info(
-            f"Finished optimization of match {bookmaker_matchid}. Starting home probability is {home_probability}.")
+            f"Finished probability calculation of match {bookmaker_matchid}. Starting home probability is {home_probability}.")
         self.handle_inplay(bookmaker_matchid, home_probability, c_lambda)
 
     def handle_prematch(self, bookmaker_matchid) -> tuple:
@@ -191,7 +191,10 @@ class Tipsport(Bookmaker):
     def get_set_odds(self, set_number: int) -> tuple:
         elem_base = self.get_base_odds_element(set_number)
         elem_odds = elem_base.find_elements_by_xpath("./../../..//div[@class='tdEventCells']//span")
-        odds = (elem_odds[1].text, elem_odds[3].text)
+        try:
+            odds = (float(elem_odds[1].text), float(elem_odds[3].text))
+        except:
+            odds = (float(elem_odds[1].text), float(elem_odds[4].text))
         return odds
 
     def wait_half_to_matchstart(self):
@@ -276,30 +279,33 @@ class Tipsport(Bookmaker):
 
     def evaluate_and_bet(self, last_set_score: tuple, current_set_score: tuple, c_lambda: float, bookmaker_matchid: str,
                          set_number: int, home_probability: float) -> float:
+
+        home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
+                1 + (1 if home_won_set(current_set_score, last_set_score) else -1))
         # evaluate last bet
         if set_number > 1:
             evaluate_bet_on_set(last_set_score, current_set_score, self.database_id, bookmaker_matchid, set_number)
         # save odds for next set
-        set_odds = self.get_set_odds(set_number + 1)
-        save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number + 1)
-
-        # bet on next set
-        home_probability = self.bet_set(home_probability, set_odds, last_set_score, current_set_score, c_lambda,
-                                        bookmaker_matchid, set_number)
+        errors = 0
+        while errors < 5:
+            try:
+                set_odds = self.get_set_odds(set_number + 1)
+                save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number + 1)
+                # bet on next set
+                self.bet_set(home_probability, set_odds, bookmaker_matchid, set_number + 1)
+                break
+            except:
+                errors = errors + 1
+                time.sleep(self.seconds_to_sleep)
         return home_probability
 
-    def bet_set(self, home_probability: float, set_odds: tuple, last_set_score: tuple, current_set_score: tuple,
-                c_lambda: float, bookmaker_matchid: str, set_number: int):
-
-        home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
-                1 + (1 if home_won_set(current_set_score, last_set_score) else -1))
+    def bet_set(self, home_probability: float, set_odds: tuple, bookmaker_matchid: str, set_number: int):
         # bet if possible
         if home_probability > 1 / set_odds[0]:
             self.bet('home', bookmaker_matchid, set_number, set_odds[0], home_probability)
         if (1 - home_probability) > 1 / set_odds[1]:
             self.bet('away', bookmaker_matchid, set_number, set_odds[1], 1 - home_probability)
-
-        return home_probability
+        pass
 
     def get_score_with_video(self, set_number: int) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
         raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
@@ -338,6 +344,9 @@ class Tipsport(Bookmaker):
         try:
             self.driver.find_element_by_xpath("//td[@class='ticketMessage successfullySaved']")
             click_id(self.driver, 'removeAllBets')
+            logging.info(
+                f"Placed bet {bet_type} in match {bookmaker_matchid} on set{set_number} with odd {odd} and \
+                probability {probability}")
             save_bet(self.database_id, bookmaker_matchid, bet_type, "".join(['set', str(set_number)]), odd, probability)
         except NoSuchElementException:
             logging.error(f"Unable to place bet \
