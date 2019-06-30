@@ -4,7 +4,7 @@ from typing import Tuple
 from selenium import webdriver
 
 
-def load_fb_credentials(credentials_file_path: str) -> Tuple[str, str]:
+def load_credentials(credentials_file_path: str) -> Tuple[str, str]:
     credentials = json.load(open(credentials_file_path, "rb"))
     return credentials.get("username"), credentials.get("password")
 

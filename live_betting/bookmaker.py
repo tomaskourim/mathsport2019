@@ -7,8 +7,8 @@ from live_betting.config_betting import WEBDRIVER_PATH
 
 
 class Bookmaker:
-    def __init__(self, url, name):
-        self._home_url = url
+    def __init__(self, home_url, name):
+        self._home_url = home_url
         self.name = name
         self.driver = webdriver.Chrome(executable_path=WEBDRIVER_PATH)
         self.driver.maximize_window()

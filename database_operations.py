@@ -37,7 +37,7 @@ def create_connection(db_file: str) -> sqlite3.Connection:
         conn = sqlite3.connect(db_file)
         return conn
     except sqlite3.Error as e:
-        logging.error(e)
+        logging.warning(e)
 
     return None
 
@@ -61,7 +61,7 @@ def execute_sql(db_path: str, query: str, param: Optional[str],
         if modifying:
             conn.commit()
     except (Exception, sqlite3.DatabaseError) as error:
-        logging.error("Sql exception:", error)
+        logging.warning("Sql exception:", error)
     finally:
         if conn is not None:
             cur.close()
@@ -89,7 +89,7 @@ def execute_many_sql(db_path: str, query: str, param: Optional[str],
         if modifying:
             conn.commit()
     except (Exception, sqlite3.DatabaseError) as error:
-        logging.error("Sql exception:", error)
+        logging.warning("Sql exception:", error)
     finally:
         if conn is not None:
             cur.close()
