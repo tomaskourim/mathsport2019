@@ -40,7 +40,7 @@ def save_match_bookmaker(params: list) -> tuple:
 
 def get_save_tournaments(book: Bookmaker) -> pd.DataFrame:
     tournaments = book.get_tournaments()
-    logging.info("------------------------------------------------------\nPrematch")
+    # logging.info("------------------------------------------------------\nPrematch")
     logging.info(tournaments)
 
     book_id = book.database_id
@@ -107,7 +107,7 @@ def save_matches(matches: pd.DataFrame, tournament_id: int, book_id: int):
 
 def process_tournaments_save_matches(book: Bookmaker, tournaments: pd.DataFrame):
     for i, tournament in tournaments.iterrows():
-        logging.info("------------------------------------------------------")
+        # logging.info("------------------------------------------------------")
         try:
             matches = book.get_matches_tournament(tournament)
             if len(matches) > 0:

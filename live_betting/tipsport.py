@@ -153,11 +153,11 @@ class Tipsport(Bookmaker):
         current_odds = (None, None)
         self.driver.get("".join([self.tennis_match_base_url, bookmaker_matchid]))
         time.sleep(self.seconds_to_sleep)
-        if ~self.open_odds_menu(bookmaker_matchid):
+        if not self.open_odds_menu(bookmaker_matchid):
             logging.error(f"Unable to open odds menu at beginning, match {bookmaker_matchid}")
             return current_odds
 
-        while ~self.match_started(bookmaker_matchid):
+        while not self.match_started(bookmaker_matchid):
             current_odds = self.get_set_odds(1)
             if current_odds != last_odds:
                 save_set_odds(current_odds, self.database_id, bookmaker_matchid, 1)
@@ -165,7 +165,7 @@ class Tipsport(Bookmaker):
             self.wait_half_to_matchstart()
             self.driver.refresh()
             time.sleep(self.seconds_to_sleep / 2)
-            if ~self.open_odds_menu(bookmaker_matchid):
+            if not self.open_odds_menu(bookmaker_matchid):
                 logging.error(f"Unable to open odds menu in loop, match {bookmaker_matchid}")
                 break
         return current_odds
@@ -235,7 +235,7 @@ class Tipsport(Bookmaker):
         last_set_score = (0, 0)
         errors_in_match = 0
         # while match not finished
-        while ~self.match_finished() and errors_in_match < 5:
+        while (not self.match_finished()) and errors_in_match < 5:
             # wait for the set to finish
             try:
                 current_set_score = self.wait_for_set_end(set_number, last_set_score)

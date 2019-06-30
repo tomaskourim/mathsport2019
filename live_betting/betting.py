@@ -62,6 +62,7 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
         book.handle_match(bookmaker_matchid, c_lambda)
     except Exception as error:
         logging.exception(f"While handling match {bookmaker_matchid} error occured {error}")
+        book.driver.save_screenshot(f"screens/{bookmaker_matchid}.png")
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
         book.close()
@@ -81,6 +82,7 @@ def get_clambda() -> float:
                                        probability_not_predicted_player=probabilities[1])
     training_set = matches_data[matches_data["year"] == datetime.datetime.utcnow().year - 1]
     c_lambda = find_single_lambda(training_set)
+    logging.info(f"Optimal lambda is {c_lambda}")
     return c_lambda
 
 
@@ -98,7 +100,7 @@ if __name__ == '__main__':
     while True:  # TODO use Flask and cron or something more reasonable then while true
         # get matches about to start, start new thread for each, process
         starting_matches_ids = get_starting_matches()
-        logging.error(f"Matches to start: {len(starting_matches_ids)}")
+        logging.info(f"Matches to start: {len(starting_matches_ids)}")
         for bookmaker_match_id_tuple in starting_matches_ids:
             thread = threading.Thread(target=handle_match, args=(bookmaker_match_id_tuple[0], clambda))
             thread.start()
