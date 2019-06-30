@@ -102,15 +102,15 @@ def evaluate_observations_single_lambda(observations: pd.DataFrame) -> float:
 
 def evaluate_single_lambda_tournaments(observations: pd.DataFrame) -> List[float]:
     result = []
-    for tournament in config.TOURNAMENTS:
+    for tournament in TOURNAMENTS:
         logging.info(f"\nEvaluating {tournament}")
         observations_current = observations[observations.tournament_name == tournament]
         result.append(evaluate_observations_single_lambda(observations_current))
 
     logging.info(f"\nEvaluating probability groups.")
-    for i in range(0, len(config.PROBABILITY_BINS) - 1):
-        lower_bound = config.PROBABILITY_BINS[i]
-        upper_bound = config.PROBABILITY_BINS[i + 1]
+    for i in range(0, len(PROBABILITY_BINS) - 1):
+        lower_bound = PROBABILITY_BINS[i]
+        upper_bound = PROBABILITY_BINS[i + 1]
         logging.info(f"\nEvaluating: {lower_bound} <= probability < {upper_bound}")
         observations_current = observations[
             (lower_bound <= observations.first_set_prob) & (observations.first_set_prob < upper_bound)]
