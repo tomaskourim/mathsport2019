@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import logging
+import os.path
 import threading
 import time
 from typing import List
@@ -62,7 +63,12 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
         book.handle_match(bookmaker_matchid, c_lambda)
     except Exception as error:
         logging.exception(f"While handling match {bookmaker_matchid} error occurred: {error}")
-        book.driver.save_screenshot(f"screens/{bookmaker_matchid}.png") # TODO rewrite if exists
+        screen_order = 1
+        screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
+        while os.path.isfile(screen_filename):
+            screen_order = screen_order + 1
+            screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
+        book.driver.save_screenshot(screen_filename)
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
         book.close()
