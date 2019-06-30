@@ -1,4 +1,5 @@
 import json
+import logging
 import time
 from typing import List
 
@@ -113,7 +114,7 @@ class Tipsport(Bookmaker):
             if len(players_splitted) != 2:
                 players_splitted = players.split("-")
             if len(players_splitted) != 2:
-                print(
+                logging.warning(
                     f"Impossible to find two players in tournament {tournament.tournament_name}. Found text: {players}")
                 continue
             home.append(players_splitted[0])
