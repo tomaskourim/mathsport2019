@@ -53,9 +53,6 @@ def get_save_tournaments(book: Bookmaker) -> pd.DataFrame:
         params = tournament[['tournament_name', 'sex', 'type', 'surface']].tolist()
         params.append(year)
         db_returned = save_tournament(params)
-        logging.error(type(db_returned))
-        logging.error(type(db_returned) == IntegrityError)
-        logging.error('duplicate key value violates unique constraint' in db_returned.args[0])
         if type(db_returned) == IntegrityError or type(db_returned) == psycopg2.errors.UniqueViolation:
             if 'duplicate key value violates unique constraint' in db_returned.args[0]:
                 continue
