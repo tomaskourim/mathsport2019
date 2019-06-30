@@ -16,6 +16,8 @@ from live_betting.config_betting import CREDENTIALS_PATH, MINUTES_PER_GAME
 from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set, home_won_set, save_bet
 from live_betting.utils import load_fb_credentials, write_id, click_id
 from odds_to_probabilities import probabilities_from_odds
+from live_betting.config_betting import CREDENTIALS_PATH
+from live_betting.utils import load_credentials, write_id, click_id
 
 
 class Tipsport(Bookmaker):
@@ -29,7 +31,7 @@ class Tipsport(Bookmaker):
         self.minimal_bet_amount = 5
 
     def login(self):
-        username, password = load_fb_credentials(CREDENTIALS_PATH)
+        username, password = load_credentials(CREDENTIALS_PATH)
         write_id(self.driver, "userNameId", username)
         write_id(self.driver, "passwordId", password)
         click_id(self.driver, "btnLogin")
