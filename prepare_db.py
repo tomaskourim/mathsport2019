@@ -118,9 +118,9 @@ def get_odds(bookmaker: str, matchids_original: list) -> list:
         matchids = matchids_original[i:i + step_size]
 
         questionmarks = '?' * len(matchids)
-        sql = f"select home.id as id, home.id_matchids as id_match, home.sazkovka as bookmaker, home.usek as match_part, \
-                home.odds_1 as odds_home, away.odds_2 as odds_away, max(home.termin,away.termin) as 'date', \
-                max(home.utime,away.utime) as utime from \
+        sql = f"select home.id as id, home.id_matchids as id_match, home.sazkovka as bookmaker, \
+                home.usek as match_part, home.odds_1 as odds_home, away.odds_2 as odds_away, \
+                max(home.termin,away.termin) as 'date', max(home.utime,away.utime) as utime from \
                 (select * from home_away \
                     where \
                         (usek='fulltime' or usek='1.set') and \
@@ -153,7 +153,7 @@ def get_odds(bookmaker: str, matchids_original: list) -> list:
     return cleaned_odds
 
 
-def prepare_database(first_year: int, last_year: str, bookmaker: str):
+def prepare_database(first_year: int, last_year: int, bookmaker: str):
     # select tournaments (10 years, 40 tournaments)
     tournaments = get_tournaments(first_year, last_year)
     matches = []

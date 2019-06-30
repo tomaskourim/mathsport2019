@@ -12,7 +12,3 @@ class Bookmaker:
 
     def close(self):
         self._driver.quit()
-
-    def login(self):
-        pass
-
