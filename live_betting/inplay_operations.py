@@ -34,8 +34,9 @@ def home_won_set(current_set_score: tuple, last_set_score: tuple) -> bool:
         raise Exception(f"Unexpected scores: {last_set_score}, {current_set_score}")
 
 
-def evaluate_bet_on_set(last_set_score, current_set_score, book_id, bookmaker_matchid, set_number):
-    query = "SELECT * FROM bet WHERE bookmaker_id='%s' AND match_bookmaker_id='%s' AND match_part=%s"
+def evaluate_bet_on_set(last_set_score: tuple, current_set_score: tuple, book_id: int, bookmaker_matchid: str,
+                        set_number: int):
+    query = "SELECT * FROM bet WHERE bookmaker_id='%s' AND match_bookmaker_id=%s AND match_part=%s"
     placed_bet = execute_sql_postgres(query, [book_id, bookmaker_matchid, "".join(['set', str(set_number)])])
     if placed_bet is not None:
         if placed_bet[7] is not None:
@@ -50,12 +51,12 @@ def evaluate_bet_on_set(last_set_score, current_set_score, book_id, bookmaker_ma
             won = True
         else:
             won = False
-        query = "UPDATE bet SET result = %s WHERE bookmaker_id='%s' AND match_bookmaker_id='%s' AND match_part=%s"
+        query = "UPDATE bet SET result = %s WHERE bookmaker_id='%s' AND match_bookmaker_id=%s AND match_part=%s"
         execute_sql_postgres(query, [won, book_id, bookmaker_matchid, "".join(['set', str(set_number)])], True)
     pass
 
 
-def save_bet(book_id, bookmaker_matchid, bet_type, match_part, odd, probability):
+def save_bet(book_id: int, bookmaker_matchid: str, bet_type: str, match_part: str, odd: float, probability: float):
     query = "INSERT INTO bet (bookmaker_id, match_bookmaker_id, bet_type, match_part, odd, probability) \
                 VALUES (%s, %s, %s, %s, %s, %s)"
     execute_sql_postgres(query, [book_id, bookmaker_matchid, bet_type, match_part, odd, probability], True)

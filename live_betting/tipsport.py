@@ -1,6 +1,7 @@
 import datetime
 import json
 import logging
+import os
 import time
 from typing import List, Tuple
 
@@ -239,18 +240,27 @@ class Tipsport(Bookmaker):
         last_set_score = (0, 0)
         errors_in_match = 0
         # while match not finished
-        while (not self.match_finished(bookmaker_matchid)) and errors_in_match < 5:
-            # wait for the set to finish
+        while errors_in_match < 5:
             try:
+                # wait for the set to finish
                 current_set_score = self.wait_for_set_end(set_number, last_set_score)
-                home_probability = self.evaluate_and_bet(last_set_score, current_set_score, c_lambda, bookmaker_matchid,
-                                                         set_number, home_probability)
+                self.evaluate_last_bet(last_set_score, current_set_score, bookmaker_matchid, set_number)
                 logging.info(f"Handled set{set_number} in match {bookmaker_matchid}.")
+                if self.match_finished(bookmaker_matchid):
+                    break
+                home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
+                        1 + (1 if home_won_set(current_set_score, last_set_score) else -1))
+                self.bet_next_set(bookmaker_matchid, set_number, home_probability)
                 last_set_score = current_set_score
                 set_number = set_number + 1
             except Exception as error:
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
+                screen_order = 1
+                screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
+                while os.path.isfile(screen_filename):
+                    screen_order = screen_order + 1
+                    screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
         pass
 
     def match_finished(self, bookmaker_matchid: str) -> bool:
@@ -278,19 +288,18 @@ class Tipsport(Bookmaker):
             else:
                 time.sleep(MINUTES_PER_GAME * 15)  # wait quarter of game
 
-    def evaluate_and_bet(self, last_set_score: tuple, current_set_score: tuple, c_lambda: float, bookmaker_matchid: str,
-                         set_number: int, home_probability: float) -> float:
-
-        home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
-                1 + (1 if home_won_set(current_set_score, last_set_score) else -1))
-        # evaluate last bet
+    def evaluate_last_bet(self, last_set_score:tuple, current_set_score:tuple, bookmaker_matchid:str, set_number:int):
         if set_number > 1:
             evaluate_bet_on_set(last_set_score, current_set_score, self.database_id, bookmaker_matchid, set_number)
-        # save odds for next set
+            logging.info(f"Bet evaluated on bookmaker_matchid {bookmaker_matchid} and set{set_number}")
+        pass
+
+    def bet_next_set(self, bookmaker_matchid: str, set_number: int, home_probability: float):
+        # get odds for next set
         errors = 0
         while errors < 5:
             try:
-                set_odds = self.get_set_odds(set_number + 1)
+                set_odds = self.get_set_odds(set_number + 1) # TODO vitez 3.set = vitez zapasu
                 save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number + 1)
                 # bet on next set
                 self.bet_set(home_probability, set_odds, bookmaker_matchid, set_number + 1)
@@ -298,7 +307,7 @@ class Tipsport(Bookmaker):
             except:
                 errors = errors + 1
                 time.sleep(self.seconds_to_sleep)
-        return home_probability
+        pass
 
     def bet_set(self, home_probability: float, set_odds: tuple, bookmaker_matchid: str, set_number: int):
         # bet if possible
