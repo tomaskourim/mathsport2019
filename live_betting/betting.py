@@ -129,12 +129,12 @@ if __name__ == '__main__':
             scan_update(main_book)
         except Exception as error:
             logging.exception(f"While updating DB error occurred: {error}")
-            screen_order = 1
-            screen_filename = f"screens/mainrun-{screen_order}.png"
-            while os.path.isfile(screen_filename):
-                screen_order = screen_order + 1
-            screen_filename = f"screens/mainrun-{screen_order}.png"
-            main_book.driver.save_screenshot(screen_filename)
+            screenshot_order = 1
+            screenshot_filename = f"screens/mainrun-{screenshot_order}.png"
+            while os.path.isfile(screenshot_filename):
+                screenshot_order = screenshot_order + 1
+            screenshot_filename = f"screens/mainrun-{screenshot_order}.png"
+            main_book.driver.save_screenshot(screenshot_filename)
         end_time = datetime.datetime.now()
         logging.info(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute
