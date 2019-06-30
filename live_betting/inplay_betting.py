@@ -67,7 +67,7 @@ def handle_match(bookmaker_matchid: str, ):
 
 if __name__ == '__main__':
     start_time = datetime.datetime.now()
-    logging.basicConfig(level=logging.ERROR)
+    logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(
         description="")
 
@@ -136,4 +136,4 @@ if __name__ == '__main__':
     # evaluate betting
     main_book.close()
     end_time = datetime.datetime.now()
-    logging.error(f"\nDuration: {(end_time - start_time)}")
+    logging.info(f"\nDuration: {(end_time - start_time)}")
