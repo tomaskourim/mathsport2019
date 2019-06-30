@@ -1,3 +1,5 @@
+import time
+
 from selenium import webdriver
 
 from database_operations import execute_sql_postgres

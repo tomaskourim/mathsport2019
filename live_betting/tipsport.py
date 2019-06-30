@@ -16,7 +16,7 @@ class Tipsport(Bookmaker):
         self.tennis_tournament_base_url = "https://www.tipsport.cz/kurzy/a/a/a-"
 
     def login(self):
-        username, password = load_fb_credentials(CREDENTIALS_PATH)
+        username, password = load_credentials(CREDENTIALS_PATH)
         write_id(self.driver, "userNameId", username)
         write_id(self.driver, "passwordId", password)
         click_id(self.driver, "btnLogin")
