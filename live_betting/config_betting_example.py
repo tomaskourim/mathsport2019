@@ -1,4 +1,4 @@
-WEBDRIVER_PATH = "C:\\Users\\1\\odrive\\Dropbox\\Tip\\Java moje\\chromedriver.exe"
+WEBDRIVER_PATH = "C:\\Users\\path\\to\\chromedriver.exe"
 CREDENTIALS_PATH = "credentials.json"
 
 TIME_TO_MATCHSTART_MINUTES = 40

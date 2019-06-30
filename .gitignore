@@ -6,3 +6,5 @@ __pycache__/
 *.7z
 live_betting/credentials.json
 live_betting/database.ini
+live_betting/config_betting.py
+live_betting/screens/
