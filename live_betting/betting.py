@@ -93,7 +93,29 @@ def get_clambda() -> float:
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
+
+    # Create a custom logger
+    logger = logging.getLogger(__name__)
+
+    # Create handlers
+    stdout_handler = logging.StreamHandler()
+    total_handler = logging.FileHandler('logfile_total.log')
+    info_handler = logging.FileHandler('logfile_info.log')
+    stdout_handler.setLevel(logging.WARNING)
+    total_handler.setLevel(logging.DEBUG)
+    info_handler.setLevel(logging.INFO)
+
+    # Create formatters and add it to handlers
+    logging_format = logging.Formatter('%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
+    stdout_handler.setFormatter(logging_format)
+    total_handler.setFormatter(logging_format)
+    info_handler.setFormatter(logging_format)
+
+    # Add handlers to the logger
+    logger.addHandler(stdout_handler)
+    logger.addHandler(total_handler)
+    logger.addHandler(info_handler)
+
     parser = argparse.ArgumentParser(
         description="")
 
