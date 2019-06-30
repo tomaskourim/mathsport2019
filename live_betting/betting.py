@@ -61,7 +61,7 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
         insert_inplay(bookmaker_matchid, book.database_id)
         book.handle_match(bookmaker_matchid, c_lambda)
     except Exception as error:
-        logging.exception(f"While handling match {bookmaker_matchid} error occured {error}")
+        logging.exception(f"While handling match {bookmaker_matchid} error occurred: {error}")
         book.driver.save_screenshot(f"screens/{bookmaker_matchid}.png")
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
