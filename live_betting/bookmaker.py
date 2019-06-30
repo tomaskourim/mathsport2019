@@ -17,6 +17,7 @@ class Bookmaker:
         options.add_argument("start-maximized")
         options.add_argument("disable-infobars")
         options.add_argument("--disable-extensions")
+        options.add_argument("window-size=1920,1080")
         self.driver = webdriver.Chrome(chrome_options=options, executable_path=WEBDRIVER_PATH)
         self.driver.maximize_window()
         self.driver.get(self._home_url)
