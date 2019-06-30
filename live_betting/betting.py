@@ -61,7 +61,7 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
         insert_inplay(bookmaker_matchid, book.database_id)
         book.handle_match(bookmaker_matchid, c_lambda)
     except Exception as error:
-        logging.error(error)
+        logging.exception(f"While handling match {bookmaker_matchid} error occured {error}")
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
         book.close()
@@ -85,7 +85,7 @@ def get_clambda() -> float:
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
     parser = argparse.ArgumentParser(
         description="")
 
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     main_book = Tipsport()
 
     # regularly repeat
-    while True: # TODO use Flask and cron or something more reasonable then while true
+    while True:  # TODO use Flask and cron or something more reasonable then while true
         # get matches about to start, start new thread for each, process
         starting_matches_ids = get_starting_matches()
         logging.error(f"Matches to start: {len(starting_matches_ids)}")

@@ -177,13 +177,13 @@ class Tipsport(Bookmaker):
             elem_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
             starting_time = self.get_starting_time()
         except NoSuchElementException:
-            logging.error(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
+            logging.warning(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
             return True
 
         if starting_time - utc_time < datetime.timedelta(seconds=30):
             if "disabled" in elem_odds[0].get_attribute("class") and "disabled" in elem_odds[1].get_attribute(
                     "class"):
-                logging.error(f"Match started at UTC: {utc_time}")
+                logging.info(f"Match started at UTC: {utc_time}")
                 return True
         return False
 
@@ -206,7 +206,7 @@ class Tipsport(Bookmaker):
             time.sleep(self.short_seconds_to_sleep / 2)
             return True
         except NoSuchElementException:
-            logging.error(f"Unable to click on odds element in match {bookmaker_matchid}. Trying again.")
+            logging.warning(f"Unable to click on odds element in match {bookmaker_matchid}. Trying again.")
             self.driver.refresh()
             time.sleep(self.seconds_to_sleep)
             try:
@@ -241,7 +241,7 @@ class Tipsport(Bookmaker):
                 current_set_score = self.wait_for_set_end(set_number, last_set_score)
                 home_probability = self.evaluate_and_bet(last_set_score, current_set_score, c_lambda, bookmaker_matchid,
                                                          set_number, home_probability)
-                logging.error(f"Handled set{set_number} in match {bookmaker_matchid}.")
+                logging.info(f"Handled set{set_number} in match {bookmaker_matchid}.")
                 last_set_score = current_set_score
                 set_number = set_number + 1
             except Exception as error:
