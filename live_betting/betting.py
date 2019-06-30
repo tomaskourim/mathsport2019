@@ -62,7 +62,7 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
         book.handle_match(bookmaker_matchid, c_lambda)
     except Exception as error:
         logging.exception(f"While handling match {bookmaker_matchid} error occurred: {error}")
-        book.driver.save_screenshot(f"screens/{bookmaker_matchid}.png")
+        book.driver.save_screenshot(f"screens/{bookmaker_matchid}.png") # TODO rewrite if exists
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
         book.close()
@@ -111,5 +111,5 @@ if __name__ == '__main__':
         start_time_run = datetime.datetime.now()
         scan_update(main_book)
         end_time = datetime.datetime.now()
-        logging.error(f"\nDuration update run: {(end_time - start_time_run)}")
+        logging.info(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute

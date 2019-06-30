@@ -190,7 +190,7 @@ class Tipsport(Bookmaker):
     def get_set_odds(self, set_number: int) -> tuple:
         elem_base = self.get_base_odds_element(set_number)
         elem_odds = elem_base.find_elements_by_xpath("./../../..//div[@class='tdEventCells']//span")
-        odds = (elem_odds[1].text, elem_odds[3].text)
+        odds = (float(elem_odds[1].text), float(elem_odds[3].text))
         return odds
 
     def wait_half_to_matchstart(self):
