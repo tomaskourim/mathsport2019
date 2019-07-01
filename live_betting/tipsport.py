@@ -318,6 +318,8 @@ class Tipsport(Bookmaker):
 
     def get_score_with_video(self, set_number: int) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
         raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
+        if 'Za ' in raw_text:
+            return (0, 0), (0, 0)
         set_score = raw_text[:3].split(':')
         set_score = [int(x) for x in set_score]
         game_score = raw_text.split(' - ')[1].split(' ')[set_number - 1].split(':')
