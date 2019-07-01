@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 import os
+import re
 import time
 from typing import List, Tuple
 
@@ -264,7 +265,9 @@ class Tipsport(Bookmaker):
                 while os.path.isfile(screen_filename):
                     screen_order = screen_order + 1
                     screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
-        pass
+                self.driver.save_screenshot(screen_filename)
+
+    pass
 
     def match_finished(self, bookmaker_matchid: str) -> bool:
         try:
@@ -316,29 +319,6 @@ class Tipsport(Bookmaker):
                 time.sleep(self.seconds_to_sleep)
         pass
 
-    def get_score_with_video(self, set_number: int, bookmaker_matchid: str) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
-        raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
-        logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
-        # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
-        if 'Za ' in raw_text:
-            return (0, 0), (0, 0)
-        raw_text = raw_text.replace(',', '')
-        set_score = raw_text[:3].split(':')
-        set_score = [int(x) for x in set_score]
-        game_score = raw_text.split(' - ')[1].split(' ')[set_number - 1].split(':')
-        game_score = [int(x) for x in game_score]
-        return tuple(set_score), tuple(game_score)
-
-    def get_score_without_video(self, set_number: int) -> Tuple[Tuple[int, int], Tuple[int, int]]:
-        elems = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
-        home_raw = elems[1].text
-        away_raw = elems[2].text
-        home_sets = int(home_raw.split('\n')[0])
-        away_sets = int(away_raw.split('\n')[0])
-        home_games = int(home_raw.split('\n')[set_number])
-        away_games = int(away_raw.split('\n')[set_number])
-        return (home_sets, away_sets), (home_games, away_games)
-
     def bet_set(self, bet_type: str, bookmaker_matchid: str, set_number: int, odd: float, probability: float):
         if bet_type == 'home':
             odd_index = 0
@@ -366,3 +346,27 @@ class Tipsport(Bookmaker):
             logging.error(f"Unable to place bet \
                 {self.database_id, bookmaker_matchid, bet_type, ''.join(['set', str(set_number)]), odd, probability}")
         pass
+
+    def get_score_with_video(self, set_number: int, bookmaker_matchid: str) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
+        raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
+        logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
+        # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
+        if 'Za ' in raw_text:
+            return (0, 0), (0, 0)
+        raw_text = raw_text.replace(',', '')
+        raw_text = re.sub('\(\\d+\)', '', raw_text)
+        set_score = raw_text[:3].split(':')
+        set_score = [int(x) for x in set_score]
+        game_score = raw_text.split(' - ')[1].split(' ')[set_number - 1].split(':')
+        game_score = [int(x) for x in game_score]
+        return tuple(set_score), tuple(game_score)
+
+    def get_score_without_video(self, set_number: int) -> Tuple[Tuple[int, int], Tuple[int, int]]:
+        elems = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
+        home_raw = elems[1].text
+        away_raw = elems[2].text
+        home_sets = int(home_raw.split('\n')[0])
+        away_sets = int(away_raw.split('\n')[0])
+        home_games = int(home_raw.split('\n')[set_number])
+        away_games = int(away_raw.split('\n')[set_number])
+        return (home_sets, away_sets), (home_games, away_games)
