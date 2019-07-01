@@ -318,6 +318,8 @@ class Tipsport(Bookmaker):
 
     def get_score_with_video(self, set_number: int) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
         raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
+        logging.info(f"Video score raw text: {raw_text}")
+        # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
         if 'Za ' in raw_text:
             return (0, 0), (0, 0)
         set_score = raw_text[:3].split(':')
