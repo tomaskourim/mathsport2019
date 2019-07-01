@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 import os
+import re
 import time
 from typing import List, Tuple
 
@@ -223,7 +224,10 @@ class Tipsport(Bookmaker):
         pass
 
     def get_base_odds_element(self, set_number: int) -> WebElement:
-        return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
+        if set_number == 5:  # TODO handle also best-of-three matches
+            return self.driver.find_element_by_xpath(f"//span[@title='Vítěz zápasu']")  # TODO verify
+        else:
+            return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
 
     def get_starting_time(self) -> datetime:
         starting_time = datetime.datetime.strptime(
@@ -243,16 +247,16 @@ class Tipsport(Bookmaker):
         while errors_in_match < 5:
             try:
                 # wait for the set to finish
-                current_set_score = self.wait_for_set_end(set_number, last_set_score)
+                current_set_score = self.wait_for_set_end(set_number, last_set_score, bookmaker_matchid)
                 self.evaluate_last_bet(last_set_score, current_set_score, bookmaker_matchid, set_number)
                 logging.info(f"Handled set{set_number} in match {bookmaker_matchid}.")
                 if self.match_finished(bookmaker_matchid):
                     break
                 home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
                         1 + (1 if home_won_set(current_set_score, last_set_score) else -1))
+                set_number = set_number + 1
                 self.bet_next_set(bookmaker_matchid, set_number, home_probability)
                 last_set_score = current_set_score
-                set_number = set_number + 1
             except Exception as error:
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
@@ -261,7 +265,9 @@ class Tipsport(Bookmaker):
                 while os.path.isfile(screen_filename):
                     screen_order = screen_order + 1
                     screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
-        pass
+                self.driver.save_screenshot(screen_filename)
+
+    pass
 
     def match_finished(self, bookmaker_matchid: str) -> bool:
         try:
@@ -271,11 +277,11 @@ class Tipsport(Bookmaker):
         except NoSuchElementException:
             return False
 
-    def wait_for_set_end(self, set_number: int, last_set_state: tuple) -> tuple:
+    def wait_for_set_end(self, set_number: int, last_set_state: tuple, bookmaker_matchid: str) -> tuple:
         while True:
             try:
                 # with live video stream
-                set_score, game_score = self.get_score_with_video(set_number)
+                set_score, game_score = self.get_score_with_video(set_number, bookmaker_matchid)
             except NoSuchElementException:
                 # w/out live video stream
                 set_score, game_score = self.get_score_without_video(set_number)
@@ -288,54 +294,32 @@ class Tipsport(Bookmaker):
             else:
                 time.sleep(MINUTES_PER_GAME * 15)  # wait quarter of game
 
-    def evaluate_last_bet(self, last_set_score:tuple, current_set_score:tuple, bookmaker_matchid:str, set_number:int):
+    def evaluate_last_bet(self, last_set_score: tuple, current_set_score: tuple, bookmaker_matchid: str,
+                          set_number: int):
         if set_number > 1:
             evaluate_bet_on_set(last_set_score, current_set_score, self.database_id, bookmaker_matchid, set_number)
             logging.info(f"Bet evaluated on bookmaker_matchid {bookmaker_matchid} and set{set_number}")
         pass
 
     def bet_next_set(self, bookmaker_matchid: str, set_number: int, home_probability: float):
-        # get odds for next set
         errors = 0
         while errors < 5:
             try:
-                set_odds = self.get_set_odds(set_number + 1) # TODO vitez 3.set = vitez zapasu
-                save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number + 1)
-                # bet on next set
-                self.bet_set(home_probability, set_odds, bookmaker_matchid, set_number + 1)
+                # get odds for next set
+                set_odds = self.get_set_odds(set_number)
+                save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number)
+                # bet on next set if possible
+                if home_probability > 1 / set_odds[0]:
+                    self.bet_set('home', bookmaker_matchid, set_number, set_odds[0], home_probability)
+                if (1 - home_probability) > 1 / set_odds[1]:
+                    self.bet_set('away', bookmaker_matchid, set_number, set_odds[1], 1 - home_probability)
                 break
             except:
                 errors = errors + 1
                 time.sleep(self.seconds_to_sleep)
         pass
 
-    def bet_set(self, home_probability: float, set_odds: tuple, bookmaker_matchid: str, set_number: int):
-        # bet if possible
-        if home_probability > 1 / set_odds[0]:
-            self.bet('home', bookmaker_matchid, set_number, set_odds[0], home_probability)
-        if (1 - home_probability) > 1 / set_odds[1]:
-            self.bet('away', bookmaker_matchid, set_number, set_odds[1], 1 - home_probability)
-        pass
-
-    def get_score_with_video(self, set_number: int) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
-        raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
-        set_score = raw_text[:3].split(':')
-        set_score = [int(x) for x in set_score]
-        game_score = raw_text.split(' - ')[1].split(' ')[set_number - 1].split(':')
-        game_score = [int(x) for x in game_score]
-        return tuple(set_score), tuple(game_score)
-
-    def get_score_without_video(self, set_number: int) -> Tuple[Tuple[int, int], Tuple[int, int]]:
-        elems = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
-        home_raw = elems[1].text
-        away_raw = elems[2].text
-        home_sets = int(home_raw.split('\n')[0])
-        away_sets = int(away_raw.split('\n')[0])
-        home_games = int(home_raw.split('\n')[set_number])
-        away_games = int(away_raw.split('\n')[set_number])
-        return (home_sets, away_sets), (home_games, away_games)
-
-    def bet(self, bet_type: str, bookmaker_matchid: str, set_number: int, odd: float, probability: float):
+    def bet_set(self, bet_type: str, bookmaker_matchid: str, set_number: int, odd: float, probability: float):
         if bet_type == 'home':
             odd_index = 0
         elif bet_type == 'away':
@@ -362,3 +346,30 @@ class Tipsport(Bookmaker):
             logging.error(f"Unable to place bet \
                 {self.database_id, bookmaker_matchid, bet_type, ''.join(['set', str(set_number)]), odd, probability}")
         pass
+
+    def get_score_with_video(self, set_number: int, bookmaker_matchid: str) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
+        raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
+        logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
+        # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
+        if 'Za ' in raw_text:
+            return (0, 0), (0, 0)
+        raw_text = raw_text.replace(',', '')
+        raw_text = re.sub('\(\\d+\)', '', raw_text)
+        set_score = raw_text[:3].split(':')
+        set_score = [int(x) for x in set_score]
+        if '-' in raw_text:
+            game_score = raw_text.split(' - ')[1].split(' ')[set_number - 1].split(':')
+        else:
+            game_score = raw_text[-4:-1].split(':')
+        game_score = [int(x) for x in game_score]
+        return tuple(set_score), tuple(game_score)
+
+    def get_score_without_video(self, set_number: int) -> Tuple[Tuple[int, int], Tuple[int, int]]:
+        elems = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
+        home_raw = elems[1].text
+        away_raw = elems[2].text
+        home_sets = int(home_raw.split('\n')[0])
+        away_sets = int(away_raw.split('\n')[0])
+        home_games = int(home_raw.split('\n')[set_number])
+        away_games = int(away_raw.split('\n')[set_number])
+        return (home_sets, away_sets), (home_games, away_games)
