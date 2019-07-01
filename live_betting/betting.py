@@ -19,16 +19,6 @@ from live_betting.tipsport import Tipsport
 from main import find_single_lambda
 
 
-def scan_update(book: Bookmaker):
-    # get tournaments & their IDs. Check database, save new ones.
-    main_tournaments = get_save_tournaments(book)
-
-    # for each tournament, get matches and their IDs. Check database, save new ones, update starting times
-    # optional save odds (all or many or some) to DB
-    process_tournaments_save_matches(book, main_tournaments)
-    pass
-
-
 def get_starting_matches() -> List[tuple]:
     utc_time = pytz.utc.localize(datetime.datetime.utcnow())
     limit_start_time = utc_time + datetime.timedelta(minutes=TIME_TO_MATCHSTART_MINUTES)
@@ -54,26 +44,10 @@ def remove_inplay(bookmaker_matchid: str, book_id: int):
     pass
 
 
-def handle_match(bookmaker_matchid: str, c_lambda: float):
-    logging.info(f"Handling match:{bookmaker_matchid}")
-    book = Tipsport()
-    try:
-        book.login()
-        insert_inplay(bookmaker_matchid, book.database_id)
-        book.handle_match(bookmaker_matchid, c_lambda)
-    except Exception as error:
-        logging.exception(f"While handling match {bookmaker_matchid} error occurred: {error}")
-        screen_order = 1
-        screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
-        while os.path.isfile(screen_filename):
-            screen_order = screen_order + 1
-            screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
-        book.driver.save_screenshot(screen_filename)
-    finally:
-        remove_inplay(bookmaker_matchid, book.database_id)
-        book.close()
-
-    logging.info(f"Finished handling match: {bookmaker_matchid}")
+def clear_inplay():
+    query = "DELETE FROM inplay"
+    execute_sql_postgres(query, None, True)
+    logging.info("Table inplay cleared.")
     pass
 
 
@@ -92,10 +66,36 @@ def get_clambda() -> float:
     return c_lambda
 
 
-def clear_inplay():
-    query = "DELETE FROM inplay"
-    execute_sql_postgres(query, None, True)
-    logging.info("Table inplay cleared.")
+def handle_match(bookmaker_matchid: str, c_lambda: float):
+    logging.info(f"Handling match:{bookmaker_matchid}")
+    book = Tipsport()
+    try:
+        book.login()
+        insert_inplay(bookmaker_matchid, book.database_id)
+        book.handle_match(bookmaker_matchid, c_lambda)
+    except Exception as error:
+        logging.exception(f"Top level error while handling match {bookmaker_matchid}. Error: {error}")
+        screen_order = 1
+        screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
+        while os.path.isfile(screen_filename):
+            screen_order = screen_order + 1
+            screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
+        book.driver.save_screenshot(screen_filename)
+    finally:
+        remove_inplay(bookmaker_matchid, book.database_id)
+        book.close()
+
+    logging.info(f"Finished handling match: {bookmaker_matchid}")
+    pass
+
+
+def scan_update(book: Bookmaker):
+    # get tournaments & their IDs. Check database, save new ones.
+    main_tournaments = get_save_tournaments(book)
+
+    # for each tournament, get matches and their IDs. Check database, save new ones, update starting times
+    # optional save odds (all or many or some) to DB
+    process_tournaments_save_matches(book, main_tournaments)
     pass
 
 
