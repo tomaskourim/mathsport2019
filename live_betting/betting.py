@@ -92,6 +92,13 @@ def get_clambda() -> float:
     return c_lambda
 
 
+def clear_inplay():
+    query = "DELETE FROM inplay"
+    execute_sql_postgres(query, None, True)
+    logging.info("Table inplay cleared.")
+    pass
+
+
 if __name__ == '__main__':
 
     # Create a custom logger
@@ -119,6 +126,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description="")
 
+    # in case it crashed with inplay games
+    clear_inplay()
+
     # get lambda coefficient
     clambda = get_clambda()
     # initialize bookmaker bettor
@@ -137,7 +147,16 @@ if __name__ == '__main__':
 
         # update database
         start_time_run = datetime.datetime.now()
-        scan_update(main_book)
+        try:
+            scan_update(main_book)
+        except Exception as error:
+            logging.exception(f"While updating DB error occurred: {error}")
+            screenshot_order = 1
+            screenshot_filename = f"screens/mainrun-{screenshot_order}.png"
+            while os.path.isfile(screenshot_filename):
+                screenshot_order = screenshot_order + 1
+            screenshot_filename = f"screens/mainrun-{screenshot_order}.png"
+            main_book.driver.save_screenshot(screenshot_filename)
         end_time = datetime.datetime.now()
         logging.info(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute

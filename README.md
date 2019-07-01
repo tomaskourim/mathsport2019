@@ -9,3 +9,10 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Deploy on Ubuntu
+Besides other, you have to
+    
+    sudo apt-get install postgresql
+    sudo apt-get install python-psycopg2
+    sudo apt-get install libpq-dev
