@@ -246,7 +246,7 @@ class Tipsport(Bookmaker):
         while errors_in_match < 5:
             try:
                 # wait for the set to finish
-                current_set_score = self.wait_for_set_end(set_number, last_set_score)
+                current_set_score = self.wait_for_set_end(set_number, last_set_score, bookmaker_matchid)
                 self.evaluate_last_bet(last_set_score, current_set_score, bookmaker_matchid, set_number)
                 logging.info(f"Handled set{set_number} in match {bookmaker_matchid}.")
                 if self.match_finished(bookmaker_matchid):
@@ -274,11 +274,11 @@ class Tipsport(Bookmaker):
         except NoSuchElementException:
             return False
 
-    def wait_for_set_end(self, set_number: int, last_set_state: tuple) -> tuple:
+    def wait_for_set_end(self, set_number: int, last_set_state: tuple, bookmaker_matchid: str) -> tuple:
         while True:
             try:
                 # with live video stream
-                set_score, game_score = self.get_score_with_video(set_number)
+                set_score, game_score = self.get_score_with_video(set_number, bookmaker_matchid)
             except NoSuchElementException:
                 # w/out live video stream
                 set_score, game_score = self.get_score_without_video(set_number)
@@ -316,9 +316,9 @@ class Tipsport(Bookmaker):
                 time.sleep(self.seconds_to_sleep)
         pass
 
-    def get_score_with_video(self, set_number: int) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
+    def get_score_with_video(self, set_number: int, bookmaker_matchid: str) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
         raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
-        logging.info(f"Video score raw text: {raw_text}")
+        logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
         # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
         if 'Za ' in raw_text:
             return (0, 0), (0, 0)
