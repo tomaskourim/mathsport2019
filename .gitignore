@@ -9,4 +9,6 @@ live_betting/database.ini
 live_betting/config_betting.py
 live_betting/screens/*
 !live_betting/screens/SCREENS_GO_HERE
+live_betting/reporting/output/*
+!live_betting/reporting/output/REPORTS_GO_HERE
 
