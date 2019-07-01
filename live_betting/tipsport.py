@@ -322,6 +322,7 @@ class Tipsport(Bookmaker):
         # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
         if 'Za ' in raw_text:
             return (0, 0), (0, 0)
+        raw_text = raw_text.replace(',', '')
         set_score = raw_text[:3].split(':')
         set_score = [int(x) for x in set_score]
         game_score = raw_text.split(' - ')[1].split(' ')[set_number - 1].split(':')
