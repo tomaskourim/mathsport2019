@@ -357,7 +357,10 @@ class Tipsport(Bookmaker):
         raw_text = re.sub('\(\\d+\)', '', raw_text)
         set_score = raw_text[:3].split(':')
         set_score = [int(x) for x in set_score]
-        game_score = raw_text.split(' - ')[1].split(' ')[set_number - 1].split(':')
+        if '-' in raw_text:
+            game_score = raw_text.split(' - ')[1].split(' ')[set_number - 1].split(':')
+        else:
+            game_score = raw_text[-4:-1].split(':')
         game_score = [int(x) for x in game_score]
         return tuple(set_score), tuple(game_score)
 
