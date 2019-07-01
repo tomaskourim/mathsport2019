@@ -223,7 +223,10 @@ class Tipsport(Bookmaker):
         pass
 
     def get_base_odds_element(self, set_number: int) -> WebElement:
-        return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
+        if set_number == 5:  # TODO handle also best-of-three matches
+            return self.driver.find_element_by_xpath(f"//span[@title='Vítěz zápasu']")  # TODO verify
+        else:
+            return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
 
     def get_starting_time(self) -> datetime:
         starting_time = datetime.datetime.strptime(
@@ -300,7 +303,7 @@ class Tipsport(Bookmaker):
         while errors < 5:
             try:
                 # get odds for next set
-                set_odds = self.get_set_odds(set_number)  # TODO vitez 3.set = vitez zapasu
+                set_odds = self.get_set_odds(set_number)
                 save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number)
                 # bet on next set if possible
                 if home_probability > 1 / set_odds[0]:
