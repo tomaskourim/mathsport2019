@@ -19,16 +19,6 @@ from live_betting.tipsport import Tipsport
 from main import find_single_lambda
 
 
-def scan_update(book: Bookmaker):
-    # get tournaments & their IDs. Check database, save new ones.
-    main_tournaments = get_save_tournaments(book)
-
-    # for each tournament, get matches and their IDs. Check database, save new ones, update starting times
-    # optional save odds (all or many or some) to DB
-    process_tournaments_save_matches(book, main_tournaments)
-    pass
-
-
 def get_starting_matches() -> List[tuple]:
     utc_time = pytz.utc.localize(datetime.datetime.utcnow())
     limit_start_time = utc_time + datetime.timedelta(minutes=TIME_TO_MATCHSTART_MINUTES)
@@ -54,6 +44,28 @@ def remove_inplay(bookmaker_matchid: str, book_id: int):
     pass
 
 
+def clear_inplay():
+    query = "DELETE FROM inplay"
+    execute_sql_postgres(query, None, True)
+    logging.info("Table inplay cleared.")
+    pass
+
+
+def get_clambda() -> float:
+    odds_probability_type = '1.set'
+    matches_data = pd.DataFrame(get_match_data(odds_probability_type, '../mathsport2019.sqlite'), columns=COLUMN_NAMES)
+    matches_data = transform_home_favorite(matches_data)
+
+    # get probabilities from odds
+    probabilities = pd.DataFrame(get_probabilities_from_odds(matches_data, odds_probability_type))
+    matches_data = matches_data.assign(probability_predicted_player=probabilities[0],
+                                       probability_not_predicted_player=probabilities[1])
+    training_set = matches_data[matches_data["year"] == datetime.datetime.utcnow().year - 1]
+    c_lambda = find_single_lambda(training_set)
+    logging.info(f"Optimal lambda is {c_lambda}")
+    return c_lambda
+
+
 def handle_match(bookmaker_matchid: str, c_lambda: float):
     logging.info(f"Handling match:{bookmaker_matchid}")
     book = Tipsport()
@@ -77,25 +89,13 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
     pass
 
 
-def get_clambda() -> float:
-    odds_probability_type = '1.set'
-    matches_data = pd.DataFrame(get_match_data(odds_probability_type, '../mathsport2019.sqlite'), columns=COLUMN_NAMES)
-    matches_data = transform_home_favorite(matches_data)
+def scan_update(book: Bookmaker):
+    # get tournaments & their IDs. Check database, save new ones.
+    main_tournaments = get_save_tournaments(book)
 
-    # get probabilities from odds
-    probabilities = pd.DataFrame(get_probabilities_from_odds(matches_data, odds_probability_type))
-    matches_data = matches_data.assign(probability_predicted_player=probabilities[0],
-                                       probability_not_predicted_player=probabilities[1])
-    training_set = matches_data[matches_data["year"] == datetime.datetime.utcnow().year - 1]
-    c_lambda = find_single_lambda(training_set)
-    logging.info(f"Optimal lambda is {c_lambda}")
-    return c_lambda
-
-
-def clear_inplay():
-    query = "DELETE FROM inplay"
-    execute_sql_postgres(query, None, True)
-    logging.info("Table inplay cleared.")
+    # for each tournament, get matches and their IDs. Check database, save new ones, update starting times
+    # optional save odds (all or many or some) to DB
+    process_tournaments_save_matches(book, main_tournaments)
     pass
 
 

@@ -250,9 +250,9 @@ class Tipsport(Bookmaker):
                     break
                 home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
                         1 + (1 if home_won_set(current_set_score, last_set_score) else -1))
+                set_number = set_number + 1
                 self.bet_next_set(bookmaker_matchid, set_number, home_probability)
                 last_set_score = current_set_score
-                set_number = set_number + 1
             except Exception as error:
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
@@ -288,33 +288,29 @@ class Tipsport(Bookmaker):
             else:
                 time.sleep(MINUTES_PER_GAME * 15)  # wait quarter of game
 
-    def evaluate_last_bet(self, last_set_score:tuple, current_set_score:tuple, bookmaker_matchid:str, set_number:int):
+    def evaluate_last_bet(self, last_set_score: tuple, current_set_score: tuple, bookmaker_matchid: str,
+                          set_number: int):
         if set_number > 1:
             evaluate_bet_on_set(last_set_score, current_set_score, self.database_id, bookmaker_matchid, set_number)
             logging.info(f"Bet evaluated on bookmaker_matchid {bookmaker_matchid} and set{set_number}")
         pass
 
     def bet_next_set(self, bookmaker_matchid: str, set_number: int, home_probability: float):
-        # get odds for next set
         errors = 0
         while errors < 5:
             try:
-                set_odds = self.get_set_odds(set_number + 1) # TODO vitez 3.set = vitez zapasu
-                save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number + 1)
-                # bet on next set
-                self.bet_set(home_probability, set_odds, bookmaker_matchid, set_number + 1)
+                # get odds for next set
+                set_odds = self.get_set_odds(set_number)  # TODO vitez 3.set = vitez zapasu
+                save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number)
+                # bet on next set if possible
+                if home_probability > 1 / set_odds[0]:
+                    self.bet_set('home', bookmaker_matchid, set_number, set_odds[0], home_probability)
+                if (1 - home_probability) > 1 / set_odds[1]:
+                    self.bet_set('away', bookmaker_matchid, set_number, set_odds[1], 1 - home_probability)
                 break
             except:
                 errors = errors + 1
                 time.sleep(self.seconds_to_sleep)
-        pass
-
-    def bet_set(self, home_probability: float, set_odds: tuple, bookmaker_matchid: str, set_number: int):
-        # bet if possible
-        if home_probability > 1 / set_odds[0]:
-            self.bet('home', bookmaker_matchid, set_number, set_odds[0], home_probability)
-        if (1 - home_probability) > 1 / set_odds[1]:
-            self.bet('away', bookmaker_matchid, set_number, set_odds[1], 1 - home_probability)
         pass
 
     def get_score_with_video(self, set_number: int) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
@@ -335,7 +331,7 @@ class Tipsport(Bookmaker):
         away_games = int(away_raw.split('\n')[set_number])
         return (home_sets, away_sets), (home_games, away_games)
 
-    def bet(self, bet_type: str, bookmaker_matchid: str, set_number: int, odd: float, probability: float):
+    def bet_set(self, bet_type: str, bookmaker_matchid: str, set_number: int, odd: float, probability: float):
         if bet_type == 'home':
             odd_index = 0
         elif bet_type == 'away':
