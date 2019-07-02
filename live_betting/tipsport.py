@@ -180,7 +180,8 @@ class Tipsport(Bookmaker):
             elem_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
             starting_time = self.get_starting_time()
         except NoSuchElementException:
-            logging.warning(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
+            logging.error(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
+            self.driver.save_screenshot(f"{bookmaker_matchid}")
             return True
 
         if starting_time - utc_time < datetime.timedelta(seconds=30):
@@ -298,6 +299,9 @@ class Tipsport(Bookmaker):
                           set_number: int):
         if set_number > 1:
             evaluate_bet_on_set(last_set_score, current_set_score, self.database_id, bookmaker_matchid, set_number)
+            logging.error(f"Betting evaluation: matchid={bookmaker_matchid}, last score: {last_set_score}, \
+            current score: {current_set_score}, set number {set_number}")
+            self.driver.save_screenshot(f"{bookmaker_matchid}-set{set_number}")
             logging.info(f"Bet evaluated on bookmaker_matchid {bookmaker_matchid} and set{set_number}")
         pass
 
@@ -349,7 +353,7 @@ class Tipsport(Bookmaker):
 
     def get_score_with_video(self, set_number: int, bookmaker_matchid: str) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
         raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
-        logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
+        logging.debug(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
         # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
         if 'Za ' in raw_text:
             return (0, 0), (0, 0)
