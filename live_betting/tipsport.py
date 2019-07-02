@@ -181,7 +181,7 @@ class Tipsport(Bookmaker):
             starting_time = self.get_starting_time()
         except NoSuchElementException:
             logging.error(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
-            self.driver.save_screenshot(f"{bookmaker_matchid}")
+            self.driver.save_screenshot(f"screens/{bookmaker_matchid}.png")
             return True
 
         if starting_time - utc_time < datetime.timedelta(seconds=30):
@@ -301,7 +301,7 @@ class Tipsport(Bookmaker):
             evaluate_bet_on_set(last_set_score, current_set_score, self.database_id, bookmaker_matchid, set_number)
             logging.error(f"Betting evaluation: matchid={bookmaker_matchid}, last score: {last_set_score}, \
             current score: {current_set_score}, set number {set_number}")
-            self.driver.save_screenshot(f"{bookmaker_matchid}-set{set_number}")
+            self.driver.save_screenshot(f"screens/{bookmaker_matchid}-set{set_number}.png")
             logging.info(f"Bet evaluated on bookmaker_matchid {bookmaker_matchid} and set{set_number}")
         pass
 
