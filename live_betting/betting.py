@@ -100,7 +100,7 @@ def scan_update(book: Bookmaker):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
+    logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
     parser = argparse.ArgumentParser(
         description="")
 
@@ -136,5 +136,5 @@ if __name__ == '__main__':
             screenshot_filename = f"screens/mainrun-{screenshot_order}.png"
             main_book.driver.save_screenshot(screenshot_filename)
         end_time = datetime.datetime.now()
-        logging.info(f"Duration update run: {(end_time - start_time_run)}")
+        logging.error(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute
