@@ -100,28 +100,7 @@ def scan_update(book: Bookmaker):
 
 
 if __name__ == '__main__':
-
-    # Create a custom logger
-    logger = logging.getLogger(__name__)
-
-    # Create handlers
-    stdout_handler = logging.StreamHandler()
-    total_handler = logging.FileHandler('logfile_total.log')
-    info_handler = logging.FileHandler('logfile_info.log')
-    stdout_handler.setLevel(logging.WARNING)
-    total_handler.setLevel(logging.DEBUG)
-    info_handler.setLevel(logging.INFO)
-
-    # Create formatters and add it to handlers
-    logging_format = logging.Formatter('%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
-    stdout_handler.setFormatter(logging_format)
-    total_handler.setFormatter(logging_format)
-    info_handler.setFormatter(logging_format)
-
-    # Add handlers to the logger
-    logger.addHandler(stdout_handler)
-    logger.addHandler(total_handler)
-    logger.addHandler(info_handler)
+    logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
 
     parser = argparse.ArgumentParser(
         description="")
