@@ -15,16 +15,6 @@ DROP TYPE IF EXISTS ODDSTYPE;
 DROP TYPE IF EXISTS MATCHPART;
 DROP TYPE IF EXISTS BETTYPE;
 
-
-CREATE TABLE bookmaker (
-    id       BIGSERIAL NOT NULL PRIMARY KEY,
-    name     VARCHAR   NOT NULL UNIQUE,
-    home_url VARCHAR   NOT NULL UNIQUE
-);
-
-INSERT INTO bookmaker (name, home_url)
-VALUES ('Tipsport', 'https://www.tipsport.cz');
-
 CREATE TYPE TOURNAMENT_TYPE AS ENUM (
     'singles',
     'doubles',
@@ -41,6 +31,38 @@ CREATE TYPE SURFACE AS ENUM (
     'grass',
     'hard'
     );
+
+CREATE TYPE ODDSTYPE AS ENUM (
+    'home_away',
+    'over_under',
+    'handicap',
+    'correct_score'
+    );
+
+CREATE TYPE MATCHPART AS ENUM (
+    'match',
+    'set1',
+    'set2',
+    'set3',
+    'set4',
+    'set5'
+    );
+
+CREATE TYPE BETTYPE AS ENUM (
+    'home',
+    'away'
+    );
+
+CREATE TABLE bookmaker (
+    id       BIGSERIAL NOT NULL PRIMARY KEY,
+    name     VARCHAR   NOT NULL UNIQUE,
+    home_url VARCHAR   NOT NULL UNIQUE
+);
+
+INSERT INTO bookmaker (name, home_url)
+VALUES ('Tipsport', 'https://www.tipsport.cz');
+
+
 
 CREATE TABLE tournament (
     id      BIGSERIAL       NOT NULL PRIMARY KEY,
@@ -79,22 +101,6 @@ CREATE TABLE matches_bookmaker (
     UNIQUE (bookmaker_id, match_bookmaker_id)
 );
 
-CREATE TYPE ODDSTYPE AS ENUM (
-    'home_away',
-    'over_under',
-    'handicap',
-    'correct_score'
-    );
-
-CREATE TYPE MATCHPART AS ENUM (
-    'match',
-    'set1',
-    'set2',
-    'set3',
-    'set4',
-    'set5'
-    );
-
 CREATE TABLE odds (
     id                 BIGSERIAL   NOT NULL PRIMARY KEY,
     bookmaker_id       BIGINT      NOT NULL,
@@ -116,12 +122,6 @@ CREATE TABLE inplay (
     FOREIGN KEY (bookmaker_id, match_bookmaker_id) REFERENCES matches_bookmaker(bookmaker_id, match_bookmaker_id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (bookmaker_id, match_bookmaker_id)
 );
-
-CREATE TYPE BETTYPE AS ENUM (
-    'home',
-    'away'
-    );
-
 
 CREATE TABLE bet (
     id                 BIGSERIAL   NOT NULL PRIMARY KEY,
