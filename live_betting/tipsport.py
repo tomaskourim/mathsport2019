@@ -17,6 +17,7 @@ from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import CREDENTIALS_PATH
 from live_betting.config_betting import MINUTES_PER_GAME
 from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set, home_won_set, save_bet
+from live_betting.prematch_operations import get_matchid
 from live_betting.utils import load_credentials, write_id, click_id
 from odds_to_probabilities import probabilities_from_odds
 
@@ -245,6 +246,8 @@ class Tipsport(Bookmaker):
         self.driver.get("".join([self.tennis_match_live_base_url, bookmaker_matchid]))
         time.sleep(self.seconds_to_sleep)
 
+        matchid = get_matchid(bookmaker_matchid, self.database_id)
+
         set_number = 1
         last_set_score = (0, 0)
         errors_in_match = 0
@@ -253,12 +256,13 @@ class Tipsport(Bookmaker):
             try:
                 # wait for the set to finish
                 current_set_score = self.wait_for_set_end(set_number, last_set_score, bookmaker_matchid)
-                self.evaluate_last_bet(last_set_score, current_set_score, bookmaker_matchid, set_number)
+                home_won = home_won_set(current_set_score, last_set_score, set_number, matchid)
+                self.evaluate_last_bet(last_set_score, current_set_score, bookmaker_matchid, set_number, home_won)
                 logging.info(f"Handled set{set_number} in match {bookmaker_matchid}.")
                 if self.match_finished(bookmaker_matchid):
                     break
                 home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
-                        1 + (1 if home_won_set(current_set_score, last_set_score) else -1))
+                        1 + (1 if home_won else -1))
                 set_number = set_number + 1
                 self.bet_next_set(bookmaker_matchid, set_number, home_probability)
                 last_set_score = current_set_score
@@ -300,12 +304,13 @@ class Tipsport(Bookmaker):
                 time.sleep(MINUTES_PER_GAME * 15)  # wait quarter of game
 
     def evaluate_last_bet(self, last_set_score: tuple, current_set_score: tuple, bookmaker_matchid: str,
-                          set_number: int):
+                          set_number: int, home_won: bool):
         if set_number > 1:
-            evaluate_bet_on_set(last_set_score, current_set_score, self.database_id, bookmaker_matchid, set_number)
+            evaluate_bet_on_set(self.database_id, bookmaker_matchid, set_number, home_won)
             logging.error(f"Betting evaluation: matchid={bookmaker_matchid}, last score: {last_set_score}, \
             current score: {current_set_score}, set number {set_number}")
-            self.driver.save_screenshot(f"screens/{bookmaker_matchid}-set{set_number}.png")
+            self.driver.save_screenshot(
+                f"screens/set_bet_evaluation_{bookmaker_matchid}-set{set_number}_currentscore_{current_set_score}.png")
             logging.info(f"Bet evaluated on bookmaker_matchid {bookmaker_matchid} and set{set_number}")
         pass
 
@@ -359,9 +364,10 @@ class Tipsport(Bookmaker):
         raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
         logging.debug(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
         # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
-        if 'Za ' in raw_text:
+        if 'Za ' in raw_text or 'Začátek plánován na' in raw_text:
             return (0, 0), (0, 0)
         raw_text = raw_text.replace(',', '')
+        raw_text = raw_text.replace('*', '')  # supertiebreak doubles has * marking serving pair
         raw_text = re.sub('\(\\d+\)', '', raw_text)
         set_score = raw_text[:3].split(':')
         set_score = [int(x) for x in set_score]
