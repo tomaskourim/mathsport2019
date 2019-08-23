@@ -1,12 +1,13 @@
 -- bets overview
-SELECT home, away, name AS tournament_name, sex, type, surface, start_time_utc, bet_type, match_part, odd, probability,
+SELECT book_id, home, away, name AS tournament_name, sex, type, surface, start_time_utc, bet_type, match_part, odd, probability,
     result
-FROM (SELECT *
+FROM (SELECT *,mb.match_bookmaker_id as book_id
       FROM bet
                JOIN matches_bookmaker mb
       ON bet.bookmaker_id = mb.bookmaker_id AND bet.match_bookmaker_id = mb.match_bookmaker_id
                JOIN matches m ON mb.match_id = m.id
                JOIN tournament t ON m.tournament_id = t.id) AS r
+WHERE start_time_utc >= '2019-08-22 12:40:00.000000'
 ORDER BY start_time_utc DESC;
 
 -- odds
