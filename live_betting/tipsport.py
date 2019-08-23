@@ -186,7 +186,7 @@ class Tipsport(Bookmaker):
             starting_time = self.get_starting_time()
         except NoSuchElementException:
             logging.error(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
-            self.driver.save_screenshot(f"screens/{bookmaker_matchid}.png")
+            self.driver.save_screenshot(f"screens/started_by_error_{bookmaker_matchid}.png")
             return True
 
         if starting_time - utc_time < datetime.timedelta(seconds=30):
