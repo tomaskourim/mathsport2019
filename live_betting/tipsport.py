@@ -69,7 +69,7 @@ class Tipsport(Bookmaker):
 
     @staticmethod
     def obtain_tournaments_from_texts(texts: List[str]) -> pd.DataFrame():
-        tournaments = pd.DataFrame(columns=["sex", "type", "surface", "name"])
+        tournaments = pd.DataFrame(columns=["sex", "type", "surface", "tournament_name"])
         for text in texts:  # the page is constantly reloading and the original elements are then no longer attached
             if len(text) == 0:
                 continue
@@ -361,7 +361,8 @@ class Tipsport(Bookmaker):
         try:
             raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
         except NoSuchElementException:
-            raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreboardStats__score']").get_attribute("title")
+            raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreboardStats__score']").get_attribute(
+                "title")
         logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
         # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
         if 'Za ' in raw_text or 'Začátek plánován na' in raw_text:
