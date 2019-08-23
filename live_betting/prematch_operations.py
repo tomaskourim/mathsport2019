@@ -42,7 +42,7 @@ def save_match_bookmaker(params: list) -> tuple:
 def get_save_tournaments(book: Bookmaker) -> pd.DataFrame:
     tournaments = book.get_tournaments()
     logging.debug("------------------------------------------------------\nPrematch")
-    logging.info(tournaments)
+    logging.debug(tournaments)
 
     book_id = book.database_id
     year = datetime.datetime.now().year
