@@ -213,21 +213,18 @@ class Tipsport(Bookmaker):
         pass
 
     def open_odds_menu(self, bookmaker_matchid: str) -> bool:
-        try:
-            click_id(self.driver, "matchName" + bookmaker_matchid)
-            time.sleep(self.short_seconds_to_sleep / 2)
-            return True
-        except NoSuchElementException:
-            logging.warning(f"Unable to click on odds element in match {bookmaker_matchid}. Trying again.")
-            self.driver.refresh()
-            time.sleep(self.seconds_to_sleep)
+        errors = 0
+        while errors < 5:
             try:
                 click_id(self.driver, "matchName" + bookmaker_matchid)
                 time.sleep(self.short_seconds_to_sleep / 2)
                 return True
             except NoSuchElementException:
-                return False
-        pass
+                errors = errors + 1
+                logging.warning(f"Unable to click on odds element in match {bookmaker_matchid}. Trying again.")
+                self.driver.refresh()
+                time.sleep(self.seconds_to_sleep * errors)
+        return False
 
     def get_base_odds_element(self, set_number: int) -> WebElement:
         if set_number == 5:  # TODO handle also best-of-three matches

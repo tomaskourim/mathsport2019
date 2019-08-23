@@ -76,10 +76,10 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
     except Exception as error:
         logging.exception(f"Top level error while handling match {bookmaker_matchid}. Error: {error}")
         screen_order = 1
-        screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
+        screen_filename = f"screens/top_match_handling_{bookmaker_matchid}-{screen_order}.png"
         while os.path.isfile(screen_filename):
             screen_order = screen_order + 1
-            screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
+            screen_filename = f"screens/top_match_handling_{bookmaker_matchid}-{screen_order}.png"
         book.driver.save_screenshot(screen_filename)
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
@@ -138,5 +138,5 @@ if __name__ == '__main__':
             screenshot_filename = f"screens/mainrun-{screenshot_order}.png"
             main_book.driver.save_screenshot(screenshot_filename)
         end_time = datetime.datetime.now()
-        logging.error(f"Duration update run: {(end_time - start_time_run)}")
+        logging.info(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute
