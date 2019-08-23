@@ -7,7 +7,7 @@ from database_operations import execute_sql_postgres
 
 
 def save_set_odds(odds: tuple, bookmaker_id: int, bookmaker_matchid: str, set_number: int):
-    utc_time_recorded = datetime.datetime.utcnow()
+    utc_time_recorded = datetime.datetime.now()
     query = "INSERT INTO odds (bookmaker_id, match_bookmaker_id, odds_type, match_part, odd1, odd2, utc_time_recorded) \
                 VALUES (%s, %s, %s, %s, %s, %s, %s)"
     set_to_save = f"set{set_number}"
@@ -63,5 +63,5 @@ def save_bet(book_id: int, bookmaker_matchid: str, bet_type: str, match_part: st
     query = "INSERT INTO bet (bookmaker_id, match_bookmaker_id, bet_type, match_part, odd, probability, utc_time_recorded) \
                 VALUES (%s, %s, %s, %s, %s, %s, %s)"
     execute_sql_postgres(query, [book_id, bookmaker_matchid, bet_type, match_part, odd, probability,
-                                 datetime.datetime.utcnow()], True)
+                                 datetime.datetime.now()], True)
     pass
