@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS match_course;
 DROP TABLE IF EXISTS bet;
 DROP TABLE IF EXISTS inplay;
 DROP TABLE IF EXISTS odds;
@@ -131,4 +132,14 @@ CREATE TABLE bet (
     result             BOOLEAN,
     FOREIGN KEY (bookmaker_id, match_bookmaker_id) REFERENCES matches_bookmaker(bookmaker_id, match_bookmaker_id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (bookmaker_id, match_bookmaker_id, bet_type, match_part)
-)
+);
+
+CREATE TABLE match_course (
+    id            BIGSERIAL NOT NULL PRIMARY KEY,
+    match_id      BIGINT    NOT NULL,
+    set_number    INT       NOT NULL,
+    result        BETTYPE   NOT NULL,
+    time_recorded TIMESTAMP NOT NULL,
+    FOREIGN KEY (match_id) REFERENCES matches(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE (match_id, set_number)
+);
