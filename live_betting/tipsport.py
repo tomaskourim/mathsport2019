@@ -358,8 +358,11 @@ class Tipsport(Bookmaker):
         pass
 
     def get_score_with_video(self, set_number: int, bookmaker_matchid: str) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
-        raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
-        logging.debug(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
+        try:
+            raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
+        except NoSuchElementException:
+            raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreboardStats__score']").get_attribute("title")
+        logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
         # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
         if 'Za ' in raw_text or 'Začátek plánován na' in raw_text:
             return (0, 0), (0, 0)
