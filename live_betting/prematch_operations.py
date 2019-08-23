@@ -117,8 +117,13 @@ def process_tournaments_save_matches(book: Bookmaker, tournaments: pd.DataFrame)
                 if type(tournament_id) != tuple:
                     continue
                 save_matches(matches, tournament_id[0], book.database_id)
-            logging.info(f"Matches from tournament {tournament.tournament_name} processed and saved.")
+            logging.debug(f"Matches from tournament {tournament.tournament_name} processed and saved.")
         except StaleElementReferenceException as error:
             logging.warning(f"Imposible to parse tournament {tournament.tournament_name}. Error: {error}")
             continue
     pass
+
+
+def get_matchid(bookmaker_matchid, bookmaker_id):
+    query = "SELECT match_id FROM matches_bookmaker WHERE bookmaker_id = %s AND match_bookmaker_id = %s"
+    return execute_sql_postgres(query, [bookmaker_id, bookmaker_matchid])
