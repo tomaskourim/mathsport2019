@@ -28,29 +28,28 @@ def save_set_odds(odds: tuple, bookmaker_id: int, bookmaker_matchid: str, set_nu
     pass
 
 
-def home_won_set(current_set_score: tuple, last_set_score: tuple) -> bool:
+def home_won_set(current_set_score: tuple, last_set_score: tuple, set_number: int, match_id: int) -> bool:
+    query = "INSERT INTO match_course (match_id, set_number, result, utc_time_recorded) VALUES (%s, %s, %s, %s)"
     if current_set_score[0] > last_set_score[0] and current_set_score[1] == last_set_score[1]:
-        return True
+        home_won = True
+        result = "home"
     elif current_set_score[1] > last_set_score[1] and current_set_score[0] == last_set_score[0]:
-        return False
+        home_won = False
+        result = "away"
     else:
         raise Exception(f"Unexpected scores: {last_set_score}, {current_set_score}")
+    execute_sql_postgres(query, [match_id, set_number, result, datetime.datetime.now()])
+    return home_won
 
 
-def evaluate_bet_on_set(last_set_score: tuple, current_set_score: tuple, book_id: int, bookmaker_matchid: str,
-                        set_number: int):
+def evaluate_bet_on_set(book_id: int, bookmaker_matchid: str, set_number: int, home_won: bool):
     query = "SELECT * FROM bet WHERE bookmaker_id='%s' AND match_bookmaker_id=%s AND match_part=%s"
     placed_bet = execute_sql_postgres(query, [book_id, bookmaker_matchid, "".join(['set', str(set_number)])])
     if placed_bet is not None:
         if placed_bet[7] is not None:
             raise Exception(f"Evaluating bet that is already \
                     evaluated: {[book_id, bookmaker_matchid, ''.join(['set', str(set_number)])]}")
-        if home_won_set(current_set_score, last_set_score):
-            home = True
-        else:
-            home = False
-
-        if (home and placed_bet[3] == 'home') or (~home and placed_bet[3] == 'away'):
+        if (home_won and placed_bet[3] == 'home') or (~home_won and placed_bet[3] == 'away'):
             won = True
         else:
             won = False

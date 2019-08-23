@@ -76,7 +76,7 @@ def update_match_start(match: pd.Series, tournament_id: int):
     if match.start_time_utc == db_returned[0]:
         pass
     else:
-        logging.info(
+        logging.debug(
             f'Updating starting time. Original time {db_returned[0]}. New time {match.start_time_utc}. Match: {match}')
         query = "UPDATE matches SET start_time_utc = %s WHERE tournament_id=%s AND home=%s AND away=%s"
         time_params = [match.start_time_utc]
