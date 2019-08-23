@@ -244,11 +244,10 @@ class Tipsport(Bookmaker):
         time.sleep(self.seconds_to_sleep)
 
         matchid = get_matchid(bookmaker_matchid, self.database_id)
-
         set_number = 1
         last_set_score = (0, 0)
         errors_in_match = 0
-        # while match not finished
+        # while match not finished or error rate reached
         while errors_in_match < 5:
             try:
                 # wait for the set to finish
@@ -258,8 +257,7 @@ class Tipsport(Bookmaker):
                 logging.info(f"Handled set{set_number} in match {bookmaker_matchid}.")
                 if self.match_finished(bookmaker_matchid):
                     break
-                home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (
-                        1 + (1 if home_won else -1))
+                home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (1 + (1 if home_won else -1))
                 set_number = set_number + 1
                 self.bet_next_set(bookmaker_matchid, set_number, home_probability)
                 last_set_score = current_set_score
@@ -267,10 +265,10 @@ class Tipsport(Bookmaker):
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
                 screen_order = 1
-                screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
+                screen_filename = f"screens/live_set{set_number}-{bookmaker_matchid}-{screen_order}.png"
                 while os.path.isfile(screen_filename):
                     screen_order = screen_order + 1
-                    screen_filename = f"screens/{bookmaker_matchid}-{screen_order}.png"
+                    screen_filename = f"screens/live_set{set_number}-{bookmaker_matchid}-{screen_order}.png"
                 self.driver.save_screenshot(screen_filename)
 
     pass
@@ -304,11 +302,10 @@ class Tipsport(Bookmaker):
                           set_number: int, home_won: bool):
         if set_number > 1:
             evaluate_bet_on_set(self.database_id, bookmaker_matchid, set_number, home_won)
-            logging.error(f"Betting evaluation: matchid={bookmaker_matchid}, last score: {last_set_score}, \
-            current score: {current_set_score}, set number {set_number}")
+            logging.info(f"Betting evaluation: matchid={bookmaker_matchid}, last score: {last_set_score}, \
+            current score: {current_set_score}, set number {set_number}. Home won = {home_won}")
             self.driver.save_screenshot(
                 f"screens/set_bet_evaluation_{bookmaker_matchid}-set{set_number}_currentscore_{current_set_score}.png")
-            logging.info(f"Bet evaluated on bookmaker_matchid {bookmaker_matchid} and set{set_number}")
         pass
 
     def bet_next_set(self, bookmaker_matchid: str, set_number: int, home_probability: float):
@@ -361,8 +358,9 @@ class Tipsport(Bookmaker):
         try:
             raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
         except NoSuchElementException:
-            raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreboardStats__score']").get_attribute(
-                "title")
+            logging.info(f"No video for match {bookmaker_matchid}.")
+            elem = self.driver.find_element_by_xpath("//span[@class='m-scoreboardStats__score']")
+            raw_text = elem.text + elem.get_attribute("title")
         logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
         # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
         if 'Za ' in raw_text or 'Začátek plánován na' in raw_text:
