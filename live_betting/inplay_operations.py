@@ -1,3 +1,5 @@
+import datetime
+
 import psycopg2
 from psycopg2._psycopg import IntegrityError
 
@@ -5,16 +7,17 @@ from database_operations import execute_sql_postgres
 
 
 def save_set_odds(odds: tuple, bookmaker_id: int, bookmaker_matchid: str, set_number: int):
-    query = "INSERT INTO odds (bookmaker_id, match_bookmaker_id, odds_type, match_part, odd1, odd2) \
-                VALUES (%s, %s, %s, %s, %s, %s)"
+    utc_time_recorded = datetime.datetime.utcnow()
+    query = "INSERT INTO odds (bookmaker_id, match_bookmaker_id, odds_type, match_part, odd1, odd2, utc_time_recorded) \
+                VALUES (%s, %s, %s, %s, %s, %s, %s)"
     set_to_save = f"set{set_number}"
-    params = [bookmaker_id, bookmaker_matchid, 'home_away', set_to_save, odds[0], odds[1]]
+    params = [bookmaker_id, bookmaker_matchid, 'home_away', set_to_save, odds[0], odds[1], utc_time_recorded]
     db_returned = execute_sql_postgres(query, params, True)
     if type(db_returned) == IntegrityError or type(db_returned) == psycopg2.errors.UniqueViolation:
         if 'duplicate key value violates unique constraint' in db_returned.args[0]:
-            query = "UPDATE odds SET odd1 = %s, odd2 = %s WHERE \
+            query = "UPDATE odds SET odd1 = %s, odd2 = %s, utc_time_recorded = %s WHERE \
                 bookmaker_id  = %s AND match_bookmaker_id = %s AND odds_type = %s AND match_part = %s"
-            params = [odds[0], odds[1], bookmaker_id, bookmaker_matchid, 'home_away', set_to_save]
+            params = [odds[0], odds[1], utc_time_recorded, bookmaker_id, bookmaker_matchid, 'home_away', set_to_save]
             execute_sql_postgres(query, params, True)
         else:
             raise db_returned
@@ -57,7 +60,8 @@ def evaluate_bet_on_set(last_set_score: tuple, current_set_score: tuple, book_id
 
 
 def save_bet(book_id: int, bookmaker_matchid: str, bet_type: str, match_part: str, odd: float, probability: float):
-    query = "INSERT INTO bet (bookmaker_id, match_bookmaker_id, bet_type, match_part, odd, probability) \
-                VALUES (%s, %s, %s, %s, %s, %s)"
-    execute_sql_postgres(query, [book_id, bookmaker_matchid, bet_type, match_part, odd, probability], True)
+    query = "INSERT INTO bet (bookmaker_id, match_bookmaker_id, bet_type, match_part, odd, probability, utc_time_recorded) \
+                VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    execute_sql_postgres(query, [book_id, bookmaker_matchid, bet_type, match_part, odd, probability,
+                                 datetime.datetime.utcnow()], True)
     pass
