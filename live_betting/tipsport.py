@@ -301,11 +301,11 @@ class Tipsport(Bookmaker):
     def evaluate_last_bet(self, last_set_score: tuple, current_set_score: tuple, bookmaker_matchid: str,
                           set_number: int, home_won: bool):
         if set_number > 1:
-            evaluate_bet_on_set(self.database_id, bookmaker_matchid, set_number, home_won)
             logging.info(f"Betting evaluation: matchid={bookmaker_matchid}, last score: {last_set_score}, \
             current score: {current_set_score}, set number {set_number}. Home won = {home_won}")
             self.driver.save_screenshot(
                 f"screens/set_bet_evaluation_{bookmaker_matchid}-set{set_number}_currentscore_{current_set_score}.png")
+            evaluate_bet_on_set(self.database_id, bookmaker_matchid, set_number, home_won)
         pass
 
     def bet_next_set(self, bookmaker_matchid: str, set_number: int, home_probability: float):
@@ -318,8 +318,16 @@ class Tipsport(Bookmaker):
                 # bet on next set if possible
                 if home_probability > 1 / set_odds[0]:
                     self.bet_set('home', bookmaker_matchid, set_number, set_odds[0], home_probability)
+                else:
+                    logging.info(
+                        f"Not placing bet on home, match {bookmaker_matchid}, set{set_number} with odds {set_odds[0]}"
+                        f" and computed prob. {home_probability}")
                 if (1 - home_probability) > 1 / set_odds[1]:
                     self.bet_set('away', bookmaker_matchid, set_number, set_odds[1], 1 - home_probability)
+                else:
+                    logging.info(
+                        f"Not placing bet on away, match {bookmaker_matchid}, set{set_number} with odds {set_odds[1]}"
+                        f" and computed prob. {1 - home_probability}")
                 break
             except:
                 errors = errors + 1
@@ -350,8 +358,8 @@ class Tipsport(Bookmaker):
                 probability {probability}")
             save_bet(self.database_id, bookmaker_matchid, bet_type, "".join(['set', str(set_number)]), odd, probability)
         except NoSuchElementException:
-            logging.error(f"Unable to place bet \
-                {self.database_id, bookmaker_matchid, bet_type, ''.join(['set', str(set_number)]), odd, probability}")
+            logging.error(f"Unable to place bet {bet_type} in match {bookmaker_matchid} on set{set_number} with "
+                          f"odd {odd} and probability {probability}")
         pass
 
     def get_score_with_video(self, set_number: int, bookmaker_matchid: str) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
