@@ -33,8 +33,8 @@ def get_starting_matches() -> List[tuple]:
 
 
 def insert_inplay(bookmaker_matchid: str, book_id: int):
-    query = "INSERT INTO inplay (bookmaker_id, match_bookmaker_id) VALUES (%s, %s)"
-    execute_sql_postgres(query, [book_id, bookmaker_matchid], True)
+    query = "INSERT INTO inplay (bookmaker_id, match_bookmaker_id, utc_time_recorded) VALUES (%s, %s, %s)"
+    execute_sql_postgres(query, [book_id, bookmaker_matchid, datetime.datetime.now()], True)
     pass
 
 
@@ -100,7 +100,8 @@ def scan_update(book: Bookmaker):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
 
     parser = argparse.ArgumentParser(
         description="")

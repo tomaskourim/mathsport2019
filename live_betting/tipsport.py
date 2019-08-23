@@ -73,6 +73,10 @@ class Tipsport(Bookmaker):
             if len(text) == 0:
                 continue
             tournament = {}
+            # to remove TV stations streaming a tournament
+            tv_location = text.find("    ")
+            if tv_location > 0:
+                text = text[0:tv_location]
             if "muži" in text:
                 tournament["sex"] = "men"
                 text = text.replace(", Tenis muži - ", "")
