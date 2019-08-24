@@ -287,7 +287,7 @@ class Tipsport(Bookmaker):
                 set_score, game_score = self.get_score_with_video(set_number, bookmaker_matchid)
             except NoSuchElementException:
                 # w/out live video stream
-                set_score, game_score = self.get_score_without_video(set_number)
+                set_score, game_score = self.get_score_without_video(set_number, bookmaker_matchid)
             if last_set_state != set_score:
                 return set_score
             elif max(game_score) < 5:
@@ -386,11 +386,12 @@ class Tipsport(Bookmaker):
         game_score = [int(x) for x in game_score]
         return tuple(set_score), tuple(game_score)
 
-    def get_score_without_video(self, set_number: int) -> Tuple[Tuple[int, int], Tuple[int, int]]:
+    def get_score_without_video(self, set_number: int, bookmaker_matchid: str) -> \
+            Tuple[Tuple[int, int], Tuple[int, int]]:
         elems = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
         home_raw = elems[1].text
         away_raw = elems[2].text
-        logging.info(f"Home raw: {home_raw}, away_raw: {away_raw}")
+        logging.info(f"No video score for match {bookmaker_matchid}: Home raw: {home_raw}, away_raw: {away_raw}")
         home_sets = int(home_raw.split('\n')[0])
         away_sets = int(away_raw.split('\n')[0])
         home_games = int(home_raw.split('\n')[set_number])
