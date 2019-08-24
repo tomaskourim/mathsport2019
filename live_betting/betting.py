@@ -16,6 +16,7 @@ from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import TIME_TO_MATCHSTART_MINUTES
 from live_betting.prematch_operations import get_save_tournaments, process_tournaments_save_matches
 from live_betting.tipsport import Tipsport
+from live_betting.utils import save_screenshot
 from main import find_single_lambda
 
 
@@ -75,12 +76,7 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
         book.handle_match(bookmaker_matchid, c_lambda)
     except Exception as error:
         logging.exception(f"Top level error while handling match {bookmaker_matchid}. Error: {error}")
-        screen_order = 1
-        screen_filename = f"screens/top_match_handling_{bookmaker_matchid}-{screen_order}.png"
-        while os.path.isfile(screen_filename):
-            screen_order = screen_order + 1
-            screen_filename = f"screens/top_match_handling_{bookmaker_matchid}-{screen_order}.png"
-        book.driver.save_screenshot(screen_filename)
+        save_screenshot(book.driver, f"top_match_handling", bookmaker_matchid)
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
         book.close()
@@ -131,12 +127,7 @@ if __name__ == '__main__':
             scan_update(main_book)
         except Exception as error:
             logging.exception(f"While updating DB error occurred: {error}")
-            screenshot_order = 1
-            screenshot_filename = f"screens/mainrun-{screenshot_order}.png"
-            while os.path.isfile(screenshot_filename):
-                screenshot_order = screenshot_order + 1
-            screenshot_filename = f"screens/mainrun-{screenshot_order}.png"
-            main_book.driver.save_screenshot(screenshot_filename)
+            save_screenshot(main_book.driver, f"mainrun", 'null')
         end_time = datetime.datetime.now()
         logging.info(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute

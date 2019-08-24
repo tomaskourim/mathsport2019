@@ -1,4 +1,5 @@
 import json
+import os
 from typing import Tuple
 
 from selenium import webdriver
@@ -25,3 +26,13 @@ def click_id(driver: webdriver, element_id: str):
 
 def click_xpath(driver: webdriver, xpath: str):
     driver.find_element_by_xpath(xpath).click()
+
+
+def save_screenshot(driver: webdriver, info_text: str, bookmaker_matchid: str):
+    screen_order = 1
+    screen_filename = f"screens/{bookmaker_matchid}-{info_text}-{screen_order}.png"
+    while os.path.isfile(screen_filename):
+        screen_order = screen_order + 1
+        screen_filename = f"screens/{bookmaker_matchid}-{info_text}-{screen_order}.png"
+    driver.save_screenshot(screen_filename)
+    pass
