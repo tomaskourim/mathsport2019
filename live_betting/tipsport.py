@@ -173,7 +173,7 @@ class Tipsport(Bookmaker):
             self.driver.refresh()
             time.sleep(self.seconds_to_sleep / 2)
             if not self.open_odds_menu(bookmaker_matchid):
-                logging.error(f"Unable to open odds menu in loop, match {bookmaker_matchid}")
+                logging.warning(f"Unable to open odds menu in loop, match {bookmaker_matchid}")
                 break
         return current_odds
 
@@ -216,7 +216,7 @@ class Tipsport(Bookmaker):
         while errors < 5:
             try:
                 click_id(self.driver, "matchName" + bookmaker_matchid)
-                time.sleep(self.short_seconds_to_sleep / 2)
+                time.sleep(self.short_seconds_to_sleep)
                 return True
             except NoSuchElementException:
                 errors = errors + 1

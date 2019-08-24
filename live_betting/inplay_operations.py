@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 import psycopg2
 from psycopg2._psycopg import IntegrityError
@@ -38,7 +39,9 @@ def home_won_set(current_set_score: tuple, last_set_score: tuple, set_number: in
         result = "away"
     else:
         raise Exception(f"Unexpected scores: {last_set_score}, {current_set_score}")
-    execute_sql_postgres(query, [match_id, set_number, result, datetime.datetime.now()], True)
+    db_returned = execute_sql_postgres(query, [match_id, set_number, result, datetime.datetime.now()], True)
+    if "success" not in db_returned:
+        logging.error(f"Imposible to save result. Matchid: {match_id}. Query: {query}. Error: {db_returned}")
     return home_won
 
 
@@ -54,13 +57,18 @@ def evaluate_bet_on_set(book_id: int, bookmaker_matchid: str, set_number: int, h
         else:
             won = False
         query = "UPDATE bet SET result = %s WHERE bookmaker_id='%s' AND match_bookmaker_id=%s AND match_part=%s"
-        execute_sql_postgres(query, [won, book_id, bookmaker_matchid, match_part], True)
+        db_returned = execute_sql_postgres(query, [won, book_id, bookmaker_matchid, match_part], True)
+        if "success" not in db_returned:
+            logging.error(
+                f"Imposible to save bet result. Matchid: {bookmaker_matchid}. Query: {query}. Error: {db_returned}")
     pass
 
 
 def save_bet(book_id: int, bookmaker_matchid: str, bet_type: str, match_part: str, odd: float, probability: float):
     query = "INSERT INTO bet (bookmaker_id, match_bookmaker_id, bet_type, match_part, odd, probability, utc_time_recorded) \
                 VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    execute_sql_postgres(query, [book_id, bookmaker_matchid, bet_type, match_part, odd, probability,
-                                 datetime.datetime.now()], True)
+    db_returned = execute_sql_postgres(query, [book_id, bookmaker_matchid, bet_type, match_part, odd, probability,
+                                               datetime.datetime.now()], True)
+    if "success" not in db_returned:
+        logging.error(f"Imposible to save bet. Matchid: {bookmaker_matchid}. Query: {query}. Error: {db_returned}")
     pass
