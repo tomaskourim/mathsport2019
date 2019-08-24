@@ -216,7 +216,7 @@ class Tipsport(Bookmaker):
 
     def open_odds_menu(self, bookmaker_matchid: str) -> bool:
         errors = 0
-        while errors < 5:
+        while errors < 4:
             try:
                 click_id(self.driver, "matchName" + bookmaker_matchid)
                 time.sleep(self.short_seconds_to_sleep)
@@ -229,13 +229,13 @@ class Tipsport(Bookmaker):
         return False
 
     def get_base_odds_element(self, set_number: int) -> WebElement:
-        if set_number == 5:  # TODO handle also best-of-three matches
-            return self.driver.find_element_by_xpath(f"//span[@title='Vítěz zápasu']")  # TODO verify
+        if set_number == 5:
+            return self.driver.find_element_by_xpath(f"//span[@title='Vítěz zápasu']")
         elif set_number == 3:
             try:
                 return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
             except NoSuchElementException:
-                return self.driver.find_element_by_xpath(f"//span[@title='Vítěz zápasu']")  # TODO verify
+                return self.driver.find_element_by_xpath(f"//span[@title='Vítěz zápasu']")
         else:
             return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
 
@@ -285,6 +285,7 @@ class Tipsport(Bookmaker):
 
     def wait_for_set_end(self, set_number: int, last_set_state: tuple, bookmaker_matchid: str) -> tuple:
         while True:
+            # TODO if no score is returned, assume the match is over and try to guess the result
             try:
                 # with live video stream
                 set_score, game_score = self.get_score_with_video(set_number, bookmaker_matchid)
@@ -308,7 +309,6 @@ class Tipsport(Bookmaker):
             save_screenshot(self.driver, f"set_bet_evaluation_set{set_number}_currentscore_{current_set_score}",
                             bookmaker_matchid)
             evaluate_bet_on_set(self.database_id, bookmaker_matchid, set_number, home_won)
-        pass
 
     def bet_next_set(self, bookmaker_matchid: str, set_number: int, home_probability: float):
         errors = 0
@@ -332,11 +332,10 @@ class Tipsport(Bookmaker):
                         f" and computed prob. {1 - home_probability}")
                 break
             except Exception as error:
-                logging.error(f"Error while placing bet: {error}")
+                logging.error(f"Error while placing bet on match {bookmaker_matchid}: {error}")
                 save_screenshot(self.driver, f"placing_bet_set{set_number}", bookmaker_matchid)
                 errors = errors + 1
                 time.sleep(self.seconds_to_sleep)
-        pass
 
     def bet_set(self, bet_type: str, bookmaker_matchid: str, set_number: int, odd: float, probability: float):
         if bet_type == 'home':
@@ -364,17 +363,15 @@ class Tipsport(Bookmaker):
         except NoSuchElementException:
             logging.error(f"Unable to place bet {bet_type} in match {bookmaker_matchid} on set{set_number} with "
                           f"odd {odd} and probability {probability}")
-        pass
 
     def get_score_with_video(self, set_number: int, bookmaker_matchid: str) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
         try:
             raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
+            logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
         except NoSuchElementException:
-            logging.info(f"No video for match {bookmaker_matchid}.")
             elem = self.driver.find_element_by_xpath("//span[@class='m-scoreboardStats__score']")
             raw_text = elem.text + elem.get_attribute("title")
-        logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
-        # TODO co kdyz se odlozi zacatek? Naparsovat cas a ulozit? Ale teoreticky by to melo vyskocit i v prematch
+            logging.info(f"Tracker score raw text for match {bookmaker_matchid}: {raw_text}")
         if 'Za ' in raw_text or 'Začátek plánován na' in raw_text:
             return (0, 0), (0, 0)
         raw_text = raw_text.replace(',', '')

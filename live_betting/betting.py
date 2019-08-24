@@ -68,7 +68,7 @@ def get_clambda() -> float:
 
 
 def handle_match(bookmaker_matchid: str, c_lambda: float):
-    logging.info(f"Handling match:{bookmaker_matchid}")
+    logging.info(f"Starting handling match:{bookmaker_matchid}")
     book = Tipsport()
     try:
         book.login()
@@ -118,7 +118,6 @@ if __name__ == '__main__':
         for bookmaker_match_id_tuple in starting_matches_ids:
             thread = threading.Thread(target=handle_match, args=(bookmaker_match_id_tuple[0], clambda))
             thread.start()
-            logging.info(f"Main thread handling match: {bookmaker_match_id_tuple[0]}")
             time.sleep(30)
 
         # update database
