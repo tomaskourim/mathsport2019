@@ -151,7 +151,8 @@ class Tipsport(Bookmaker):
         starting_odds = self.handle_prematch(bookmaker_matchid)
         logging.info(f"Finished prematch handling of match {bookmaker_matchid}. Starting odds is {starting_odds}.")
         if starting_odds[0] is None:
-            pass
+            logging.info(f"Match {bookmaker_matchid} has no starting odds.")
+            return
         home_probability = probabilities_from_odds(np.asarray(starting_odds), "1.set", FAIR_ODDS_PARAMETER)[0]
         logging.info(f"Finished probability calculation of match {bookmaker_matchid}. \
                         Starting home probability is {home_probability}.")
