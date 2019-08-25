@@ -41,8 +41,8 @@ def save_match_bookmaker(params: list) -> tuple:
 
 def get_save_tournaments(book: Bookmaker) -> pd.DataFrame:
     tournaments = book.get_tournaments()
-    # logging.info("------------------------------------------------------\nPrematch")
-    logging.info(tournaments)
+    logging.debug("------------------------------------------------------\nPrematch")
+    logging.debug(tournaments)
 
     book_id = book.database_id
     year = datetime.datetime.now().year
@@ -62,7 +62,7 @@ def get_save_tournaments(book: Bookmaker) -> pd.DataFrame:
             params = [db_returned[0], book_id, tournament.tournament_bookmaker_id,
                       tournament.tournament_bookmaker_year_id]
             save_tournament_bookmaker(params)
-            logging.info(f"Processed tournament {tournament.tournament_name}")
+            logging.debug(f"Processed tournament {tournament.tournament_name}")
         else:
             raise db_returned
 
