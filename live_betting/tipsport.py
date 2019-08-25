@@ -421,4 +421,5 @@ class Tipsport(Bookmaker):
         else:
             away_games = int(away_games_raw)
 
+        logging.info(f"Current score sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
         return (home_sets, away_sets), (home_games, away_games)
