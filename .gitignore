@@ -14,3 +14,4 @@ live_betting/reporting/output/*
 DB_backups
 logfile_info.log
 logfile_total.log
+logfile_error.log
