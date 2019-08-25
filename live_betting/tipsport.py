@@ -392,8 +392,33 @@ class Tipsport(Bookmaker):
         home_raw = elems[1].text
         away_raw = elems[2].text
         logging.info(f"No video score for match {bookmaker_matchid}: Home raw: {home_raw}, away_raw: {away_raw}")
-        home_sets = int(home_raw.split('\n')[0])
-        away_sets = int(away_raw.split('\n')[0])
-        home_games = int(home_raw.split('\n')[set_number])
-        away_games = int(away_raw.split('\n')[set_number])
+
+        home_split = home_raw.split('\n')
+        home_sets_raw = home_split[0]
+        home_games_raw = home_split[set_number]
+
+        away_split = away_raw.split('\n')
+        away_sets_raw = away_split[0]
+        away_games_raw = away_split[set_number]
+
+        if "-" in home_sets_raw:
+            home_sets = 0
+        else:
+            home_sets = int(home_sets_raw)
+
+        if "-" in away_sets_raw:
+            away_sets = 0
+        else:
+            away_sets = int(away_sets_raw)
+
+        if "-" in home_games_raw:
+            home_games = 0
+        else:
+            home_games = int(home_games_raw)
+
+        if "-" in away_games_raw:
+            away_games = 0
+        else:
+            away_games = int(away_games_raw)
+
         return (home_sets, away_sets), (home_games, away_games)
