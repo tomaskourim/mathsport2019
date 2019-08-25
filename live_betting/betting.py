@@ -68,7 +68,7 @@ def get_clambda() -> float:
 
 
 def handle_match(bookmaker_matchid: str, c_lambda: float):
-    logging.info(f"Starting handling match:{bookmaker_matchid}")
+    logging.info(f"Starting handling match: {bookmaker_matchid}")
     book = Tipsport()
     try:
         book.login()
