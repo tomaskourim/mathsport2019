@@ -1,7 +1,6 @@
 import argparse
 import datetime
 import logging
-import os.path
 import threading
 import time
 from typing import List
@@ -27,6 +26,9 @@ def get_starting_matches() -> List[tuple]:
                 (SELECT * FROM matches WHERE start_time_utc > %s AND start_time_utc < %s) AS matches \
                 JOIN \
                 matches_bookmaker ON matches.id = match_id \
+                JOIN \
+                tournament ON matches.tournament_id = tournament.id \
+                WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' \
                 EXCEPT \
                 SELECT match_bookmaker_id FROM inplay"
     params = [utc_time, limit_start_time]
