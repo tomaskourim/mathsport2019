@@ -1,7 +1,5 @@
-import argparse
 import datetime
 import logging
-import os.path
 import threading
 import time
 from typing import List
@@ -48,7 +46,7 @@ def remove_inplay(bookmaker_matchid: str, book_id: int):
 def clear_inplay():
     query = "DELETE FROM inplay"
     execute_sql_postgres(query, None, True)
-    logging.info("Table inplay cleared.")
+    logger.info("Table inplay cleared.")
     pass
 
 
@@ -63,25 +61,25 @@ def get_clambda() -> float:
                                        probability_not_predicted_player=probabilities[1])
     training_set = matches_data[matches_data["year"] == datetime.datetime.utcnow().year - 1]
     c_lambda = find_single_lambda(training_set)
-    logging.info(f"Optimal lambda is {c_lambda}")
+    logger.info(f"Optimal lambda is {c_lambda}")
     return c_lambda
 
 
 def handle_match(bookmaker_matchid: str, c_lambda: float):
-    logging.info(f"Starting handling match: {bookmaker_matchid}")
+    logger.info(f"Starting handling match: {bookmaker_matchid}")
     book = Tipsport()
     try:
         book.login()
         insert_inplay(bookmaker_matchid, book.database_id)
         book.handle_match(bookmaker_matchid, c_lambda)
     except Exception as error:
-        logging.exception(f"Top level error while handling match {bookmaker_matchid}. Error: {error}")
+        logger.exception(f"Top level error while handling match {bookmaker_matchid}. Error: {error}")
         save_screenshot(book.driver, f"top_match_handling", bookmaker_matchid)
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
         book.close()
 
-    logging.info(f"Finished handling match: {bookmaker_matchid}")
+    logger.info(f"Finished handling match: {bookmaker_matchid}")
     pass
 
 
@@ -96,11 +94,34 @@ def scan_update(book: Bookmaker):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
 
-    parser = argparse.ArgumentParser(
-        description="")
+    # Create a custom logger
+    logger = logging.getLogger()
+    logger.setLevel('DEBUG')
+
+    # Create handlers
+    total_handler = logging.FileHandler('logfile_total.log')
+    info_handler = logging.FileHandler('logfile_info.log')
+    error_handler = logging.FileHandler('logfile_error.log')
+    stdout_handler = logging.StreamHandler()
+
+    total_handler.setLevel(logging.DEBUG)
+    info_handler.setLevel(logging.INFO)
+    error_handler.setLevel(logging.WARNING)
+    stdout_handler.setLevel(logging.WARNING)
+
+    # Create formatters and add it to handlers
+    logging_format = logging.Formatter('%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
+    total_handler.setFormatter(logging_format)
+    info_handler.setFormatter(logging_format)
+    error_handler.setFormatter(logging_format)
+    stdout_handler.setFormatter(logging_format)
+
+    # Add handlers to the logger
+    logger.addHandler(total_handler)
+    logger.addHandler(info_handler)
+    logger.addHandler(error_handler)
+    logger.addHandler(stdout_handler)
 
     # in case it crashed with inplay games
     clear_inplay()
@@ -114,7 +135,7 @@ if __name__ == '__main__':
     while True:  # TODO use Flask and cron or something more reasonable then while true
         # get matches about to start, start new thread for each, process
         starting_matches_ids = get_starting_matches()
-        logging.info(f"Matches to start: {len(starting_matches_ids)}")
+        logger.info(f"Matches to start: {len(starting_matches_ids)}")
         for bookmaker_match_id_tuple in starting_matches_ids:
             thread = threading.Thread(target=handle_match, args=(bookmaker_match_id_tuple[0], clambda))
             thread.start()
@@ -125,8 +146,8 @@ if __name__ == '__main__':
         try:
             scan_update(main_book)
         except Exception as error:
-            logging.exception(f"While updating DB error occurred: {error}")
+            logger.exception(f"While updating DB error occurred: {error}")
             save_screenshot(main_book.driver, f"mainrun", 'null')
         end_time = datetime.datetime.now()
-        logging.info(f"Duration update run: {(end_time - start_time_run)}")
+        logger.info(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute

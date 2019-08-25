@@ -125,7 +125,7 @@ def execute_sql_postgres(query: str, param: Optional, modifying: bool = False, r
         if modifying:
             conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
-        logging.debug("Sql exception:", error)
+        logging.debug(f"Sql exception: {error}")
         return_value = error
     finally:
         if cur is not None:

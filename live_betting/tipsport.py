@@ -187,7 +187,7 @@ class Tipsport(Bookmaker):
             elem_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
             starting_time = self.get_starting_time()
         except NoSuchElementException:
-            logging.error(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
+            logging.warning(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
             save_screenshot(self.driver, f"started_by_error", bookmaker_matchid)
             return True
 
@@ -372,7 +372,7 @@ class Tipsport(Bookmaker):
             elem = self.driver.find_element_by_xpath("//span[@class='m-scoreboardStats__score']")
             raw_text = elem.text + elem.get_attribute("title")
             logging.info(f"Tracker score raw text for match {bookmaker_matchid}: {raw_text}")
-        if 'Za ' in raw_text or 'Začátek plánován na' in raw_text:
+        if 'Za ' in raw_text or 'Začátek plánován na' in raw_text or 'se rozehr' in raw_text:
             return (0, 0), (0, 0)
         raw_text = raw_text.replace(',', '')
         raw_text = raw_text.replace('*', '')  # supertiebreak doubles has * marking serving pair
