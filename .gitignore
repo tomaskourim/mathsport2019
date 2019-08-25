@@ -12,4 +12,5 @@ live_betting/screens/*
 live_betting/reporting/output/*
 !live_betting/reporting/output/REPORTS_GO_HERE
 DB_backups
-
+logfile_info.log
+logfile_total.log
