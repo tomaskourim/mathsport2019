@@ -272,6 +272,7 @@ class Tipsport(Bookmaker):
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
                 save_screenshot(self.driver, f"live_set{set_number}", bookmaker_matchid)
+                time.sleep(self.seconds_to_sleep)
 
     pass
 
@@ -332,7 +333,8 @@ class Tipsport(Bookmaker):
                         f" and computed prob. {1 - home_probability}")
                 break
             except Exception as error:
-                logging.error(f"Error while placing bet on match {bookmaker_matchid}: {error}")
+                logging.error(
+                    f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
                 save_screenshot(self.driver, f"placing_bet_set{set_number}", bookmaker_matchid)
                 errors = errors + 1
                 time.sleep(self.seconds_to_sleep)
@@ -372,7 +374,7 @@ class Tipsport(Bookmaker):
             elem = self.driver.find_element_by_xpath("//span[@class='m-scoreboardStats__score']")
             raw_text = elem.text + elem.get_attribute("title")
             logging.info(f"Tracker score raw text for match {bookmaker_matchid}: {raw_text}")
-        if 'Za ' in raw_text or 'Začátek plánován na' in raw_text or 'se rozehr' in raw_text:
+        if 'Za ' in raw_text or 'Začátek plánován' in raw_text or 'se rozehr' in raw_text or 'ošetřování' in raw_text:
             return (0, 0), (0, 0)
         raw_text = raw_text.replace(',', '')
         raw_text = raw_text.replace('*', '')  # supertiebreak doubles has * marking serving pair
