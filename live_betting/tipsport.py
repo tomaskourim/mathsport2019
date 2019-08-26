@@ -237,11 +237,11 @@ class Tipsport(Bookmaker):
     def get_base_odds_element(self, set_number: int) -> WebElement:
         if set_number == 5:
             return self.driver.find_element_by_xpath(f"//span[@title='Vítěz zápasu']")
-        # elif set_number == 3:
-        #     try:
-        #         return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
-        #     except NoSuchElementException:
-        #         return self.driver.find_element_by_xpath(f"//span[@title='Vítěz zápasu']")
+        elif set_number == 3:
+            try:
+                return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
+            except NoSuchElementException:
+                return self.driver.find_element_by_xpath(f"//span[@title='Vítěz zápasu']")
         else:
             return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
 
