@@ -273,6 +273,7 @@ class Tipsport(Bookmaker):
                 errors_in_match = errors_in_match + 1
                 save_screenshot(self.driver, f"live_set{set_number}", bookmaker_matchid)
                 time.sleep(self.seconds_to_sleep)
+
     pass
 
     def match_finished(self, bookmaker_matchid: str) -> bool:
@@ -332,7 +333,8 @@ class Tipsport(Bookmaker):
                         f" and computed prob. {1 - home_probability}")
                 break
             except Exception as error:
-                logging.error(f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
+                logging.error(
+                    f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
                 save_screenshot(self.driver, f"placing_bet_set{set_number}", bookmaker_matchid)
                 errors = errors + 1
                 time.sleep(self.seconds_to_sleep)
