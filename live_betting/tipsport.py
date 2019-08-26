@@ -182,14 +182,20 @@ class Tipsport(Bookmaker):
 
     def match_started(self, bookmaker_matchid) -> bool:
         utc_time = pytz.utc.localize(datetime.datetime.utcnow())
-        try:
-            elem_base = self.get_base_odds_element(1)
-            elem_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
-            starting_time = self.get_starting_time()
-        except NoSuchElementException:
-            logging.warning(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
-            save_screenshot(self.driver, f"started_by_error", bookmaker_matchid)
-            return True
+        errors = 0
+        while True:
+            try:
+                elem_base = self.get_base_odds_element(1)
+                elem_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
+                starting_time = self.get_starting_time()
+                break
+            except NoSuchElementException:
+                save_screenshot(self.driver, f"to_start_by_error", bookmaker_matchid)
+                time.sleep(self.seconds_to_sleep / 2)
+                errors = errors + 1
+                if errors > 3:
+                    logging.warning(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
+                    return True
 
         if starting_time - utc_time < datetime.timedelta(seconds=30):
             if "disabled" in elem_odds[0].get_attribute("class") and "disabled" in elem_odds[1].get_attribute(
@@ -315,7 +321,7 @@ class Tipsport(Bookmaker):
 
     def bet_next_set(self, bookmaker_matchid: str, set_number: int, home_probability: float):
         errors = 0
-        while errors < 5:
+        while errors < 3:
             try:
                 # get odds for next set
                 set_odds = self.get_set_odds(set_number)
