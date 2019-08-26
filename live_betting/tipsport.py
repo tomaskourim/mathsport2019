@@ -261,13 +261,13 @@ class Tipsport(Bookmaker):
                 current_set_score = self.wait_for_set_end(set_number, last_set_score, bookmaker_matchid)
                 home_won = home_won_set(current_set_score, last_set_score, set_number, matchid)
                 self.evaluate_last_bet(last_set_score, current_set_score, bookmaker_matchid, set_number, home_won)
+                last_set_score = current_set_score
                 logging.info(f"Handled set{set_number} in match {bookmaker_matchid}. Home won = {home_won}")
                 if self.match_finished(bookmaker_matchid):
                     break
                 home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (1 + (1 if home_won else -1))
                 set_number = set_number + 1
                 self.bet_next_set(bookmaker_matchid, set_number, home_probability)
-                last_set_score = current_set_score
             except Exception as error:
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
@@ -285,11 +285,13 @@ class Tipsport(Bookmaker):
             return False
 
     def wait_for_set_end(self, set_number: int, last_set_state: tuple, bookmaker_matchid: str) -> tuple:
+        game_score = (0, 0)
         while True:
             # TODO if no score is returned, assume the match is over and try to guess the result
             try:
                 # with live video stream
-                set_score, game_score = self.get_score_with_video(set_number, bookmaker_matchid)
+                set_score, game_score = self.get_score_with_video(set_number, bookmaker_matchid, last_set_state,
+                                                                  game_score)
             except NoSuchElementException:
                 # w/out live video stream
                 set_score, game_score = self.get_score_without_video(set_number, bookmaker_matchid)
@@ -366,7 +368,8 @@ class Tipsport(Bookmaker):
             logging.error(f"Unable to place bet {bet_type} in match {bookmaker_matchid} on set{set_number} with "
                           f"odd {odd} and probability {probability}")
 
-    def get_score_with_video(self, set_number: int, bookmaker_matchid: str) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
+    def get_score_with_video(self, set_number: int, bookmaker_matchid: str, last_set_score: tuple,
+                             last_game_score: tuple) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
         try:
             raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
             logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
@@ -375,7 +378,7 @@ class Tipsport(Bookmaker):
             raw_text = elem.text + elem.get_attribute("title")
             logging.info(f"Tracker score raw text for match {bookmaker_matchid}: {raw_text}")
         if 'Za ' in raw_text or 'Začátek plánován' in raw_text or 'se rozehr' in raw_text or 'ošetřování' in raw_text:
-            return (0, 0), (0, 0)
+            return last_set_score, last_game_score
         raw_text = raw_text.replace(',', '')
         raw_text = raw_text.replace('*', '')  # supertiebreak doubles has * marking serving pair
         raw_text = re.sub('\(\\d+\)', '', raw_text)
