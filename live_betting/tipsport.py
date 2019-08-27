@@ -191,7 +191,7 @@ class Tipsport(Bookmaker):
                 break
             except NoSuchElementException:
                 save_screenshot(self.driver, f"to_start_by_error", bookmaker_matchid)
-                time.sleep(self.seconds_to_sleep / 2)
+                time.sleep(self.seconds_to_sleep)
                 errors = errors + 1
                 if errors > 3:
                     logging.warning(f"Match {bookmaker_matchid} started by error at UTC {utc_time}")
