@@ -31,10 +31,10 @@ def save_set_odds(odds: tuple, bookmaker_id: int, bookmaker_matchid: str, set_nu
 
 def home_won_set(current_set_score: tuple, last_set_score: tuple, set_number: int, match_id: int) -> bool:
     query = "INSERT INTO match_course (match_id, set_number, result, utc_time_recorded) VALUES (%s, %s, %s, %s)"
-    if current_set_score[0] > last_set_score[0] and current_set_score[1] == last_set_score[1]:
+    if current_set_score[0] == last_set_score[0] + 1 and current_set_score[1] == last_set_score[1]:
         home_won = True
         result = "home"
-    elif current_set_score[1] > last_set_score[1] and current_set_score[0] == last_set_score[0]:
+    elif current_set_score[1] == last_set_score[1] + 1 and current_set_score[0] == last_set_score[0]:
         home_won = False
         result = "away"
     else:
