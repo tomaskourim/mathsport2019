@@ -34,3 +34,10 @@ FROM (
              JOIN matches m ON mb.match_id = m.id
              JOIN tournament t ON m.tournament_id = t.id) AS r
 ORDER BY start_time_utc DESC, home;
+
+-- match course
+SELECT match_bookmaker_id, home, away, start_time_utc, set_number, result, utc_time_recorded
+FROM match_course
+         JOIN matches m ON match_course.match_id = m.id
+         JOIN matches_bookmaker mb ON m.id = mb.match_id
+ORDER BY start_time_utc, match_bookmaker_id, set_number;
