@@ -391,7 +391,11 @@ class Tipsport(Bookmaker):
         set_score = raw_text[:3].split(':')
         set_score = [int(x) for x in set_score]
         if '-' in raw_text:
-            game_score = raw_text.split(' - ')[1].split(' ')[set_number - 1].split(':')
+            set_games = raw_text.split(' - ')[1].split(' ')
+            if sum(set_score) == len(set_games) - 2:
+                game_score = set_games[set_number - 1].split(':')
+            else:
+                set_score, game_score = self.get_score_from_mistake(set_games)
         else:
             game_score = raw_text[-4:-1].split(':')
         game_score = [int(x) for x in game_score]
@@ -434,3 +438,11 @@ class Tipsport(Bookmaker):
 
         logging.info(f"Current score sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
         return (home_sets, away_sets), (home_games, away_games)
+
+    @staticmethod
+    def get_score_from_mistake(set_games: List) -> Tuple[List[int, int], List[int, int]]:
+        home_sets = sum(1 if set_games[i].split(':')[0] > set_games[i].split(':')[1] else 0 for i in
+                        range(0, len(set_games) - 2))
+        away_sets = sum(1 if set_games[i].split(':')[1] > set_games[i].split(':')[0] else 0 for i in
+                        range(0, len(set_games) - 2))
+        return [home_sets, away_sets], set_games[len(set_games) - 2].split(':')
