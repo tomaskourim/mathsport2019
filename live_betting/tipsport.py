@@ -440,7 +440,7 @@ class Tipsport(Bookmaker):
         return (home_sets, away_sets), (home_games, away_games)
 
     @staticmethod
-    def get_score_from_mistake(set_games: List) -> Tuple[List[int, int], List[int, int]]:
+    def get_score_from_mistake(set_games: List) -> Tuple[List[int], List[int]]:
         home_sets = sum(1 if set_games[i].split(':')[0] > set_games[i].split(':')[1] else 0 for i in
                         range(0, len(set_games) - 2))
         away_sets = sum(1 if set_games[i].split(':')[1] > set_games[i].split(':')[0] else 0 for i in
