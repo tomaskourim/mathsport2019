@@ -315,8 +315,6 @@ class Tipsport(Bookmaker):
         if set_number > 1:
             logging.info(f"Betting evaluation: matchid={bookmaker_matchid}, last score: {last_set_score}, \
             current score: {current_set_score}, set number {set_number}. Home won = {home_won}")
-            save_screenshot(self.driver, f"set_bet_evaluation_set{set_number}_currentscore_{current_set_score}",
-                            bookmaker_matchid)
             evaluate_bet_on_set(self.database_id, bookmaker_matchid, set_number, home_won)
 
     def bet_next_set(self, bookmaker_matchid: str, set_number: int, home_probability: float):
