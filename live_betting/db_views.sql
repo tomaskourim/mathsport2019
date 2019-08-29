@@ -41,3 +41,11 @@ FROM match_course
          JOIN matches m ON match_course.match_id = m.id
          JOIN matches_bookmaker mb ON m.id = mb.match_id
 ORDER BY start_time_utc, match_bookmaker_id, set_number;
+
+-- inplay
+SELECT *
+FROM inplay
+         JOIN matches_bookmaker mb
+ON inplay.bookmaker_id = mb.bookmaker_id AND inplay.match_bookmaker_id = mb.match_bookmaker_id
+         JOIN matches m ON mb.match_id = m.id
+         JOIN tournament t ON m.tournament_id = t.id;
