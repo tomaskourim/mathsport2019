@@ -292,15 +292,16 @@ class Tipsport(Bookmaker):
 
     def wait_for_set_end(self, set_number: int, last_set_state: tuple, bookmaker_matchid: str) -> tuple:
         game_score = (0, 0)
+        point_score = ""
         while True:
             # TODO if no score is returned, assume the match is over and try to guess the result
             try:
                 # with live video stream
-                set_score, game_score = self.get_score_with_video(set_number, bookmaker_matchid, last_set_state,
-                                                                  game_score)
+                set_score, game_score, point_score = self.get_score_with_video(set_number, bookmaker_matchid,
+                                                                               last_set_state, game_score, point_score)
             except NoSuchElementException:
                 # w/out live video stream
-                set_score, game_score = self.get_score_without_video(set_number, bookmaker_matchid)
+                set_score, game_score, point_score = self.get_score_without_video(set_number, bookmaker_matchid)
             if last_set_state != set_score:
                 return set_score
             elif max(game_score) < 5:
@@ -308,7 +309,7 @@ class Tipsport(Bookmaker):
             elif game_score[0] == 5 and game_score[1] == 5:
                 time.sleep(MINUTES_PER_GAME * 60)  # wait 1 game
             else:
-                time.sleep(MINUTES_PER_GAME * 15)  # wait quarter of game
+                time.sleep(MINUTES_PER_GAME * 10)  # wait a moment
 
     def evaluate_last_bet(self, last_set_score: tuple, current_set_score: tuple, bookmaker_matchid: str,
                           set_number: int, home_won: bool):
@@ -339,7 +340,7 @@ class Tipsport(Bookmaker):
                         f" and computed prob. {1 - home_probability}")
                 break
             except Exception as error:
-                logging.error(
+                logging.exception(
                     f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
                 save_screenshot(self.driver, f"placing_bet_set{set_number}", bookmaker_matchid)
                 errors = errors + 1
@@ -373,16 +374,22 @@ class Tipsport(Bookmaker):
                           f"odd {odd} and probability {probability}")
 
     def get_score_with_video(self, set_number: int, bookmaker_matchid: str, last_set_score: tuple,
-                             last_game_score: tuple) -> Tuple[Tuple[int, ...], Tuple[int, ...]]:
+                             last_game_score: tuple, last_point_score: str) -> \
+            Tuple[Tuple[int, ...], Tuple[int, ...], str]:
         try:
             raw_text = self.driver.find_element_by_xpath("//span[@class='m-scoreOffer__msg']").text
             logging.info(f"Video score raw text for match {bookmaker_matchid}: {raw_text}")
         except NoSuchElementException:
-            elem = self.driver.find_element_by_xpath("//span[@class='m-scoreboardStats__score']")
-            raw_text = elem.text + elem.get_attribute("title")
-            logging.info(f"Tracker score raw text for match {bookmaker_matchid}: {raw_text}")
+            try:
+                elem = self.driver.find_element_by_xpath("//span[@class='m-scoreboardStats__score']")
+                raw_text = elem.text + elem.get_attribute("title")
+                logging.info(f"Tracker score raw text for match {bookmaker_matchid}: {raw_text}")
+            except NoSuchElementException:
+                self.driver.find_element_by_xpath(
+                    "//div[contains(text(),'byl ukončen, vyberte si další z naší nabídky aktuálně probíhajících')]")
+                return self.get_score_after_match(last_set_score, last_game_score, last_point_score)
         if 'Za ' in raw_text or 'Začátek plánován' in raw_text or 'se rozehr' in raw_text or 'ošetřování' in raw_text:
-            return last_set_score, last_game_score
+            return last_set_score, last_game_score, last_point_score
         raw_text = raw_text.replace(',', '')
         raw_text = raw_text.replace('*', '')  # supertiebreak doubles has * marking serving pair
         raw_text = re.sub('\(\\d+\)', '', raw_text)
@@ -390,17 +397,19 @@ class Tipsport(Bookmaker):
         set_score = [int(x) for x in set_score]
         if '-' in raw_text:
             set_games = raw_text.split(' - ')[1].split(' ')
+            point_score = set_games[len(set_games) - 1]
             if sum(set_score) == len(set_games) - 2:
                 game_score = set_games[set_number - 1].split(':')
             else:
                 set_score, game_score = self.get_score_from_mistake(set_games)
         else:
             game_score = raw_text[-4:-1].split(':')
+            point_score = last_point_score  # TODO actually do something
         game_score = [int(x) for x in game_score]
-        return tuple(set_score), tuple(game_score)
+        return tuple(set_score), tuple(game_score), point_score
 
     def get_score_without_video(self, set_number: int, bookmaker_matchid: str) -> \
-            Tuple[Tuple[int, int], Tuple[int, int]]:
+            Tuple[Tuple[int, int], Tuple[int, int], str]:
         elems = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
         home_raw = elems[1].text
         away_raw = elems[2].text
@@ -435,7 +444,8 @@ class Tipsport(Bookmaker):
             away_games = int(away_games_raw)
 
         logging.info(f"Current score sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
-        return (home_sets, away_sets), (home_games, away_games)
+        point_score = ""  # TODO actualy get it
+        return (home_sets, away_sets), (home_games, away_games), point_score
 
     @staticmethod
     def get_score_from_mistake(set_games: List) -> Tuple[List[int], List[int]]:
@@ -444,3 +454,25 @@ class Tipsport(Bookmaker):
         away_sets = sum(1 if set_games[i].split(':')[1] > set_games[i].split(':')[0] else 0 for i in
                         range(0, len(set_games) - 2))
         return [home_sets, away_sets], set_games[len(set_games) - 2].split(':')
+
+    @staticmethod
+    def get_score_after_match(set_score, game_score, point_score):
+        if max(set_score) == 2:  # match about to end
+            if game_score == (6, 6):  # set about to end in tiebreak #TODO what about Wimbledon and infinite sets
+                point_score = point_score.replace('(', '').replace(')', '')
+                point_home = int(point_score.split(':')[0])
+                point_away = int(point_score.split(':')[1])
+                game_score = (game_score[0] + 1, game_score[1]) if point_home > point_away else (
+                    game_score[0], game_score[1] + 1)
+            elif max(game_score) >= 5 and max(game_score) - min(game_score) >= 1:  # set about to end
+                game_score = (game_score[0] + 1, game_score[1]) if game_score[0] > game_score[1] else (
+                    game_score[0], game_score[1] + 1)
+            else:
+                logging.error(f"Set score: {set_score}, game score: {game_score}, point score: {point_score}")
+                raise Exception(f"Unexpected scores: {set_score}, {game_score}, {point_score}")
+            set_score = (set_score[0] + 1, set_score[1]) if game_score[0] > game_score[1] else (
+                set_score[0], set_score[1] + 1)
+            point_score = '0:0'
+            return set_score, game_score, point_score
+        else:
+            raise Exception(f"Unexpected set score: {set_score}, {game_score}, {point_score}")
