@@ -444,7 +444,7 @@ class Tipsport(Bookmaker):
             away_games = int(away_games_raw)
 
         logging.info(f"Current score sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
-        point_score = ""  # TODO actualy get it
+        point_score = ""  # TODO actually get it
         return (home_sets, away_sets), (home_games, away_games), point_score
 
     @staticmethod
