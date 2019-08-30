@@ -52,7 +52,7 @@ def evaluate_bet_on_set(book_id: int, bookmaker_matchid: str, set_number: int, h
     if placed_bet is not None:
         if placed_bet[7] is not None:
             raise Exception(f"Evaluating bet that is already evaluated: {[book_id, bookmaker_matchid, match_part]}")
-        if (home_won and placed_bet[3] == 'home') or (~home_won and placed_bet[3] == 'away'):
+        if (home_won and placed_bet[3] == 'home') or (not home_won and placed_bet[3] == 'away'):
             won = True
         else:
             won = False
