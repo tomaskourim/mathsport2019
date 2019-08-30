@@ -295,13 +295,8 @@ class Tipsport(Bookmaker):
         point_score = ""
         while True:
             # TODO if no score is returned, assume the match is over and try to guess the result
-            try:
-                # with live video stream
-                set_score, game_score, point_score = self.get_score_with_video(set_number, bookmaker_matchid,
-                                                                               last_set_state, game_score, point_score)
-            except NoSuchElementException:
-                # w/out live video stream
-                set_score, game_score, point_score = self.get_score_without_video(set_number, bookmaker_matchid)
+            set_score, game_score, point_score = self.get_score(set_number, bookmaker_matchid,
+                                                                last_set_state, game_score, point_score)
             if last_set_state != set_score:
                 return set_score
             elif max(game_score) < 5:
@@ -319,8 +314,7 @@ class Tipsport(Bookmaker):
             evaluate_bet_on_set(self.database_id, bookmaker_matchid, set_number, home_won)
 
     def bet_next_set(self, bookmaker_matchid: str, set_number: int, home_probability: float):
-        errors = 0
-        while errors < 3:
+        while True:
             try:
                 # get odds for next set
                 set_odds = self.get_set_odds(set_number)
@@ -343,8 +337,11 @@ class Tipsport(Bookmaker):
                 logging.exception(
                     f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
                 save_screenshot(self.driver, f"placing_bet_set{set_number}", bookmaker_matchid)
-                errors = errors + 1
-                time.sleep(self.seconds_to_sleep)
+                if self.next_set_started(bookmaker_matchid, set_number):
+                    logging.info(f"Match {bookmaker_matchid}: Set{set_number} started.")
+                    break
+                else:
+                    time.sleep(self.seconds_to_sleep / 2)  # wait just a moment
 
     def bet_set(self, bet_type: str, bookmaker_matchid: str, set_number: int, odd: float, probability: float):
         if bet_type == 'home':
@@ -372,6 +369,24 @@ class Tipsport(Bookmaker):
         except NoSuchElementException:
             logging.error(f"Unable to place bet {bet_type} in match {bookmaker_matchid} on set{set_number} with "
                           f"odd {odd} and probability {probability}")
+
+    def next_set_started(self, bookmaker_matchid: str, set_number: int) -> bool:
+        _, _, point_score = self.get_score(set_number, bookmaker_matchid, (0, 0), (0, 0), "")
+        if point_score == '(00:00)':  # TODO it is eager to start, some corner cases should be handled
+            return False
+        else:
+            return True
+
+    def get_score(self, set_number: int, bookmaker_matchid: str, last_set_score: tuple, last_game_score: tuple,
+                  last_point_score: str) -> Tuple[Tuple[int, ...], Tuple[int, ...], str]:
+        try:
+            # with live video stream
+            return self.get_score_with_video(set_number, bookmaker_matchid, last_set_score, last_game_score,
+                                             last_point_score)
+        except NoSuchElementException:
+            # w/out live video stream
+            return self.get_score_without_video(set_number, bookmaker_matchid)
+        pass
 
     def get_score_with_video(self, set_number: int, bookmaker_matchid: str, last_set_score: tuple,
                              last_game_score: tuple, last_point_score: str) -> \
