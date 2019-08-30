@@ -457,7 +457,7 @@ class Tipsport(Bookmaker):
 
     @staticmethod
     def get_score_after_match(set_score, game_score, point_score):
-        if max(set_score) == 2:  # match about to end
+        if max(set_score) == 2:  # match about to end #TODO handle non-Grand Slam
             if game_score == (6, 6):  # set about to end in tiebreak #TODO what about Wimbledon and infinite sets
                 point_score = point_score.replace('(', '').replace(')', '')
                 point_home = int(point_score.split(':')[0])
