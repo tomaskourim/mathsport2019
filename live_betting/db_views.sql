@@ -1,15 +1,14 @@
 -- bets overview
-SELECT book_id, home, away, name AS tournament_name, sex, type, surface, start_time_utc, bet_type, match_part, odd,
-    probability,
-    result
+SELECT book_id, home, away, match_part, odd, bet_type, result, name AS tournament_name, sex, type, surface, start_time_utc,
+    probability, utc_time_recorded
 FROM (SELECT *, mb.match_bookmaker_id AS book_id
       FROM bet
                JOIN matches_bookmaker mb
       ON bet.bookmaker_id = mb.bookmaker_id AND bet.match_bookmaker_id = mb.match_bookmaker_id
                JOIN matches m ON mb.match_id = m.id
                JOIN tournament t ON m.tournament_id = t.id) AS r
-WHERE start_time_utc >= '2019-08-29 15:00:00.000000'
-ORDER BY start_time_utc, book_id, match_part;
+WHERE start_time_utc >= '2019-08-30 15:00:00.000000'
+ORDER BY utc_time_recorded DESC , start_time_utc, book_id, match_part;
 
 -- odds
 SELECT book_id, home, away, name AS tournament_name, sex, type, surface, start_time_utc, odds_type, match_part, odd1,
@@ -21,7 +20,7 @@ FROM (
     ON odds.bookmaker_id = mb.bookmaker_id AND odds.match_bookmaker_id = mb.match_bookmaker_id
              JOIN matches m ON mb.match_id = m.id
              JOIN tournament t ON m.tournament_id = t.id) AS r
-WHERE start_time_utc >= '2019-08-29 15:00:00.000000'
+WHERE start_time_utc >= '2019-08-30 15:00:00.000000'
 ORDER BY start_time_utc, book_id, match_part;
 
 -- inplay
@@ -40,5 +39,5 @@ SELECT match_bookmaker_id, home, away, start_time_utc, set_number, result, utc_t
 FROM match_course
          JOIN matches m ON match_course.match_id = m.id
          JOIN matches_bookmaker mb ON m.id = mb.match_id
-WHERE start_time_utc > '2019-08-29 15:00:00.000000'
+WHERE start_time_utc > '2019-08-30 15:00:00.000000'
 ORDER BY start_time_utc, match_bookmaker_id, set_number;
