@@ -269,7 +269,7 @@ class Tipsport(Bookmaker):
                 self.evaluate_last_bet(last_set_score, current_set_score, bookmaker_matchid, set_number, home_won)
                 last_set_score = current_set_score
                 logging.info(f"Handled set{set_number} in match {bookmaker_matchid}. Home won = {home_won}")
-                if self.match_finished(bookmaker_matchid):
+                if self.match_finished(bookmaker_matchid, current_set_score):
                     break
                 home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (1 + (1 if home_won else -1))
                 set_number = set_number + 1
@@ -282,13 +282,18 @@ class Tipsport(Bookmaker):
 
     pass
 
-    def match_finished(self, bookmaker_matchid: str) -> bool:
-        try:
-            self.driver.find_element_by_xpath("//span[@class='removalCountdownText']")
-            logging.info(f"Match {bookmaker_matchid} finished.")
-            return True
-        except NoSuchElementException:
-            return False
+    def match_finished(self, bookmaker_matchid: str, current_set_score: tuple) -> bool:
+        if max(current_set_score) < 3:  # TODO handle best-of-three matches
+            try:
+                self.driver.find_element_by_xpath("//span[@class='removalCountdownText']")
+            except NoSuchElementException:
+                try:
+                    self.driver.find_element_by_xpath(
+                        "//div[contains(text(),'byl ukončen, vyberte si další z naší nabídky aktuálně probíhajících')]")
+                except NoSuchElementException:
+                    return False
+        logging.info(f"Match {bookmaker_matchid} finished.")  # return True unless given conditions happens
+        return True
 
     def wait_for_set_end(self, set_number: int, last_set_state: tuple, bookmaker_matchid: str) -> tuple:
         game_score = (0, 0)
