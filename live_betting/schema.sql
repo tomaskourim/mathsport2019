@@ -23,7 +23,8 @@ CREATE TYPE TOURNAMENT_TYPE AS ENUM (
 
 CREATE TYPE SEX AS ENUM (
     'men',
-    'women'
+    'women',
+    'mix'
     );
 
 CREATE TYPE SURFACE AS ENUM (
@@ -80,7 +81,8 @@ CREATE TABLE tournament_bookmaker (
     bookmaker_id                  BIGINT    NOT NULL REFERENCES bookmaker(id) ON DELETE CASCADE ON UPDATE CASCADE,
     tournament_bookmaker_id       VARCHAR,
     tournament_bookmaker_extra_id VARCHAR,
-    UNIQUE (tournament_id, bookmaker_id)
+    UNIQUE (tournament_id, bookmaker_id),
+    UNIQUE (bookmaker_id, tournament_bookmaker_id, tournament_bookmaker_extra_id)
 );
 
 CREATE TABLE matches (

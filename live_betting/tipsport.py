@@ -83,15 +83,19 @@ class Tipsport(Bookmaker):
             elif "ženy" in text:
                 tournament["sex"] = "women"
                 text = text.replace(", Tenis ženy - ", "")
+            elif "mix" in text:
+                tournament["sex"] = "mix"
+                text = text.replace(", Tenis mix", "")
             else:
                 tournament["sex"] = None
 
             if "dvouhra" in text:
                 tournament["type"] = "singles"
                 text = text.replace("dvouhra", "")
-            elif "čtyřhra" in text:
+            elif "čtyřhra" in text or '4hra' in text:
                 tournament["type"] = "doubles"
                 text = text.replace("čtyřhra", "")
+                text = text.replace("4hra", "")
             elif "družstva" in text:
                 tournament["type"] = "teams"
                 text = text.replace("družstva", "")
@@ -104,12 +108,14 @@ class Tipsport(Bookmaker):
             elif "antuka" in text:
                 tournament["surface"] = "clay"
                 text = text.replace(" - antuka", "")
-            elif "tvrdý povrch" in text:
+            elif "tvrdý " in text:
                 tournament["surface"] = "hard"
                 text = text.replace(" - tvrdý povrch", "")
+                text = text.replace(" - tvrdý p.", "")
             else:
                 tournament["surface"] = None
 
+            text = text.replace(",", "") # no commas should be there at this point
             tournament["tournament_name"] = text.strip()
             tournaments = tournaments.append(tournament, ignore_index=True)
 
