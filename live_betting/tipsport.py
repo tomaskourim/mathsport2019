@@ -283,7 +283,7 @@ class Tipsport(Bookmaker):
     pass
 
     def match_finished(self, bookmaker_matchid: str, current_set_score: tuple) -> bool:
-        if max(current_set_score) < 3:  # TODO handle best-of-three matches
+        if max(current_set_score) < 2:  # TODO handle best-of-five matches
             try:
                 self.driver.find_element_by_xpath("//span[@class='removalCountdownText']")
             except NoSuchElementException:
@@ -477,7 +477,7 @@ class Tipsport(Bookmaker):
 
     @staticmethod
     def get_score_after_match(set_score, game_score, point_score):
-        if max(set_score) == 2:  # match about to end #TODO handle non-Grand Slam
+        if max(set_score) == 1:  # match about to end #TODO handle Grand Slam
             if game_score == (6, 6):  # set about to end in tiebreak #TODO what about Wimbledon and infinite sets
                 point_score = point_score.replace('(', '').replace(')', '')
                 point_home = int(point_score.split(':')[0])
