@@ -23,32 +23,28 @@ FROM matches
          JOIN tournament t ON matches.tournament_id = t.id
          JOIN matches_bookmaker mb ON matches.id = mb.match_id
          JOIN bet b ON mb.bookmaker_id = b.bookmaker_id AND mb.match_bookmaker_id = b.match_bookmaker_id
-WHERE name = 'US Open' AND sex = 'men' AND type = 'singles';
+WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL;
 
 -- expected money wins and actual wins - naive betting
 SELECT home, away, bet_type, match_part, odd, probability, result,
     probability * (odd - 1) - (1 - probability) AS expected_win,
-    CASE WHEN result IS TRUE
-             THEN odd - 1
-         ELSE CASE WHEN result IS FALSE THEN -1 ELSE 0 END END AS win
+    CASE WHEN result IS TRUE THEN odd - 1 ELSE -1 END AS win
 FROM matches
          JOIN tournament t ON matches.tournament_id = t.id
          JOIN matches_bookmaker mb ON matches.id = mb.match_id
          JOIN bet b ON mb.bookmaker_id = b.bookmaker_id AND mb.match_bookmaker_id = b.match_bookmaker_id
-WHERE name = 'US Open' AND sex = 'men' AND type = 'singles'
+WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL
 ORDER BY start_time_utc, home, match_part;
 
 
 -- expected money wins and actual wins - naive betting summed
 SELECT sum(probability * (odd - 1) - (1 - probability)) AS expected_win,
-    sum(CASE WHEN result IS TRUE
-                 THEN odd - 1
-             ELSE CASE WHEN result IS FALSE THEN -1 ELSE 0 END END) AS win
+    sum(CASE WHEN result IS TRUE THEN odd - 1 ELSE -1 END) AS win
 FROM matches
          JOIN tournament t ON matches.tournament_id = t.id
          JOIN matches_bookmaker mb ON matches.id = mb.match_id
          JOIN bet b ON mb.bookmaker_id = b.bookmaker_id AND mb.match_bookmaker_id = b.match_bookmaker_id
-WHERE name = 'US Open' AND sex = 'men' AND type = 'singles';
+WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL;
 
 
 -- expected money wins and actual wins - advanced betting
@@ -56,26 +52,25 @@ SELECT home, away, bet_type, match_part, odd, probability, result,
     probability * (probability * odd - probability) - (1 - probability) * probability AS expected_win,
     CASE WHEN result IS TRUE
              THEN probability * odd - probability
-         ELSE CASE WHEN result IS FALSE THEN -probability ELSE 0 END END AS win
+         ELSE -probability END AS win
 FROM matches
          JOIN tournament t ON matches.tournament_id = t.id
          JOIN matches_bookmaker mb ON matches.id = mb.match_id
          JOIN bet b ON mb.bookmaker_id = b.bookmaker_id AND mb.match_bookmaker_id = b.match_bookmaker_id
-WHERE name = 'US Open' AND sex = 'men' AND type = 'singles'
+WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL
 ORDER BY start_time_utc, home, match_part;
 
 
 -- expected money wins and actual wins - advanced betting summed
-SELECT sum((probability * odd - probability) - (1 - probability) * probability) AS expected_win,
+SELECT sum(probability * (probability * odd - probability) - (1 - probability) * probability) AS expected_win,
     sum(CASE WHEN result IS TRUE
                  THEN probability * odd - probability
-             ELSE CASE WHEN result IS FALSE THEN -probability ELSE 0 END END) AS win
+             ELSE -probability END) AS win
 FROM matches
          JOIN tournament t ON matches.tournament_id = t.id
          JOIN matches_bookmaker mb ON matches.id = mb.match_id
          JOIN bet b ON mb.bookmaker_id = b.bookmaker_id AND mb.match_bookmaker_id = b.match_bookmaker_id
-WHERE name = 'US Open' AND sex = 'men' AND type = 'singles';
-
+WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL;
 
 
 
