@@ -73,6 +73,9 @@ FROM matches
 WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL;
 
 
+
+---------------------------------------------------------------
+---------- database manipulations -----------------------------
 -- manually updated odds
 INSERT INTO bet_manually_updated
 SELECT *
