@@ -1533,15 +1533,51 @@ An automated tool developed using the Python programming language and Selenium
 \end_inset
 
  bets were made with the total amout CZK 
-\begin_inset Formula $3829$
+\begin_inset Formula $2992$
 \end_inset
 
  betted.
  
+\begin_inset Formula $3$
+\end_inset
+
+ bets were cancelled due to one of the players forfeiting the match (because
+ of injury).
+ Amoung these bets the expected number of wins was 
+\begin_inset Formula $59.85$
+\end_inset
+
+ whereas the actual number of wins was 
+\begin_inset Formula $57$
+\end_inset
+
+.
+ The theoretical expected win with constant bet of 
+\begin_inset Formula $1$
+\end_inset
+
+ on each bet is 
+\begin_inset Formula $11.1$
+\end_inset
+
+ compared to actual theoretical win of 
+\begin_inset Formula $3$
+\end_inset
+
+ units.
+ The above mentioned betting system yielded expected win 
+\begin_inset Formula $4.91$
+\end_inset
+
+ units, and was actaully 
+\begin_inset Formula $2.24$
+\end_inset
+
+ units.
 \end_layout
 
 \begin_layout Standard
-Popisu live sazeni na US Open, vysledky, analyzu.
+Pridat rozptyly, zhodnoceni
 \end_layout
 
 \begin_layout Subsubsection
@@ -1553,6 +1589,7 @@ Mohl bych popsat (ted kdyz uz mam data) ruzne alternativy sazeni.
  Tedy napriklad odvozeni modelu jako success punished a sazeni, respektive
  spise jako modelu se 2 lambda.
  A divat se, ktery by byl byval byl nejlepsi.
+ Dalsi typy sazeni, napriklad Kelly.
 \end_layout
 
 \begin_layout Section
