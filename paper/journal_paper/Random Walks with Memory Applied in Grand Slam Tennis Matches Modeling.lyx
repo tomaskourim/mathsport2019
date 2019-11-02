@@ -412,6 +412,63 @@ cite{ja2016ddny}
 .
 \end_layout
 
+\begin_layout Standard
+In order to further validate the quality of the presented model (see further
+ section XXX), an automated betting and odds scraping tool was developed
+ using the Python programming language and Selenium framework.
+ The tool operates with Tipsport's (a major Czech bookmaker) website and
+ scrapes it for both prematch as well as in-play odds.
+ It observes all selected matches (in this case men tennis US Open matches)
+ and, for the purpose of this study, first scrapes the first set closing
+ odd, i.e.
+ the last odds available before the match start.
+ It then observes the match's progress and scrapes next set winning odds
+ at the moment between to sets to be played.
+ All these odds are stored into a database, together with some general informati
+on about the match, such as the tournament it is played on, respective players,
+ starting time etc.
+ Additionally, the model is applied live and set winning probabilities are
+ calculated on the fly as are the matches played.
+ Whenever is the set winning probability higher than the odds implied set
+ winning probability, the tool makes an actual bet.
+ The amout bet 
+\begin_inset Formula $b$
+\end_inset
+
+ depends on the set winning probablity 
+\begin_inset Formula $p$
+\end_inset
+
+ so that 
+\begin_inset Formula 
+\[
+b=p\cdot C,
+\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $C$
+\end_inset
+
+ is some bankroll related constant (in this particular case CZK 
+\begin_inset Formula $50$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Unfortunately, the tool does not work 100% correctly, which is caused mainly
+ by the Tipsport betting website not working 100% correctly and sometimes
+ behaving in an unexpected way.
+ Therefore, out of the 127 matches and XXX sets played in total during 2019
+ men tennis US Open, the tool only collected 423 set odds (some matches
+ and sets we not played due to scretch of one of the players, some odds
+ were not collected due to errors either on the tool or on Tipsport's website).
+ Additionally, in real life conditions the tool made 131 bets.
+\end_layout
+
 \begin_layout Section
 Application of random walk
 \begin_inset CommandInset label
