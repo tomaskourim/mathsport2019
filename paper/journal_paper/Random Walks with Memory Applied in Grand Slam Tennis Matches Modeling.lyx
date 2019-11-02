@@ -1479,6 +1479,68 @@ Model testing
 \end_layout
 
 \begin_layout Standard
+The model was implemented and tested in real life setup where it actively
+ bet in-play agains Tipsport, the biggest bookmaker in the Czech Republic.
+ The test was set up in the following manner.
+\end_layout
+
+\begin_layout Standard
+An automated tool developed using the Python programming language and Selenium
+ framework running on remote server (Digital Ocean) was developed and deployed
+ for the purpose of this paper.
+ The tool was continuously watching odds offering of Tipsport for 2019 men
+ tennis US Open, especially the set winning odds, and storing the odds into
+ a database (Postgresql database).
+ Tipsport's starting odds were used to obtain parameter 
+\begin_inset Formula $p_{o}$
+\end_inset
+
+ (see section Odds to probability) and optimized 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ trained on the 2018 tennis season (see section XXX) as the second necessary
+ model parameter.
+ Every match was observed individually and after each finished set next
+ set winning probabilites were computed using the presented model.
+ Whenever the actuall set winning odds were higher than the probability
+ implied odds, i.e.
+ 
+\begin_inset Formula $o>\frac{1}{p}$
+\end_inset
+
+, a bet was made.
+ The amout bettet was computed as 
+\begin_inset Formula $p\cdot C$
+\end_inset
+
+, where 
+\begin_inset Formula $C$
+\end_inset
+
+ is some bankroll dependent constant (in this case CZK 
+\begin_inset Formula $50$
+\end_inset
+
+).
+ This amout was further rounded with precision CZK 
+\begin_inset Formula $1$
+\end_inset
+
+ (due to betting limitations of Tipsport).
+ Overall, 
+\begin_inset Formula $131$
+\end_inset
+
+ bets were made with the total amout CZK 
+\begin_inset Formula $3829$
+\end_inset
+
+ betted.
+ 
+\end_layout
+
+\begin_layout Standard
 Popisu live sazeni na US Open, vysledky, analyzu.
 \end_layout
 
