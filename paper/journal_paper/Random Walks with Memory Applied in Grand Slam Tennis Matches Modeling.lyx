@@ -133,35 +133,29 @@ There are several different approaches in modeling and simulating tennis
  Markov-like chains usually from one particular part of the game - set by
  set, game by game, point by point or even rally by rally 
 \backslash
-cite{2, 7, 10, 12}.
+cite{BAC,HUZ,NEW,SPA}.
  Other approaches use some sort of regression (logistic, probit) 
 \backslash
-cite{3, 4, 5, 6, 8} or econometric methods 
+cite{COP}, 
 \backslash
-cite{11}.
+cite{DZH,KLA}.
  The methods can be also divided into those focusing on the match result
  itself 
 \backslash
-cite{5, 8}, those focusing on the modeling the match development (already
+cite{DZH,KLA}, those focusing on the modeling the match development (already
  mentioned methods using random processes models), and also concentrated
  to partial results during a match - in play probabilities
 \backslash
-cite{7}.
+cite{HUZ}.
  Comparison of some of the existing methods can be found in Kovalchik 
 \backslash
-cite{9}.
+cite{KOW}.
  In this paper a task is to find the best prediction way.
  However, to reach good results is not a matter of model only, it is also
  a matter of information used.
- This problem has been discussed also in Kou
+ This problem has been discussed also in 
 \backslash
-v{r}im (2016).
-\end_layout
-
-\begin_layout Standard
-{
-\backslash
-bf srovnat speavne reference!!!}
+cite{TK16}.
 \end_layout
 
 \begin_layout Standard
@@ -171,9 +165,9 @@ Thus, a basic information is the rating of players.
  For instance the past performance, match conditions (the surface, location)
  and even the bookmaker's odds, which are in fact constructed from all the
  information considered to be relevant.
- In fact, the goal of every modeling tool should be to do better (at least
- sometimes) than the prediction based on them (and, eventually, to use them
- as a partial information source).
+ And the goal of every modeling tool should be to do better (at least sometimes)
+ than the prediction based on them (and, eventually, to use them as a partial
+ information source).
 \end_layout
 
 \begin_layout Standard
@@ -187,8 +181,12 @@ The present contribution describes the tennis match using a random walk
  of data describing these random processes (i.e.
  various tennis result databases provided by the tennis federation as well
  as many private subjects).
- In this paper, the random walk consisting of a sequence of sets within
- a match is studied.
+ An analysis of non-Markov development in tennis matches has been provided
+ already in 
+\backslash
+cite{TK15}.
+ In the present paper, the random walk consisting of a sequence of sets
+ within a match is studied.
  Matches played as a best-of-five, i.e.
  the men Grand Slam tournaments, are considered.
  In these matches, up to 5 steps of the random walk can be observed.
@@ -225,6 +223,219 @@ Random walk
 
 \begin_layout Standard
 Kratky popis random walk ala teze.
+\end_layout
+
+\begin_layout Subsection
+Tennis match as a random walk
+\end_layout
+
+\begin_layout Standard
+A basic type of a discrete time random walk is the Bernoulli walk, with
+ random steps (denote them $X_i$ at stage $i$) $X_i=
+\backslash
+pm 1$, with constant $P(X_i=1)=p_0$.
+ It is a representation of a Markov chain, i.e.
+ a memory-less random process.
+ It may fit perfectly to many real processes, however, many others, including
+ the process of tennis match development, are more complex, and a memory
+ element has to be introduced in order to correctly describe them.
+ Then $p_0$ can be regarded as based on initial match conditions, and transition
+ probabilities evolve in dependence on the match state as well as on its
+ (recent) history.
+\end_layout
+
+\begin_layout Standard
+Naturally, the idea of process transitions depending on the history of process
+ itself is not new.
+ A rich field of inspiration is for instance the statistical modeling of
+ recurrent events in the lifetime analysis.
+ Let us mention here for instance the continuous time hazard rate models
+ as in 
+\backslash
+cite{PEA} with the hazard rate changing after each event, which authors
+ implement to the Cox regression model framework.
+ As the case analyzed in the present paper is simpler, the time is discrete
+ and the history is not long, we shall not consider a regression model (though
+ the use of logistic regression is a natural generalization here) and change
+ the transition probabilities just by multiplying them by a convenient parameter.
+\end_layout
+
+\begin_layout Standard
+An inspiration to such a modification of Bernoulli random walk can be found
+ in several papers where the length of step was changed in a similar way.
+ Thus, Loic Turban in 
+\backslash
+cite{LT} presented a model of a one-dimensional random walk with memory
+ introduced through varying step size.
+ In the paper, it is assumed that the step size in the direction of the
+ last step will be lowered by a coefficient $
+\backslash
+lambda$ and the step in the opposite direction will be prolonged so that
+ the sum of absolute values of the steps remains constant and equal to $2$.
+ The goal is to stabilize the process.
+ Another interesting variant of model is due Schütz and Trimper 
+\backslash
+cite{ST} introducing a special type of random walk with the random increment
+ at time step $t$ depending on the full history of the process, which they
+ compared to an elephant an its memory.
+ The walk tends to repeat "good decisions" (i.e.
+ steps) from history and, on the contrary, to avoid repetition of others.
+\end_layout
+
+\begin_layout Subsubsection
+Transition probabilities dependent on process history
+\end_layout
+
+\begin_layout Standard
+The concept of the model has been introduced in 
+\backslash
+cite{TK17}.
+ It is also based on the standard random walk with steps $X_i=
+\backslash
+pm 1, i=1,2,...$.
+ The distribution of the first random variable $X_{1}$ is given by a starting
+ parameter $p_{0}
+\backslash
+in[0,
+\backslash
+,1]$, so that $P(X_{1}=1)=p_{0}$ and $P(X_{1}=-1)=1-p_{0}$.
+ After the $i$-th step (for $i
+\backslash
+ge1$), the probability distribution of the next step, $X_{i+1}$, is given
+ by the (random) probability $p_{i}$, which depends on a coefficient $
+\backslash
+lambda
+\backslash
+in[0,
+\backslash
+,1]$ and the last random variable $X_{i},
+\backslash
+,i=1,2,...$:
+\end_layout
+
+\begin_layout Standard
+$$ p_{i}=
+\backslash
+lambda p_{i-1} 
+\backslash
+,
+\backslash
+,
+\backslash
+mbox{for} 
+\backslash
+,
+\backslash
+,X_{i}=1, $$ $$ p_{i}=1-
+\backslash
+lambda(1-p_{i-1}) 
+\backslash
+,
+\backslash
+,
+\backslash
+mbox{for} 
+\backslash
+,
+\backslash
+, X_{i}=-1, $$ which yields that 
+\backslash
+begin{equation} p_{i}=
+\backslash
+lambda p_{i-1}+
+\backslash
+frac{1}{2}(1-
+\backslash
+lambda)(1-X_{i}).
+ 
+\backslash
+end{equation} The case $
+\backslash
+lambda=1$ corresponds to the standard Markov random walk with constant transitio
+n probability, with $
+\backslash
+lambda=0$ the walk would be a series of alternating steps to the left and
+ right with only the first step direction being chosen randomly.
+ Therefore only$
+\backslash
+lambda
+\backslash
+in(0,
+\backslash
+,1)$ is further considered.
+ as after a "success" $X_i=1$ its probability in the next step decreases,
+ we can call this scheme a "success punished" model.
+ Naturally, the opposite, a "success rewarded" variant, is possible, which
+ leads to the expression: 
+\backslash
+begin{equation} p_{i}=
+\backslash
+lambda p_{i-1}+
+\backslash
+frac{1}{2}(1-
+\backslash
+lambda)(1-X_{i}) 
+\backslash
+end{equation} for $i=1,2,...$.
+\end_layout
+
+\begin_layout Standard
+Another alternative is a random walk with each event influencing the further
+ development of the walk differently, which can be defined as: Let $
+\backslash
+lambda_{0},
+\backslash
+,
+\backslash
+lambda_{1}
+\backslash
+in(0,
+\backslash
+,1)$, then 
+\backslash
+begin{equation} p_{i}=
+\backslash
+frac{1}{2}[(1+X_{i})
+\backslash
+lambda_{0}p_{i-1}+(1-X_{i})(1-
+\backslash
+lambda_{1}(1-p_{i-1}))].
+ 
+\backslash
+end{equation} Now a proper combination of parameters $
+\backslash
+lambda_0,
+\backslash
+,
+\backslash
+lambda_1$ leads to either "success punished" or "success rewarded" variants.
+\end_layout
+
+\begin_layout Standard
+In the study 
+\backslash
+cite{TK17} the behavior of proposed random walks types was analyzed, mainly
+ their tendencies after many steps (i.e.
+ asymptotic properties.
+ As in the present application the walk consists in just a small number
+ of steps, the long-run properties overview is omitted here.
+ The main concern is therefore the assessing the initial probability $p_0$
+ and reliable estimation of parameters $
+\backslash
+lambda$.
+ Another task is to recognize which type of model is the most convenient,
+ how long history of match is relevant to reliable match development prediction.
+ In the context of the application to tennis match modeling (its sets or
+ games as well), in fact the dependence on the last one or two steps is
+ quite satisfactory.
+ Naturally, there are generalization which also could be considered.
+ Except already mentioned regression models (for instance $
+\backslash
+lambda$ depending on available covariates, in logistic manner) also models
+ with time-varying parameters can be considered.
+ In the following real data analysis we shall cover some of model variants,
+ showing their usefulness and good predictive properties, the others (as
+ the regression models) will be a matter of future research.
 \end_layout
 
 \begin_layout Subsection
