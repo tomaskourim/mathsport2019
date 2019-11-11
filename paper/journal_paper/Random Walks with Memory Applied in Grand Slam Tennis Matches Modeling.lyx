@@ -1124,7 +1124,7 @@ cite{ja2016ddny}
 \end_layout
 
 \begin_layout Standard
-Next step in model evaluation is the estimation of parameter 
+Next step in model verification is the estimation of parameter 
 \begin_inset Formula $\lambda$
 \end_inset
 
@@ -1142,7 +1142,7 @@ where
 \begin_inset Formula $N_{train}$
 \end_inset
 
- is the number of sets 2 through 5 played in the training dataset, 
+ is the number of sets 2 thru 5 played in the training dataset, 
 \begin_inset Formula $p_{i}$
 \end_inset
 
@@ -1150,7 +1150,17 @@ where
 \begin_inset Formula $i-th$
 \end_inset
 
- set obtained using the method described above for each match, and 
+ set obtained using equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Random-walk-with"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for each match, and 
 \begin_inset Formula $x_{i}$
 \end_inset
 
@@ -1223,10 +1233,10 @@ status open
 \begin_inset Tabular
 <lyxtabular version="3" rows="10" columns="2">
 <features tabularvalignment="middle">
-<column alignment="center" valignment="top">
+<column alignment="center" valignment="top" width="0pt">
 <column alignment="center" valignment="top">
 <row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1235,7 +1245,7 @@ Year
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1246,7 +1256,7 @@ Optimal lambda
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1255,7 +1265,7 @@ Optimal lambda
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1266,7 +1276,7 @@ Optimal lambda
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1275,7 +1285,7 @@ Optimal lambda
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1286,7 +1296,7 @@ Optimal lambda
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1295,7 +1305,7 @@ Optimal lambda
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1306,7 +1316,7 @@ Optimal lambda
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1315,7 +1325,7 @@ Optimal lambda
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1326,7 +1336,7 @@ Optimal lambda
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1335,7 +1345,7 @@ Optimal lambda
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1346,7 +1356,7 @@ Optimal lambda
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1355,7 +1365,7 @@ Optimal lambda
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1366,7 +1376,7 @@ Optimal lambda
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1375,7 +1385,7 @@ Optimal lambda
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1386,7 +1396,7 @@ Optimal lambda
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1395,7 +1405,7 @@ Optimal lambda
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1406,7 +1416,7 @@ Optimal lambda
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1415,7 +1425,7 @@ Optimal lambda
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1454,8 +1464,16 @@ Optimal values of the coefficient
 
 \end_layout
 
+\begin_layout Plain Layout
+
+\end_layout
+
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
 
 \end_layout
 
@@ -1491,12 +1509,24 @@ noprefix "false"
 \end_inset
 
 .
- Using the Lyapunov variant of Central Limit Theorem (CLT), the resulting
- random variable 
+ Using the Lyapunov variant of Central Limit Theorem 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{billingsley1995probability}
+\end_layout
+
+\end_inset
+
+, the resulting random variable 
 \begin_inset Formula $y$
 \end_inset
 
- follows the standard normal distribution 
+ follows the standard normal distribution
 \begin_inset Formula 
 \[
 y=\frac{\sqrt{N_{test}}(\bar{x}-\hat{p})}{\hat{\sigma}}\thicksim\mathcal{N}(0,\,1).
@@ -1504,8 +1534,8 @@ y=\frac{\sqrt{N_{test}}(\bar{x}-\hat{p})}{\hat{\sigma}}\thicksim\mathcal{N}(0,\,
 
 \end_inset
 
-Then in order to verify the model accuracy, the null hypothesis that the
- true average Player A set winning probability 
+Then ow to verify the model accuracy, the the null hypothesis that the true
+ average Player A set winning probability 
 \begin_inset Formula $\bar{p}$
 \end_inset
 
@@ -1559,8 +1589,17 @@ One of the assumptions of the CLT is that the observed random variables
 \end_layout
 
 \begin_layout Standard
-Using this approach, there are 36 testing data subsets together (up to 4
- sets considered in each match, 9 yearly testing datasets).
+Using this approach, there are 36 testing sets
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Up to 4 sets considered in each match, 9 yearly testing datasets.
+\end_layout
+
+\end_inset
+
+ together.
  On a 95% confidence level, only on 2 out of the 36 available subsets provide
  strong enough evidence to reject the null hypothesis.
  On the other hand, the null hypothesis is relatively weak.
@@ -1571,8 +1610,18 @@ Using this approach, there are 36 testing data subsets together (up to 4
  created according to some real life based criteria.
  The natural way how to create such subsets is dividing the matches to the
  4 different tournaments.
- This refining yields 180 subsets: 4 sets in each match evaluated, 4+1 tournamen
-ts every year, 9 years for testing.
+ This refining yields 180 subsets
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+4 sets in each match evaluated, 4+1 tournaments every year, 9 years for
+ testing.
+\end_layout
+
+\end_inset
+
+ altogether.
  Using 95% confidence level, only 6 of the 180 subsets have data strong
  enough to reject the null hypothesis.
  It is worth mentioning that the size of some of the datasets regarding
@@ -1590,10 +1639,31 @@ To further analyze the robustness of the model it is important to realize
 \begin_inset Formula $\frac{1}{2}$
 \end_inset
 
+, see further Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Data-description"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
 .
  In such a dataset it is not very difficult to estimate the average winning
  probability.
- The situation changes if the bookmaker's favorite is considered for predictions.
+ The situation changes if the bookmaker's favorite is considered for predictions
+ (more details on who is the favorite and how to choose him in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Data-description"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
  Performing the same tests as described in the previous paragraph the data
  allows to reject the null hypothesis (at 95% confidence level) on 5 subsets
  containing all tournaments and 8 single tournament subsets (out of 180
@@ -1624,8 +1694,20 @@ noprefix "false"
 \end_inset
 
 .
- Out of the 180 newly created odds-based subgroups, only 9 have data strong
- enough to reject 
+ Out of the 180
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Further division, i.e.
+ by tournament and odds, was not performed as the resulting datasets would
+ not contain enough data.
+\end_layout
+
+\end_inset
+
+ newly created odds-based subgroups, only 9 have data strong enough to reject
+ 
 \begin_inset Formula $H_{0}$
 \end_inset
 
@@ -1645,9 +1727,6 @@ noprefix "false"
 \end_inset
 
 .
- More detailed division, i.e.
- by tournament and odds, was not performed as the resulting datasets would
- not contain enough data.
 \end_layout
 
 \begin_layout Standard
@@ -1661,12 +1740,10 @@ status open
 \begin_inset Graphics
 	filename C:/Users/1/workspace/mathsport2019/paper/conference_paper/probabilities_histogram.png
 	width 100text%
-	draft
-	special type=eps
 
 \end_inset
 
- 
+
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -1688,6 +1765,10 @@ First set winning probability
 
 \end_layout
 
+\begin_layout Plain Layout
+
+\end_layout
+
 \end_inset
 
 
@@ -1704,12 +1785,10 @@ status open
 \begin_inset Graphics
 	filename C:/Users/1/workspace/mathsport2019/paper/conference_paper/hypothesis_testing.PNG
 	width 100text%
-	draft
-	special type=eps
 
 \end_inset
 
- 
+
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -1737,29 +1816,7 @@ p-values
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-centering
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{}
-\end_layout
-
-\end_inset
-
+\align center
 
 \end_layout
 
