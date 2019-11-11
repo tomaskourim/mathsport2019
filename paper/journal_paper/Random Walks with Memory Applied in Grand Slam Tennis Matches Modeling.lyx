@@ -764,16 +764,12 @@ name "sec:Data-description"
 \end_layout
 
 \begin_layout Standard
-Tohle trochu prepsano
-\end_layout
-
-\begin_layout Standard
 Two datasets were acquired for the purpose of this paper, one for model
  development and the other for model testing.
  The development dataset contains the results from all Grand Slam tournaments
  from 2009 to 2018 and corresponding Pinnacle Sports bookmaker's odds
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Plain Layout
 Pinnacle Sports bookmaker was chosen as it is considered leading in the
@@ -785,7 +781,7 @@ Pinnacle Sports bookmaker was chosen as it is considered leading in the
  and it was created using data publicly available from website www.oddsportal.com.
  Every year 4 Grand Slam
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Plain Layout
 Australian Open, French Open, The Wimbledon and US Open.
@@ -809,10 +805,10 @@ Australian Open, French Open, The Wimbledon and US Open.
 \begin_inset Formula $5080$
 \end_inset
 
- matches available alltogether.
+ matches available altogether.
  Some matches were not finished due to one of the players forfeiting and
  such matches were omitted from the dataset.
- Matches without bookmaker's odds were ommited as well.
+ Matches without bookmaker's odds were omitted as well.
  The dataset contains 
 \begin_inset Formula $4255$
 \end_inset
@@ -848,25 +844,19 @@ Australian Open, French Open, The Wimbledon and US Open.
 \end_layout
 
 \begin_layout Standard
-tohle de facto kopie
-\end_layout
-
-\begin_layout Standard
 The order in which the players are listed is rather random.
- The players listed first 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Such player/team would be normally considered as ``home'', however, as there
- are (usually) no home players on the international tournaments, the order
- is based on the www.oddsportal.com data and/or the respective tournament
- committees.
-\end_layout
-
+ The players listed first won 2201 in total, just slightly over the half.
+ The player listed first would be normally considered as 
+\begin_inset Quotes eld
 \end_inset
 
- won 2201 in total, just slightly over the half.
+home
+\begin_inset Quotes erd
+\end_inset
+
+, however, as there are (usually) no home players on the international tournamen
+ts, the order is based on the www.oddsportal.com data and/or the respective
+ tournament committees.
  On the other hand, if the bookmaker's favorite (i.e.
  the player with better odds or the first listed player in case the odds
  are even) is considered, the situation changes significantly.
@@ -905,16 +895,12 @@ cite{ja2016ddny}
 \end_layout
 
 \begin_layout Standard
-tohle pridano
-\end_layout
-
-\begin_layout Standard
 Evaluation dataset was created in order to further validate the quality
- of the presented model (see further section XXX).
+ of the presented model (see the section NNN).
  It consists of the 2019 men singles US Open matches, with the results and
  set winning odds provided by Tipsport (a major Czech bookmaker).
  The major difference between the two datasets is the fact that the evaluation
- dataset contains not only prematch odds, but in-play odds as well, and
+ dataset contains not only pre-match odds, but in-play odds as well, and
  can be thus used to evaluate the model quality in the real life setting
  (and of course, the dataset contains some basic information about the match,
  such as the tournament it is played on, respective players, starting time
@@ -926,11 +912,11 @@ Evaluation dataset was created in order to further validate the quality
  then further caused the tool behaving in an unexpected way.
  Therefore, out of the 127 matches and XXX sets played in total during 2019
  men tennis US Open, the tool only collected 423 set odds.
- The prematch set odds (i.e.
+ The pre-match set odds (i.e.
  first set winning odds) as well as all relevant information regarding the
  match itself were collected by the tool primarily used to collect the training
  dataset, which is better tested and more robust, and this information is
- thus completely available withou missing data.
+ thus completely available without missing data.
 \end_layout
 
 \begin_layout Section
