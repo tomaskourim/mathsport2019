@@ -164,35 +164,112 @@ Tennis is one of the oldest and most traditional sports, which is pursued
 \end_layout
 
 \begin_layout Standard
-There are several different approaches in modeling and simulating tennis
+There are several different approaches in modelling and simulating tennis
  games.
  The most common ones use Markov chains as the baseline of the model, creating
  Markov-like chains usually from one particular part of the game - set by
  set, game by game, point by point or even rally by rally 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
 \backslash
-cite{BAC,HUZ,NEW,SPA}.
+cite{barnett2005combining,hunter2009can,newton2009monte,spanias2012predicting}
+\end_layout
+
+\end_inset
+
+.
  Other approaches use some sort of regression (logistic, probit) 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
 \backslash
-cite{COP}, 
+cite{del2010differences}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
 \backslash
-cite{DZH,KLA}.
+cite{dziedzic2015predicting,klaassen2003forecasting}
+\end_layout
+
+\end_inset
+
+.
  The methods can be also divided into those focusing on the match result
  itself 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
 \backslash
-cite{DZH,KLA}, those focusing on the modeling the match development (already
- mentioned methods using random processes models), and also concentrated
- to partial results during a match - in play probabilities
+cite{dziedzic2015predicting,klaassen2003forecasting}
+\end_layout
+
+\end_inset
+
+, those focusing on the modelling the match development (already mentioned
+ methods using random processes models), and also concentrated to partial
+ results during a match - in play probabilities 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
 \backslash
-cite{HUZ}.
+cite{hunter2009can}
+\end_layout
+
+\end_inset
+
+.
  Comparison of some of the existing methods can be found in Kovalchik 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
 \backslash
-cite{KOW}.
+cite{kovalchik2015comparative}
+\end_layout
+
+\end_inset
+
+.
  In this paper a task is to find the best prediction way.
  However, to reach good results is not a matter of model only, it is also
  a matter of information used.
  This problem has been discussed also in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
 \backslash
-cite{TK16}.
+cite{ja2016ddny}
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -202,8 +279,8 @@ Thus, a basic information is the rating of players.
  For instance the past performance, match conditions (the surface, location)
  and even the bookmaker's odds, which are in fact constructed from all the
  information considered to be relevant.
- And the goal of every modeling tool should be to do better (at least sometimes)
- than the prediction based on them (and, eventually, to use them as a partial
+ And the goal of every modelling tool should be to do better (at least sometimes
+) than the prediction based on them (and, eventually, to use them as a partial
  information source).
 \end_layout
 
@@ -213,15 +290,26 @@ The present contribution describes the tennis match using a random walk
  The match in fact consists of several such processes.
  A series of sets within a match, games within a set, points within a game
  or even strokes within a point can be all considered a random process and
- modeled using a random walk.
+ modelled using a random walk.
  These walks are well described by the tennis rules and there exist lots
  of data describing these random processes (i.e.
  various tennis result databases provided by the tennis federation as well
  as many private subjects).
  An analysis of non-Markov development in tennis matches has been provided
  already in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
 \backslash
-cite{TK15}.
+cite{ja2015ddny}
+\end_layout
+
+\end_inset
+
+.
  In the present paper, the random walk consisting of a sequence of sets
  within a match is studied.
  Matches played as a best-of-five, i.e.
@@ -240,7 +328,7 @@ cite{TK15}.
 \end_layout
 
 \begin_layout Standard
-The remainder of the paper is organized as follows.
+The remainder of the paper is organized as follows.....
 \end_layout
 
 \begin_layout Section
