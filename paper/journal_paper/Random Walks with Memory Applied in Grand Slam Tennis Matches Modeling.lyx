@@ -1006,18 +1006,8 @@ name "sec:Initial-probability-derivation"
 \end_layout
 
 \begin_layout Standard
-The model of a random walk with varying probabilities described in Section
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Random-walk-with"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
- takes two parameters, initial set winning probability 
+The model (1) or (2) of a random walk with varying probabilities described
+ in Section 2 contains two parameters, initial set winning probability 
 \begin_inset Formula $p_{0}$
 \end_inset
 
@@ -1030,49 +1020,42 @@ noprefix "false"
 \begin_inset Formula $\lambda$
 \end_inset
 
- is the main subject of this paper and is described in Section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Model-description-and"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
+ is the main subject of this paper and is described further.
 \end_layout
 
 \begin_layout Standard
 Estimating the initial set winning probability is a major task by itself
- and represents one of the elementary problems in tennis modeling.
+ and represents one of the elementary problems in tennis modelling.
  For the purpose of this article an estimation based on bookmaker's odds
  will be used.
- Specifically, the closing odds
-\begin_inset Foot
+ Specifically, the closing odds (closing odds means the last odds available
+ before the match started) by Pinnacle Sports bookmaker for the first set
+ result are used to estimate the probabilities of each player winning the
+ first set.
+ Such odds represent a good estimation of the underlying winning probability
+ and are considered as a baseline in the sports betting industry.
+ The odds, however, have to be transformed into probabilities.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\begin_inset Note Note
 status open
 
 \begin_layout Plain Layout
-Closing odds means the last odds available before the match started.
+
+\series bold
+KONKRETNE!!!
 \end_layout
 
 \end_inset
 
- by Pinnacle Sports bookmaker for the first set result are used to estimate
- the probabilities of each player winning the first set, i.e.
- 
-\begin_inset Formula $p_{0}$
-\end_inset
 
- and 
-\begin_inset Formula $1-p_{0}$
-\end_inset
+\end_layout
 
-.
- Such odds represent a good estimation of the underlying winning probability
- and are considered as a baseline in the sports betting industry.
- The odds, however, have to be transformed into probabilities.
- A method described in 
+\begin_layout Standard
+A method described in 
 \begin_inset ERT
 status open
 
@@ -1094,7 +1077,10 @@ cite{ja2015ddny}
 \end_inset
 
 .
- Obtained first set winning probabilities are then used as a given starting
+\end_layout
+
+\begin_layout Standard
+Obtained first set winning probabilities are then used as a given starting
  probability 
 \begin_inset Formula $p_{0}$
 \end_inset
