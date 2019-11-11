@@ -930,26 +930,13 @@ name "sec:Model-description-and"
 
 \end_layout
 
-\begin_layout Standard
-Tohle je zatim kopie z minula, pokusim se prepsat.
-\end_layout
-
 \begin_layout Subsection
 Model description
 \end_layout
 
 \begin_layout Standard
-Original inspiration of the random walk described in Section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Random-walk-with"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
- is based on intensive study of historical sport results and their development.
+Original inspiration of the random walk described in Section 2 is based
+ on intensive study of historical sport results and their development.
  The data suggest that the probability of success (i.e.
  scoring, winning a set or a point etc.) evolves according to the random
  walk with varying probabilities.
@@ -986,83 +973,25 @@ noprefix "false"
 \begin_layout Standard
 The model is used to predict the winning probabilities of sets 2 through
  5 and is constructed in a following manner.
- For each match, the first set winning probability of Player A
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-The player which is listed first in the database, see Section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Data-description"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
- for details.
-\end_layout
-
-\end_inset
-
-, 
+ For each match, the first set winning probability of Player A (the player
+ which is listed first in the database), 
 \begin_inset Formula $p_{0}$
 \end_inset
 
-, is given (see Section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Initial-probability-derivation"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-) and a coefficient 
+, is given by an initial probability and a coefficient 
 \begin_inset Formula $\lambda$
 \end_inset
 
  is fixed for the entire dataset.
- In order to compute the second set winning probability
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Winning probability of Player A is always considered as Player B winning
- probability is just the complement.
-\end_layout
-
-\end_inset
-
-, the result of the first set is observed and second set winning probability
- is computed using equation 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:suc_rew"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
- This procedure is repeated for all remaining sets played.
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-There can be either 3, 4 or 5 sets played in total in a 
+ In order to compute his second set winning probability, the result of the
+ first set is observed and second set winning probability is computed using
+ equation ( ).
+ This procedure is repeated for all remaining sets played (there can be
+ either 3, 4 or 5 sets played in total in a 
 \emph on
 best-of-five
 \emph default
- tennis game.
-\end_layout
-
-\end_inset
-
-
+ tennis game
 \end_layout
 
 \begin_layout Subsection
