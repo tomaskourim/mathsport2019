@@ -1783,12 +1783,12 @@ Overall, the model was tested on 360 different subsets and only 22 of them
 \end_layout
 
 \begin_layout Subsection
-Model testing
+Test by betting
 \end_layout
 
 \begin_layout Standard
 The model was implemented and tested in real life setup where it actively
- bet in-play agains Tipsport, the biggest bookmaker in the Czech Republic.
+ bet in-play against Tipsport, the biggest bookmaker in the Czech Republic.
  The test was set up in the following manner.
 \end_layout
 
@@ -1800,25 +1800,24 @@ An automated tool developed using the Python programming language and Selenium
  tennis US Open, especially the set winning odds, and storing the odds into
  a database (Postgresql database).
  Tipsport's starting odds were used to obtain parameter 
-\begin_inset Formula $p_{o}$
+\begin_inset Formula $p_{0}$
 \end_inset
 
- (see section Odds to probability) and optimized 
+ (as described above) and optimized 
 \begin_inset Formula $\lambda$
 \end_inset
 
- trained on the 2018 tennis season (see section XXX) as the second necessary
- model parameter.
+ trained on the 2018 tennis season as the second necessary model parameter.
  Every match was observed individually and after each finished set next
- set winning probabilites were computed using the presented model.
- Whenever the actuall set winning odds were higher than the probability
- implied odds, i.e.
+ set winning probabilities were computed using the presented model.
+ Whenever the actual set winning odds were higher than the probability implied
+ odds, i.e.
  
-\begin_inset Formula $o>\frac{1}{p}$
+\begin_inset Formula $0>\frac{1}{p}$
 \end_inset
 
 , a bet was made.
- The amout bettet was computed as 
+ The amount betted was computed as 
 \begin_inset Formula $p\cdot C$
 \end_inset
 
@@ -1826,12 +1825,12 @@ An automated tool developed using the Python programming language and Selenium
 \begin_inset Formula $C$
 \end_inset
 
- is some bankroll dependent constant (in this case CZK 
+ was some bankroll dependent constant (in this case CZK 
 \begin_inset Formula $50$
 \end_inset
 
 ).
- This amout was further rounded with precision CZK 
+ This amount was further rounded with precision CZK 
 \begin_inset Formula $1$
 \end_inset
 
@@ -1840,7 +1839,7 @@ An automated tool developed using the Python programming language and Selenium
 \begin_inset Formula $131$
 \end_inset
 
- bets were made with the total amout CZK 
+ bets were made with the total amount CZK 
 \begin_inset Formula $2992$
 \end_inset
 
@@ -1851,7 +1850,7 @@ An automated tool developed using the Python programming language and Selenium
 
  bets were cancelled due to one of the players forfeiting the match (because
  of injury).
- Amoung these bets the expected number of wins was 
+ Among these bets the expected number of wins was 
 \begin_inset Formula $59.85$
 \end_inset
 
@@ -1877,7 +1876,7 @@ An automated tool developed using the Python programming language and Selenium
 \begin_inset Formula $4.91$
 \end_inset
 
- units, and was actaully 
+ units, and was actually 
 \begin_inset Formula $2.24$
 \end_inset
 
@@ -1885,13 +1884,22 @@ An automated tool developed using the Python programming language and Selenium
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
 Pridat rozptyly, zhodnoceni
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
-an automated betting and odds scraping tool was developed using the Python
+An automated betting and odds scraping tool was developed using the Python
  programming language and Selenium framework.
- The tool operates with Tipsport's website and scrapes it for both prematch
+ The tool operates with Tipsport's website and scrapes it for both pre-match
  as well as in-play odds.
  It observes all selected matches (in this case men tennis US Open matches)
  and, for the purpose of this study, first scrapes the first set closing
@@ -1906,31 +1914,28 @@ on about the match, such as the tournament it is played on, respective players,
  calculated on the fly as are the matches played.
  Whenever is the set winning probability higher than the odds implied set
  winning probability, the tool makes an actual bet.
- The amout bet 
+ The bet amount 
 \begin_inset Formula $b$
 \end_inset
 
- depends on the set winning probablity 
+ is set as described above, i.e.
+ itdepends on the set winning probability 
 \begin_inset Formula $p$
 \end_inset
 
- so that 
-\begin_inset Formula 
-\[
-b=p\cdot C,
-\]
-
+, namely 
+\begin_inset Formula $b=p\cdot C,$
 \end_inset
 
  where 
 \begin_inset Formula $C$
 \end_inset
 
- is some bankroll related constant (in this particular case CZK 
+ is some constant (in this particular case CZK 
 \begin_inset Formula $50$
 \end_inset
 
-).
+ again).
 \end_layout
 
 \begin_layout Subsubsection
