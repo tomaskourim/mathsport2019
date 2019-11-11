@@ -1965,30 +1965,18 @@ name "sec:Conclusion"
 Neco jako ze to je zajimavy model a ma navic vysledky na live sazeni.
 \end_layout
 
-\begin_layout Section
-Remarks
+\begin_layout Section*
+Funding, Remarks
 \end_layout
 
 \begin_layout Standard
-tohle je porad pravda, tak bych to nechal
-\end_layout
-
-\begin_layout Standard
-The source code containing all functionality mentioned in this article including
- the automated betting engine is freely available as open source at GitHub
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-https://github.com/tomaskourim/mathsport2019
-\end_layout
-
-\end_inset
-
- together with a database containing all data that was used in this paper.
- Some results can be also obtained from the same repository.
- The research was partly supported by the grant No.
+The research was supported by the grant No.
  18-02739S of the Grant Agency of the Czech Republic.
+ The source code containing all functionality mentioned in this article
+ including the automated betting engine is freely available as open source
+ at GitHub (https://github.com/tomaskourim/mathsport2019) together with a
+ database containing all data that was used in this paper.
+ Some results can be also obtained from the same repository.
 \end_layout
 
 \begin_layout Standard
