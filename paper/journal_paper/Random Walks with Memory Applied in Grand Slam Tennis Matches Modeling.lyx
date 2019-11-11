@@ -90,15 +90,52 @@ theorems-ams-bytype
 \begin_body
 
 \begin_layout Title
-Random Walks with Memory Applied to Grand Slam Tennis Matches Modeling
+Tennis Match as Random Walk with Memory: Application to Grand Slam Matches
+ Modelling
 \end_layout
 
 \begin_layout Author
 Tomáš Kouřim
+\begin_inset Formula $^{1,2}$
+\end_inset
+
+, Petr Volf
+\begin_inset Formula $^{2}$
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset Formula $^{1}$
+\end_inset
+
+ Faculty of Nuclear Sciences and Physical Engineering, 
+\begin_inset Newline newline
+\end_inset
+
+Czech Technical University in Prague
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset Formula $^{2}$
+\end_inset
+
+Institute of Information Theory and Automation,
+\begin_inset Newline newline
+\end_inset
+
+ Academy of Sciences of the Czech Republic
 \end_layout
 
 \begin_layout Abstract
 TODO.
+\end_layout
+
+\begin_layout Standard
+Key words:....
 \end_layout
 
 \begin_layout Section
