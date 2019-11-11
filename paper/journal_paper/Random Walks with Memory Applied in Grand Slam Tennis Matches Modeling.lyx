@@ -332,22 +332,141 @@ The remainder of the paper is organized as follows.....
 \end_layout
 
 \begin_layout Section
-On random walks with varying probability
-\begin_inset CommandInset label
-LatexCommand label
-name "sec:Random-walk-with"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Random walk
+Tennis match as a random walk
 \end_layout
 
 \begin_layout Standard
-Kratky popis random walk ala teze.
+A basic type of a discrete time random walk is the Bernoulli walk, with
+ random steps (denote them 
+\begin_inset Formula $X_{i}$
+\end_inset
+
+ at stage 
+\begin_inset Formula $i$
+\end_inset
+
+) 
+\begin_inset Formula $X_{i}=\pm1$
+\end_inset
+
+, with constant 
+\begin_inset Formula $P(X_{i}=1)=p_{0}$
+\end_inset
+
+.
+ It is a representation of a Markov chain, i.e.
+ a memory-less random process.
+ It may fit perfectly to many real processes, however, many others, including
+ the process of tennis match development, are more complex, and a memory
+ element has to be introduced in order to correctly describe them.
+ Then 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ can be regarded as based on initial match conditions, and transition probabilit
+ies evolve in dependence on the match state as well as on its (recent) history.
+\end_layout
+
+\begin_layout Standard
+Naturally, the idea of process transitions depending on the history of process
+ itself is not new.
+ A rich field of inspiration is for instance the statistical modelling of
+ recurrent events in the lifetime analysis.
+ Let us mention for instance the continuous time hazard rate models as in
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{percy2007scheduling}
+\end_layout
+
+\end_inset
+
+ with the hazard rate changing after each event, here implemented to the
+ Cox regression model framework.
+ As the case analyzed in the present paper is simpler, the time is discrete
+ and the history is not long, we shall not consider a regression model (though
+ the use of logistic regression is a natural generalization here) and change
+ the transition probabilities just by multiplying them by a convenient parameter.
+ An inspiration to such a modification of Bernoulli random walk can be found
+ in several papers where the length of step was changed in a similar way.
+ Thus, Loic Turban in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{turban2010random}
+\end_layout
+
+\end_inset
+
+ presented a model of a one-dimensional random walk with memory introduced
+ through varying step size.
+ In the paper, it is assumed that the step size in the direction of the
+ last step will be lowered by a coefficient 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ and the step in the opposite direction will be prolonged so that the sum
+ of absolute values of the steps remains constant and equal to 
+\begin_inset Formula $2$
+\end_inset
+
+.
+ The goal is to stabilize the process.
+ Another interesting variant of model is due Schaltz and Trimper 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{schutz2004elephants}
+\end_layout
+
+\end_inset
+
+ introducing a special type of random walk with the random increment at
+ time step 
+\begin_inset Formula $t$
+\end_inset
+
+ depending on the full history of the process, which they compared to an
+ elephant an its memory.
+ The walk tends to repeat 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+good decisions
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+ (i.e.
+ steps) from history and, on the contrary, to avoid repetition of others.
+ The present application does not allow for changing the steps length, instead
+ we are changing the transition probabilities in a similar manner.
 \end_layout
 
 \begin_layout Subsection
