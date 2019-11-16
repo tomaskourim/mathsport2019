@@ -1790,7 +1790,7 @@ Overall, the model was tested on 360 different subsets and only 22 of them
  tennis Grand Slam matches.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Section
 Test by betting
 \end_layout
 
@@ -1959,7 +1959,7 @@ graf vyvoje portfolia
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 Alternative testing
 \end_layout
 
