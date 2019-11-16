@@ -1986,6 +1986,24 @@ name "sec:Conclusion"
 Neco jako ze to je zajimavy model a ma navic vysledky na live sazeni.
 \end_layout
 
+\begin_layout Standard
+In the present paper, a model of Bernoulli-like random walk with transitions
+ dependent on the walk history was introduced.
+ Naturally, the model idea can lead to a more general models, however even
+ a rather simple version presented here showed a sufficient flexibility,
+ when applied to tennis matches modelling.
+ First, the fit of the model was tested statistically, then it was tested
+ also via its use in real in-play betting, with rather encouraging results.
+\end_layout
+
+\begin_layout Standard
+The source code containing all functionality mentioned in this article including
+ the automated betting engine is freely available as open source at GitHub
+ (https://github.com/tomaskourim/mathsport2019) together with a database
+ containing all data that was used in this paper.
+ Some results can be also obtained from the same repository.
+\end_layout
+
 \begin_layout Section*
 Funding, Remarks
 \end_layout
@@ -1993,11 +2011,6 @@ Funding, Remarks
 \begin_layout Standard
 The research was supported by the grant No.
  18-02739S of the Grant Agency of the Czech Republic.
- The source code containing all functionality mentioned in this article
- including the automated betting engine is freely available as open source
- at GitHub (https://github.com/tomaskourim/mathsport2019) together with a
- database containing all data that was used in this paper.
- Some results can be also obtained from the same repository.
 \end_layout
 
 \begin_layout Standard
