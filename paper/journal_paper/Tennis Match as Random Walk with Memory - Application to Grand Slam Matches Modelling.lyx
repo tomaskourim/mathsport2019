@@ -357,7 +357,7 @@ The remainder of the paper is organized as follows: First, the model of
 \end_layout
 
 \begin_layout Section
-Tennis match as a random walk
+Models of random walk with memory
 \end_layout
 
 \begin_layout Standard
@@ -792,29 +792,13 @@ name "sec:Data-description"
 Two datasets were acquired for the purpose of this paper, one for model
  development and the other for model testing.
  The development dataset contains the results from all Grand Slam tournaments
- from 2009 to 2018 and corresponding Pinnacle Sports bookmaker's odds
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-Pinnacle Sports bookmaker was chosen as it is considered leading in the
- sports betting industry.
-\end_layout
-
-\end_inset
-
- and it was created using data publicly available from website www.oddsportal.com.
- Every year 4 Grand Slam
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-Australian Open, French Open, The Wimbledon and US Open.
-\end_layout
-
-\end_inset
-
- tournaments are played, making it 40 tournaments during the selected period.
+ from 2009 to 2018 and corresponding Pinnacle Sports bookmaker's odds (Pinnacle
+ Sports bookmaker was chosen as it is considered leading in the sports betting
+ industry).
+ It was created using data publicly available from website www.oddsportal.com.
+ Every year 4 Grand Slam tournaments (i.e.
+ Australian Open, French Open, The Wimbledon and US Open) are played, making
+ it 40 tournaments during the selected period.
  Each Grand Slam has 
 \begin_inset Formula $128$
 \end_inset
@@ -921,7 +905,7 @@ cite{ja2016ddny}
 
 \begin_layout Standard
 Evaluation dataset was created in order to further validate the quality
- of the presented model (see the section NNN).
+ of the presented model.
  It consists of the 2019 men singles US Open matches, with the results and
  set winning odds provided by Tipsport (a major Czech bookmaker).
  The major difference between the two datasets is the fact that the evaluation
@@ -955,10 +939,6 @@ name "sec:Model-description-and"
 
 \end_layout
 
-\begin_layout Subsection
-Model description
-\end_layout
-
 \begin_layout Standard
 Original inspiration of the random walk described in Section 2 is based
  on intensive study of historical sport results and their development.
@@ -968,30 +948,10 @@ Original inspiration of the random walk described in Section 2 is based
  Moreover, it follows from the data that sports can be very roughly divided
  into two categories.
  Sports played for a certain amount of time, such as soccer or ice-hockey,
- evolve according to the walk defined by expression 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:suc_punished"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
+ evolve according to the walk defined by expression (1).
  On the other hand, sports where there is necessary to achieve certain number
  of points, such as tennis or volleyball, appear to follow the pattern defined
- in equation 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:suc_rew"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
+ in equation (2).
  Therefore the later approach is used to model a tennis game.
 \end_layout
 
@@ -1010,7 +970,7 @@ The model is used to predict the winning probabilities of sets 2 through
  is fixed for the entire dataset.
  In order to compute his second set winning probability, the result of the
  first set is observed and second set winning probability is computed using
- equation ( ).
+ equation (2).
  This procedure is repeated for all remaining sets played (there can be
  either 3, 4 or 5 sets played in total in a 
 \emph on
@@ -1556,19 +1516,11 @@ Then in order to verify the model accuracy, the null hypothesis that the
 
  was tested.
  Formally, 
-\begin_inset Formula 
-\[
-H_{0}:\bar{p}=\hat{p}
-\]
-
+\begin_inset Formula $H_{0}:\bar{p}=\hat{p}$
 \end_inset
 
-
-\begin_inset Formula 
-\[
-H_{1}:\bar{p}\neq\hat{p}.
-\]
-
+, 
+\begin_inset Formula $H_{1}:\bar{p}\neq\hat{p}.$
 \end_inset
 
 
@@ -1971,6 +1923,10 @@ Alternative testing
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
 Mohl bych popsat (ted kdyz uz mam data) ruzne alternativy sazeni.
  Tedy napriklad odvozeni modelu jako success punished a sazeni, respektive
  spise jako modelu se 2 lambda.
@@ -1978,8 +1934,17 @@ Mohl bych popsat (ted kdyz uz mam data) ruzne alternativy sazeni.
  Dalsi typy sazeni, napriklad Kelly.
 \end_layout
 
+\begin_layout Plain Layout
+- asi uz ne??
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
-Conclusion
+Concluding remarks
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Conclusion"
@@ -2012,7 +1977,7 @@ The source code containing all functionality mentioned in this article including
 \end_layout
 
 \begin_layout Section*
-Funding, Remarks
+Funding
 \end_layout
 
 \begin_layout Standard
