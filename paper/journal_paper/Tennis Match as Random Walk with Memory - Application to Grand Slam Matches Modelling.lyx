@@ -346,7 +346,14 @@ cite{ja2015ddny}
 \end_layout
 
 \begin_layout Standard
-The remainder of the paper is organized as follows.....
+The remainder of the paper is organized as follows: First, the model of
+ Bernoulii-like random walk with transitions dependent on preceding steps
+ is introduced.
+ The rest of the paper then deals with its application to modelling tennis
+ matches.
+ In Section 3 the data are described, in Sect.
+ 4 the model is evaluated and its flexibility tested.
+ Finally, the usefulness of the model is assessed also via its use to betting.
 \end_layout
 
 \begin_layout Section
