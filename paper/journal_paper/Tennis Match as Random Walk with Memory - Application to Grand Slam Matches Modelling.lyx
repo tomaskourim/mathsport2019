@@ -131,11 +131,29 @@ Institute of Information Theory and Automation,
 \end_layout
 
 \begin_layout Abstract
-TODO.
+The contribution introduces a Bernoulli-like random walk with transition
+ probabilities depending of its recent steps.
+ Then, implicitly, the walk depends on the walk whole history.
+ The main objective is its application to modelling and then to prediction
+ of tennis matches.
+ The data are taken from the Grand Slam tennis matches, since 2009 till
+ 2019.
+ The flexibility of the model is tested thoroughly on several datasets selection
+s and the results reported.
+ It is shown that the model corresponds well to the majority of matches.
+ Finally, the model is also used for the in-play betting, with rather encouragin
+g results.
 \end_layout
 
-\begin_layout Standard
-Key words:....
+\begin_layout Abstract
+
+\series bold
+\emph on
+Key words:
+\series default
+\emph default
+ Random walk, transitions dependent on history, tennis modelling, prediction,
+ betting
 \end_layout
 
 \begin_layout Section
@@ -1926,6 +1944,19 @@ on about the match, such as the tournament it is played on, respective players,
 \end_inset
 
  again).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+graf vyvoje portfolia
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
