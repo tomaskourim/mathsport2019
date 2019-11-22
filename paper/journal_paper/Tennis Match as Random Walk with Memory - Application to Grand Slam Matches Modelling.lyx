@@ -1020,27 +1020,7 @@ Estimating the initial set winning probability is a major task by itself
  Such odds represent a good estimation of the underlying winning probability
  and are considered as a baseline in the sports betting industry.
  The odds, however, have to be transformed into probabilities.
-\end_layout
-
-\begin_layout Standard
-
-\series bold
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-
-\series bold
-KONKRETNE!!!
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-A method described in 
+ A method described in 
 \begin_inset ERT
 status open
 
@@ -1053,19 +1033,43 @@ cite{ja2015ddny}
 
 \end_inset
 
- is used to obtain probabilities, using a parameter 
-\begin_inset Formula $t\in[0,\,1]$
+ is used to obtain probabilities, which in case of only two possible outcomes
+ (such as in tennis match) can be expressed as 
+\begin_inset Formula 
+\[
+p_{i}=\frac{1}{a_{i}}-(G-1)[1-\frac{1}{a_{i}G}+2\omega(\frac{1}{a_{i}G}-0.5)],\;i\in\{1,\,2\},
+\]
+
 \end_inset
 
- set to the value 
-\begin_inset Formula $t=0.5$
-\end_inset
 
-.
 \end_layout
 
 \begin_layout Standard
-Obtained first set winning probabilities are then used as a given starting
+where 
+\begin_inset Formula $p_{i}$
+\end_inset
+
+ are the unknown first set winning probabilities, 
+\begin_inset Formula $a_{i}$
+\end_inset
+
+ the corresponding odds provided by bookmaker and 
+\begin_inset Formula $G=\sum_{i=1}^{2}\frac{1}{a_{i}}$
+\end_inset
+
+.
+ A parameter 
+\begin_inset Formula $\omega\in[0,\,1]$
+\end_inset
+
+ is used to spread bookmaker's margin among the two outcomes and for the
+ purpose of this paper is set to the value 
+\begin_inset Formula $\omega=0.5$
+\end_inset
+
+.
+ Obtained first set winning probabilities are then used as a given starting
  probability 
 \begin_inset Formula $p_{0}$
 \end_inset
