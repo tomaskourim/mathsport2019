@@ -1959,17 +1959,23 @@ name "sec:Conclusion"
 \end_layout
 
 \begin_layout Standard
-Neco jako ze to je zajimavy model a ma navic vysledky na live sazeni.
-\end_layout
-
-\begin_layout Standard
 In the present paper, a model of Bernoulli-like random walk with transitions
  dependent on the walk history was introduced.
- Naturally, the model idea can lead to a more general models, however even
- a rather simple version presented here showed a sufficient flexibility,
- when applied to tennis matches modelling.
- First, the fit of the model was tested statistically, then it was tested
- also via its use in real in-play betting, with rather encouraging results.
+ A number of variations of this model was described by the authors in a
+ recent study (zdroj Amistat).
+ This paper shows that even the rather simple version presented here shows
+ sufficient flexibility and can be applied to tennis matches modelling.
+ The model was first tested statistically on historical data and the optimal
+ model parameters were computed using numerical methods.
+ The results were then tested in real 
+\emph on
+in-play 
+\emph default
+betting against a commercial bookmaker with rather encouraging results.
+ This show a huge potential of the model being able even the most complicated
+ real life discrete random processes with memory.
+ The application of the model on different real life problems will be subject
+ of further research.
 \end_layout
 
 \begin_layout Standard
