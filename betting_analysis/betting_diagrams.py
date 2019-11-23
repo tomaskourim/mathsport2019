@@ -1,6 +1,8 @@
 import datetime
 import logging
 
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
 from database_operations import execute_sql_postgres
@@ -43,14 +45,33 @@ def generate_diagrams():
             odds_betting_win.append(-bet.probability)
             balance_odds.append(balance_odds[index] + odds_betting_win[index])
 
-    logger.info(min(balance_naive))
-    logger.info(min(balance_odds))
-    logger.info(min(balance_kelly))
     all_bets.insert(0, "naive_balance", balance_naive[1:], True)
     all_bets.insert(0, "naive_wins", naive_betting_win, True)
 
     all_bets.insert(0, "odds_balance", balance_odds[1:], True)
     all_bets.insert(0, "odds_wins", odds_betting_win, True)
+
+    naive_min = min(all_bets.naive_balance)
+    odds_min = min(all_bets.odds_balance)
+
+    x_axis = range(1, len(all_bets) + 1)
+    plt.plot(x_axis, all_bets.naive_balance, 'b-', x_axis, all_bets.odds_balance, 'r-')
+    plt.xlabel('bet number')
+    plt.ylabel('account balance')
+
+    naive_min_coordinates = (np.where(all_bets.naive_balance == naive_min)[0][0], naive_min)
+    naive_min_annotation_coordinates = (naive_min_coordinates[0] - 60, naive_min_coordinates[1] + 0.3)
+    odds_min_coordinates = (np.where(all_bets.odds_balance == odds_min)[0][0], odds_min)
+    odds_min_annotation_coordinates = (odds_min_coordinates[0] - 60, odds_min_coordinates[1] - 1)
+    plt.annotate('global min naive', xy=naive_min_coordinates, xytext=naive_min_annotation_coordinates,
+                 arrowprops=dict(facecolor='black', shrink=0.01, width=1),
+                 )
+    plt.annotate('global min odds', xy=odds_min_coordinates, xytext=odds_min_annotation_coordinates,
+                 arrowprops=dict(facecolor='black', shrink=0.01, width=1),
+                 )
+    plt.axhline(linewidth=0.5, color='k')
+    plt.savefig('account_balance_development.pdf', bbox_inches='tight')
+    plt.show()
 
     pass
 
