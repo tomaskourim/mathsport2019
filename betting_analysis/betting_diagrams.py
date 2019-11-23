@@ -55,7 +55,8 @@ def generate_diagrams():
     odds_min = min(all_bets.odds_balance)
 
     x_axis = range(1, len(all_bets) + 1)
-    plt.plot(x_axis, all_bets.naive_balance, 'b-', x_axis, all_bets.odds_balance, 'r-')
+    plt.plot(x_axis, all_bets.naive_balance, 'b-', label='naive')
+    plt.plot(x_axis, all_bets.odds_balance, 'r-', label='probability')
     plt.xlabel('bet number')
     plt.ylabel('account balance')
 
@@ -66,10 +67,12 @@ def generate_diagrams():
     plt.annotate('global min naive', xy=naive_min_coordinates, xytext=naive_min_annotation_coordinates,
                  arrowprops=dict(facecolor='black', shrink=0.01, width=1),
                  )
-    plt.annotate('global min odds', xy=odds_min_coordinates, xytext=odds_min_annotation_coordinates,
+    plt.annotate('global min probability', xy=odds_min_coordinates, xytext=odds_min_annotation_coordinates,
                  arrowprops=dict(facecolor='black', shrink=0.01, width=1),
                  )
     plt.axhline(linewidth=0.5, color='k')
+    plt.legend()
+
     plt.savefig('account_balance_development.pdf', bbox_inches='tight')
     plt.show()
 
