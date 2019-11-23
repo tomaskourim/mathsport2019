@@ -47,7 +47,7 @@ FROM matches
 WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL;
 
 
--- expected money wins and actual wins - advanced betting
+-- expected money wins and actual wins - probability betting
 SELECT home, away, bet_type, match_part, odd, probability, result,
     probability * (probability * odd - probability) - (1 - probability) * probability AS expected_win,
     CASE WHEN result IS TRUE
@@ -61,7 +61,7 @@ WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL
 ORDER BY utc_time_recorded;
 
 
--- expected money wins and actual wins - advanced betting summed
+-- expected money wins and actual wins - probability betting summed
 SELECT sum(probability * (probability * odd - probability) - (1 - probability) * probability) AS expected_win,
     sum(CASE WHEN result IS TRUE
                  THEN probability * odd - probability
@@ -73,6 +73,29 @@ FROM matches
 WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL;
 
 
+-- expected money wins and actual wins - 1/odds betting
+SELECT home, away, bet_type, match_part, odd, probability, result,
+    probability * (1 - 1 / odd) - (1 - probability) * (1 / odd) AS expected_win,
+    CASE WHEN result IS TRUE
+             THEN (1 - 1 / odd)
+         ELSE (-1 / odd) END AS win
+FROM matches
+         JOIN tournament t ON matches.tournament_id = t.id
+         JOIN matches_bookmaker mb ON matches.id = mb.match_id
+         JOIN bet b ON mb.bookmaker_id = b.bookmaker_id AND mb.match_bookmaker_id = b.match_bookmaker_id
+WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL
+ORDER BY utc_time_recorded;
+
+-- expected money wins and actual wins - 1/odds betting summed
+SELECT sum(probability * (1 - 1 / odd) - (1 - probability) * (1 / odd)) AS expected_win,
+    sum(CASE WHEN result IS TRUE
+                 THEN (1 - 1 / odd)
+             ELSE (-1 / odd) END) AS win
+FROM matches
+         JOIN tournament t ON matches.tournament_id = t.id
+         JOIN matches_bookmaker mb ON matches.id = mb.match_id
+         JOIN bet b ON mb.bookmaker_id = b.bookmaker_id AND mb.match_bookmaker_id = b.match_bookmaker_id
+WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL;
 
 ---------------------------------------------------------------
 ---------- database manipulations -----------------------------
