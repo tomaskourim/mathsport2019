@@ -13,8 +13,8 @@ FROM matches
          JOIN tournament t ON matches.tournament_id = t.id
          JOIN matches_bookmaker mb ON matches.id = mb.match_id
          JOIN bet b ON mb.bookmaker_id = b.bookmaker_id AND mb.match_bookmaker_id = b.match_bookmaker_id
-WHERE name = 'US Open' AND sex = 'men' AND type = 'singles'
-ORDER BY start_time_utc, home, match_part;
+WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL
+ORDER BY utc_time_recorded;
 
 
 -- US Open men single matches - results and expected results

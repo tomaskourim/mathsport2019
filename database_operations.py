@@ -9,7 +9,7 @@ import psycopg2
 from config import DATABASE_PATH
 
 
-def config(filename='database.ini', section='postgresql'):
+def config(filename='../database.ini', section='postgresql'):
     # create a parser
     parser = ConfigParser()
     # read config file
