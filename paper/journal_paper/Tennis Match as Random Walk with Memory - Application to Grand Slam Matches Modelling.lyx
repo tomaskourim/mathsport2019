@@ -1764,11 +1764,15 @@ The model was implemented and tested in real life setup where it actively
 \end_layout
 
 \begin_layout Standard
-An automated tool developed using the Python programming language and Selenium
- framework running on remote server (Digital Ocean) was developed and deployed
- for the purpose of this paper.
- The tool was continuously watching odds offering of Tipsport for 2019 men
- tennis US Open, especially the set winning odds, and storing the odds into
+An automated betting and odds scraping tool developed using the Python programmi
+ng language and Selenium framework running on remote server (Digital Ocean)
+ was developed and deployed for the purpose of this paper.
+ The tool operates with Tipsport's website and scrapes it for both pre-match
+ as well as in-play odds.
+ For the purpose of this study the tool was set up to continuously observer
+ odds offering of Tipsport for 2019 men tennis US Open, especially the set
+ winning odds, and storing the odds together with some general information
+ about the match, such as the respective players, starting time etc., into
  a database (Postgresql database).
  Tipsport's starting odds were used to obtain parameter 
 \begin_inset Formula $p_{0}$
@@ -1778,18 +1782,26 @@ An automated tool developed using the Python programming language and Selenium
 \begin_inset Formula $\lambda$
 \end_inset
 
- trained on the 2018 tennis season as the second necessary model parameter.
+ trained on the 
+\begin_inset Formula $2018$
+\end_inset
+
+ tennis season as the second necessary model parameter.
  Every match was observed individually and after each finished set next
  set winning probabilities were computed using the presented model.
- Whenever the actual set winning odds were higher than the probability implied
- odds, i.e.
+ Whenever the actual set winning odds for one of the players 
+\begin_inset Formula $a_{i}$
+\end_inset
+
+ were higher than the probability implied set winning odds for that player,
+ i.e.
  
-\begin_inset Formula $0>\frac{1}{p}$
+\begin_inset Formula $a_{i}>\frac{1}{p_{i}}$
 \end_inset
 
 , a bet was made.
  The amount betted was computed as 
-\begin_inset Formula $p\cdot C$
+\begin_inset Formula $p_{i}\cdot C$
 \end_inset
 
 , where 
@@ -1830,28 +1842,15 @@ An automated tool developed using the Python programming language and Selenium
 \end_inset
 
 .
- The theoretical expected win with constant bet of 
-\begin_inset Formula $1$
+ The expected win from the betting was 
+\begin_inset Formula $4.91\cdot C$
 \end_inset
 
- on each bet is 
-\begin_inset Formula $11.1$
+, the actuall winning amounted for 
+\begin_inset Formula $2.24\cdot C$
 \end_inset
 
- compared to actual theoretical win of 
-\begin_inset Formula $2.99$
-\end_inset
-
- units.
- The above mentioned betting system yielded expected win 
-\begin_inset Formula $4.91$
-\end_inset
-
- units, and was actually 
-\begin_inset Formula $2.24$
-\end_inset
-
- units.
+.
  The development of the account balance is displayed on Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1866,6 +1865,22 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
+The theoretical expected win with constant bet of 
+\begin_inset Formula $1$
+\end_inset
+
+ on each bet is 
+\begin_inset Formula $11.1$
+\end_inset
+
+ compared to actual theoretical win of 
+\begin_inset Formula $2.99$
+\end_inset
+
+ units.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Note Note
 status open
 
@@ -1876,48 +1891,6 @@ Pridat rozptyly, zhodnoceni
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-An automated betting and odds scraping tool was developed using the Python
- programming language and Selenium framework.
- The tool operates with Tipsport's website and scrapes it for both pre-match
- as well as in-play odds.
- It observes all selected matches (in this case men tennis US Open matches)
- and, for the purpose of this study, first scrapes the first set closing
- odd, i.e.
- the last odds available before the match start.
- It then observes the match's progress and scrapes next set winning odds
- at the moment between to sets to be played.
- All these odds are stored into a database, together with some general informati
-on about the match, such as the tournament it is played on, respective players,
- starting time etc.
- Additionally, the model is applied live and set winning probabilities are
- calculated on the fly as are the matches played.
- Whenever is the set winning probability higher than the odds implied set
- winning probability, the tool makes an actual bet.
- The bet amount 
-\begin_inset Formula $b$
-\end_inset
-
- is set as described above, i.e.
- itdepends on the set winning probability 
-\begin_inset Formula $p$
-\end_inset
-
-, namely 
-\begin_inset Formula $b=p\cdot C,$
-\end_inset
-
- where 
-\begin_inset Formula $C$
-\end_inset
-
- is some constant (in this particular case CZK 
-\begin_inset Formula $50$
-\end_inset
-
- again).
 \end_layout
 
 \begin_layout Standard
@@ -1985,7 +1958,7 @@ Mohl bych popsat (ted kdyz uz mam data) ruzne alternativy sazeni.
 
 \end_inset
 
-
+z
 \end_layout
 
 \begin_layout Section
