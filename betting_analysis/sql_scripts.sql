@@ -34,7 +34,7 @@ FROM matches
          JOIN matches_bookmaker mb ON matches.id = mb.match_id
          JOIN bet b ON mb.bookmaker_id = b.bookmaker_id AND mb.match_bookmaker_id = b.match_bookmaker_id
 WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL
-ORDER BY start_time_utc, home, match_part;
+ORDER BY utc_time_recorded;
 
 
 -- expected money wins and actual wins - naive betting summed
@@ -58,7 +58,7 @@ FROM matches
          JOIN matches_bookmaker mb ON matches.id = mb.match_id
          JOIN bet b ON mb.bookmaker_id = b.bookmaker_id AND mb.match_bookmaker_id = b.match_bookmaker_id
 WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' AND result NOTNULL
-ORDER BY start_time_utc, home, match_part;
+ORDER BY utc_time_recorded;
 
 
 -- expected money wins and actual wins - advanced betting summed

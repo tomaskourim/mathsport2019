@@ -1,37 +1,56 @@
 import datetime
 import logging
-import threading
-import time
-from typing import List
 
 import pandas as pd
-import pytz
 
-from config import COLUMN_NAMES
-from data_operations import transform_home_favorite, get_probabilities_from_odds
-from database_operations import execute_sql_postgres, get_match_data
-from live_betting.bookmaker import Bookmaker
-from live_betting.config_betting import TIME_TO_MATCHSTART_MINUTES
-from live_betting.prematch_operations import get_save_tournaments, process_tournaments_save_matches
-from live_betting.tipsport import Tipsport
-from live_betting.utils import save_screenshot
-from main import find_single_lambda
+from database_operations import execute_sql_postgres
+
+BET_COLUMN_NAMES = ["home", "away", "start_time_utc", "bet_type", "match_part", "odd", "probability", "result",
+                    "utc_time_recorded"]
+
 
 def generate_diagrams():
-    logger.info("sd")
-    tournament='US Open'
-    sex='men'
-    type='singles'
-    params=[tournament,sex,type]
-    query="SELECT home, away, start_time_utc, bet_type, match_part, odd, probability, result, utc_time_recorded " \
-        "FROM matches " \
+    tournament = 'US Open'
+    sex = 'men'
+    type = 'singles'
+    params = [tournament, sex, type]
+    query = "SELECT home, away, start_time_utc, bet_type, match_part, odd, probability, result, utc_time_recorded " \
+            "FROM matches " \
             "JOIN tournament t ON matches.tournament_id = t.id " \
             "JOIN matches_bookmaker mb ON matches.id = mb.match_id " \
             "JOIN bet b ON mb.bookmaker_id = b.bookmaker_id AND mb.match_bookmaker_id = b.match_bookmaker_id " \
-        "WHERE name = %s AND sex = %s AND type = %s AND result NOTNULL " \
-        "ORDER BY utc_time_recorded;"
+            "WHERE name = %s AND sex = %s AND type = %s AND result NOTNULL " \
+            "ORDER BY utc_time_recorded;"
 
-    all_bets=pd.DataFrame(execute_sql_postgres(query, params, False, True))
+    all_bets = pd.DataFrame(execute_sql_postgres(query, params, False, True), columns=BET_COLUMN_NAMES)
+    naive_betting_win = []
+    odds_betting_win = []
+    kelly_betting_win = []
+    balance_naive = [0]
+    balance_odds = [0]
+    balance_kelly = [50]
+    for index, bet in all_bets.iterrows():
+        if bet.result:
+            naive_betting_win.append(bet.odd - 1)
+            balance_naive.append(balance_naive[index] + naive_betting_win[index])
+
+            odds_betting_win.append(bet.probability * bet.odd - bet.probability)
+            balance_odds.append(balance_odds[index] + odds_betting_win[index])
+        else:
+            naive_betting_win.append(-1)
+            balance_naive.append(balance_naive[index] + naive_betting_win[index])
+
+            odds_betting_win.append(-bet.probability)
+            balance_odds.append(balance_odds[index] + odds_betting_win[index])
+
+    logger.info(min(balance_naive))
+    logger.info(min(balance_odds))
+    logger.info(min(balance_kelly))
+    all_bets.insert(0, "naive_balance", balance_naive[1:], True)
+    all_bets.insert(0, "naive_wins", naive_betting_win, True)
+
+    all_bets.insert(0, "odds_balance", balance_odds[1:], True)
+    all_bets.insert(0, "odds_wins", odds_betting_win, True)
 
     pass
 
@@ -51,7 +70,6 @@ if __name__ == '__main__':
 
     # Add handlers to the logger
     logger.addHandler(stdout_handler)
-
 
     start_time_run = datetime.datetime.now()
     generate_diagrams()
