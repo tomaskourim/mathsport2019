@@ -1839,7 +1839,7 @@ An automated tool developed using the Python programming language and Selenium
 \end_inset
 
  compared to actual theoretical win of 
-\begin_inset Formula $3$
+\begin_inset Formula $2.99$
 \end_inset
 
  units.
@@ -1852,6 +1852,17 @@ An automated tool developed using the Python programming language and Selenium
 \end_inset
 
  units.
+ The development of the account balance is displayed on Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Account-balance-development"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -1910,11 +1921,41 @@ on about the match, such as the tournament it is played on, respective players,
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-graf vyvoje portfolia
+\begin_inset Graphics
+	filename ../../betting_analysis/account_balance_development.pdf
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Account-balance-development"
+
+\end_inset
+
+Account balance development for different betting strategies.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
