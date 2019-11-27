@@ -1,5 +1,6 @@
 import datetime
 import logging
+from typing import Tuple
 
 import math
 import matplotlib.pyplot as plt
@@ -13,11 +14,17 @@ BET_COLUMN_NAMES = ["home", "away", "start_time_utc", "bet_type", "match_part", 
                     "utc_time_recorded"]
 
 
-def generate_diagrams():
+def get_global_extremes_coordinates(array: np.ndarray) -> Tuple[float, float, Tuple[int, float]]:
+    minimum = min(array)
+    min_coordinates = (np.where(array == minimum)[0][0], minimum)
+    return minimum, max(array), min_coordinates
+
+
+def get_all_bets() -> pd.DataFrame:
     tournament = 'US Open'
     sex = 'men'
-    type = 'singles'
-    params = [tournament, sex, type]
+    match_type = 'singles'
+    params = [tournament, sex, match_type]
     query = "SELECT home, away, start_time_utc, bet_type, match_part, odd, probability, result, utc_time_recorded " \
             "FROM matches " \
             "JOIN tournament t ON matches.tournament_id = t.id " \
@@ -26,10 +33,10 @@ def generate_diagrams():
             "WHERE name = %s AND sex = %s AND type = %s AND result NOTNULL " \
             "ORDER BY utc_time_recorded;"
 
-    all_bets = pd.DataFrame(execute_sql_postgres(query, params, False, True), columns=BET_COLUMN_NAMES)
+    return pd.DataFrame(execute_sql_postgres(query, params, False, True), columns=BET_COLUMN_NAMES)
 
-    bets = len(all_bets)
 
+def get_betting_results(all_bets: pd.DataFrame) -> pd.DataFrame:
     naive_betting_win = []
     prob_betting_win = []
     odds_betting_win = []
@@ -62,6 +69,32 @@ def generate_diagrams():
     all_bets.insert(0, "odds_balance", balance_odds[1:], True)
     all_bets.insert(0, "odds_wins", odds_betting_win, True)
 
+    return all_bets
+
+
+def get_p_value(observed_values: np.ndarray, expected_values: np.ndarray, variances: np.ndarray) -> float:
+    number_observations = len(observed_values)
+    x_mean = sum(observed_values) / number_observations
+    mu_hat = sum(expected_values) / number_observations
+    var_hat = sum(variances) / number_observations
+    logging.info(
+        f"Observations: {number_observations}. \
+        Observed value: {x_mean}, expected value: {mu_hat}, standard deviation: {math.sqrt(var_hat)}")
+    expected_distribution = stat.norm()
+
+    observed_value = math.sqrt(number_observations) * (x_mean - mu_hat) / math.sqrt(var_hat)
+
+    cdf_observed = expected_distribution.cdf(observed_value)
+    return min(cdf_observed, 1 - cdf_observed) * 2
+
+
+def generate_diagrams():
+    all_bets = get_all_bets()
+
+    all_bets = get_betting_results(all_bets)
+
+    bets = len(all_bets)
+
     x_axis = range(1, len(all_bets) + 1)
     plt.plot(x_axis, all_bets.naive_balance, 'b-', label='naive')
     plt.plot(x_axis, all_bets.prob_balance, 'r-', label='probability')
@@ -69,21 +102,19 @@ def generate_diagrams():
     plt.xlabel('bet number')
     plt.ylabel('account balance')
 
-    naive_min = min(all_bets.naive_balance)
-    naive_min_coordinates = (np.where(all_bets.naive_balance == naive_min)[0][0], naive_min)
+    naive_min, naive_max, naive_min_coordinates = get_global_extremes_coordinates(all_bets.naive_balance)
     naive_min_annotation_coordinates = (naive_min_coordinates[0] - 60, naive_min_coordinates[1] + 0.3)
     plt.annotate('global min naive', xy=naive_min_coordinates, xytext=naive_min_annotation_coordinates,
                  arrowprops=dict(facecolor='black', shrink=0.01, width=1),
                  )
 
-    prob_min = min(all_bets.prob_balance)
-    prob_min_coordinates = (np.where(all_bets.prob_balance == prob_min)[0][0], prob_min)
+    prob_min, prob_max, prob_min_coordinates = get_global_extremes_coordinates(all_bets.prob_balance)
     prob_min_annotation_coordinates = (prob_min_coordinates[0] - 90, prob_min_coordinates[1] - 1)
     plt.annotate('global min probability and 1/odds', xy=prob_min_coordinates, xytext=prob_min_annotation_coordinates,
                  arrowprops=dict(facecolor='black', shrink=0.01, width=1),
                  )
 
-    odds_min = min(all_bets.odds_balance)
+    odds_min, odds_max, _ = get_global_extremes_coordinates(all_bets.odds_balance)
     # odds_min_coordinates = (np.where(all_bets.odds_balance == odds_min)[0][0], odds_min)
     # odds_min_annotation_coordinates = (odds_min_coordinates[0] - 20, odds_min_coordinates[1] + 6)
     # plt.annotate('global min 1/odds', xy=odds_min_coordinates, xytext=odds_min_annotation_coordinates,
@@ -96,41 +127,35 @@ def generate_diagrams():
     plt.savefig('account_balance_development.pdf', bbox_inches='tight')
     plt.show()
 
-    logger.info(naive_min)
-    logger.info(prob_min)
-    logger.info(odds_min)
+    logger.info(
+        f"Naive betting: \
+        Min = {naive_min:.2f}; \
+        Max = {naive_max:.2f}. \
+        Final balance: {all_bets.naive_balance[bets - 1]:.2f}")
+    logger.info(
+        f"Probs betting: \
+        Min = {prob_min:.2f}; \
+        Max = {prob_max:.2f}. \
+        Final balance: {all_bets.prob_balance[bets - 1]:.2f}")
+    logger.info(
+        f"1/odds betting: \
+        Min = {odds_min:.2f}; \
+        Max = {odds_max:.2f}. \
+        Final balance: {all_bets.odds_balance[bets - 1]:.2f}")
 
-    logger.info(max(all_bets.naive_balance))
-    logger.info(max(all_bets.prob_balance))
-    logger.info(max(all_bets.odds_balance))
+    p_value = get_p_value(all_bets.result, all_bets.probability, all_bets.probability * (1 - all_bets.probability))
 
-    logger.info(all_bets.naive_balance[bets - 1])
-    logger.info(all_bets.prob_balance[bets - 1])
-    logger.info(all_bets.odds_balance[bets - 1])
+    logger.info(f"P-value: {p_value}")
 
-    x_mean = sum(all_bets.result) / bets
-    mu_hat = sum(all_bets.probability) / bets
-    var_hat = sum(all_bets.probability * (1 - all_bets.probability)) / bets
-    logging.info(f"Observations: {bets}. Observed value: {x_mean}, expected value: {mu_hat}, \
-            standard deviation: {math.sqrt(var_hat)}")
-    expected_distribution = stat.norm()
-
-    observed_value = math.sqrt(bets) * (x_mean - mu_hat) / math.sqrt(var_hat)
-
-    cdf_observed = expected_distribution.cdf(observed_value)
-    probability_of_more_extreme = min(cdf_observed, 1 - cdf_observed) * 2
-
-    logger.info(f"P-value: {probability_of_more_extreme}")
-
-    if probability_of_more_extreme < 0.1:
+    if p_value < 0.1:
         logging.info("Reject H0 on 90% level.")
     else:
         logging.info("Cannot reject H0.")
 
-    if probability_of_more_extreme < 0.05:
+    if p_value < 0.05:
         logging.info("Reject H0 on 95% level.")
 
-    if probability_of_more_extreme < 0.01:
+    if p_value < 0.01:
         logging.info("Reject H0 on 99% level.")
 
     pass
