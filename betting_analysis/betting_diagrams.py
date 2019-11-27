@@ -40,12 +40,10 @@ def get_betting_results(all_bets: pd.DataFrame) -> pd.DataFrame:
     naive_betting_win = []
     prob_betting_win = []
     odds_betting_win = []
-    kelly_betting_win = []
 
     balance_naive = [0]
     balance_prob = [0]
     balance_odds = [0]
-    balance_kelly = [50]
     for index, bet in all_bets.iterrows():
         if bet.result:
             naive_betting_win.append(bet.odd - 1)
@@ -85,7 +83,30 @@ def get_p_value(observed_values: np.ndarray, expected_values: np.ndarray, varian
     observed_value = math.sqrt(number_observations) * (x_mean - mu_hat) / math.sqrt(var_hat)
 
     cdf_observed = expected_distribution.cdf(observed_value)
-    return min(cdf_observed, 1 - cdf_observed) * 2
+    p_value = min(cdf_observed, 1 - cdf_observed) * 2
+
+    logger.info(f"P-value: {p_value}")
+
+    if p_value < 0.1:
+        logging.info("Reject H0 on 90% level.")
+    else:
+        logging.info("Cannot reject H0.")
+
+    if p_value < 0.05:
+        logging.info("Reject H0 on 95% level.")
+
+    if p_value < 0.01:
+        logging.info("Reject H0 on 99% level.")
+
+    return p_value
+
+
+def log_result(betting_type: str, minimum: float, maximum: float, final_balance: float):
+    logger.info(
+        f"{betting_type}: \
+        Min = {minimum:.2f}; \
+        Max = {maximum:.2f}. \
+        Final balance: {final_balance:.2f}")
 
 
 def generate_diagrams():
@@ -115,11 +136,6 @@ def generate_diagrams():
                  )
 
     odds_min, odds_max, _ = get_global_extremes_coordinates(all_bets.odds_balance)
-    # odds_min_coordinates = (np.where(all_bets.odds_balance == odds_min)[0][0], odds_min)
-    # odds_min_annotation_coordinates = (odds_min_coordinates[0] - 20, odds_min_coordinates[1] + 6)
-    # plt.annotate('global min 1/odds', xy=odds_min_coordinates, xytext=odds_min_annotation_coordinates,
-    #              arrowprops=dict(facecolor='black', shrink=0.01, width=1),
-    #              )
 
     plt.axhline(linewidth=0.5, color='k')
     plt.legend()
@@ -127,36 +143,11 @@ def generate_diagrams():
     plt.savefig('account_balance_development.pdf', bbox_inches='tight')
     plt.show()
 
-    logger.info(
-        f"Naive betting: \
-        Min = {naive_min:.2f}; \
-        Max = {naive_max:.2f}. \
-        Final balance: {all_bets.naive_balance[bets - 1]:.2f}")
-    logger.info(
-        f"Probs betting: \
-        Min = {prob_min:.2f}; \
-        Max = {prob_max:.2f}. \
-        Final balance: {all_bets.prob_balance[bets - 1]:.2f}")
-    logger.info(
-        f"1/odds betting: \
-        Min = {odds_min:.2f}; \
-        Max = {odds_max:.2f}. \
-        Final balance: {all_bets.odds_balance[bets - 1]:.2f}")
+    log_result("Naive betting", naive_min, naive_max, all_bets.naive_balance[bets - 1])
+    log_result("Prob betting", prob_min, prob_max, all_bets.prob_balance[bets - 1])
+    log_result("1/pdds betting", odds_min, odds_max, all_bets.odds_balance[bets - 1])
 
-    p_value = get_p_value(all_bets.result, all_bets.probability, all_bets.probability * (1 - all_bets.probability))
-
-    logger.info(f"P-value: {p_value}")
-
-    if p_value < 0.1:
-        logging.info("Reject H0 on 90% level.")
-    else:
-        logging.info("Cannot reject H0.")
-
-    if p_value < 0.05:
-        logging.info("Reject H0 on 95% level.")
-
-    if p_value < 0.01:
-        logging.info("Reject H0 on 99% level.")
+    get_p_value(all_bets.result, all_bets.probability, all_bets.probability * (1 - all_bets.probability))
 
     pass
 
