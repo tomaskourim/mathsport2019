@@ -37,40 +37,66 @@ def get_all_bets() -> pd.DataFrame:
 
 
 def get_betting_results(all_bets: pd.DataFrame) -> pd.DataFrame:
-    naive_betting_win = []
-    prob_betting_win = []
-    odds_betting_win = []
+    betting_win_naive = []
+    betting_win_prob = []
+    betting_win_odds = []
+
+    expected_betting_win_naive = []
+    expected_betting_win_prob = []
+    expected_betting_win_odds = []
+
+    variance_betting_win_naive = []
+    variance_betting_win_prob = []
+    variance_betting_win_odds = []
 
     balance_naive = [0]
     balance_prob = [0]
     balance_odds = [0]
     for index, bet in all_bets.iterrows():
+        probability = bet.probability
+        odd = bet.odd
         if bet.result:
-            naive_betting_win.append(bet.odd - 1)
-            prob_betting_win.append(bet.probability * bet.odd - bet.probability)
-            odds_betting_win.append(1 - 1 / bet.odd)
+            betting_win_naive.append(odd - 1)
+            betting_win_prob.append(probability * odd - probability)
+            betting_win_odds.append(1 - 1 / odd)
         else:
-            naive_betting_win.append(-1)
-            prob_betting_win.append(-bet.probability)
-            odds_betting_win.append(-1 / bet.odd)
+            betting_win_naive.append(-1)
+            betting_win_prob.append(-probability)
+            betting_win_odds.append(-1 / odd)
 
-        balance_naive.append(balance_naive[index] + naive_betting_win[index])
-        balance_prob.append(balance_prob[index] + prob_betting_win[index])
-        balance_odds.append(balance_odds[index] + odds_betting_win[index])
+        balance_naive.append(balance_naive[index] + betting_win_naive[index])
+        balance_prob.append(balance_prob[index] + betting_win_prob[index])
+        balance_odds.append(balance_odds[index] + betting_win_odds[index])
+
+        expected_betting_win_naive.append(probability * odd - 1)
+        expected_betting_win_prob.append(probability * (probability * odd - 1))
+        expected_betting_win_odds.append(probability - 1 / odd)
+
+        variance_betting_win_naive.append(probability * (odd ** 2) * (1 - probability))
+        variance_betting_win_prob.append((probability ** 3) * (odd ** 2) * (1 - probability))
+        variance_betting_win_odds.append(probability * (1 - probability))
 
     all_bets.insert(0, "naive_balance", balance_naive[1:], True)
-    all_bets.insert(0, "naive_wins", naive_betting_win, True)
+    all_bets.insert(0, "naive_expected_wins", expected_betting_win_naive, True)
+    all_bets.insert(0, "naive_variance_wins", variance_betting_win_naive, True)
+    all_bets.insert(0, "naive_wins", betting_win_naive, True)
 
     all_bets.insert(0, "prob_balance", balance_prob[1:], True)
-    all_bets.insert(0, "prob_wins", prob_betting_win, True)
+    all_bets.insert(0, "prob_expected_wins", expected_betting_win_prob, True)
+    all_bets.insert(0, "prob_variance_wins", variance_betting_win_prob, True)
+    all_bets.insert(0, "prob_wins", betting_win_prob, True)
 
     all_bets.insert(0, "odds_balance", balance_odds[1:], True)
-    all_bets.insert(0, "odds_wins", odds_betting_win, True)
+    all_bets.insert(0, "odds_expected_wins", expected_betting_win_odds, True)
+    all_bets.insert(0, "odds_variance_wins", variance_betting_win_odds, True)
+    all_bets.insert(0, "odds_wins", betting_win_odds, True)
 
     return all_bets
 
 
-def get_p_value(observed_values: np.ndarray, expected_values: np.ndarray, variances: np.ndarray) -> float:
+def get_p_value(computing_type: str, observed_values: np.ndarray, expected_values: np.ndarray,
+                variances: np.ndarray) -> float:
+    logging.info(f"----------------------------------------\n\t\tTesting {computing_type}:")
     number_observations = len(observed_values)
     x_mean = sum(observed_values) / number_observations
     mu_hat = sum(expected_values) / number_observations
@@ -101,20 +127,25 @@ def get_p_value(observed_values: np.ndarray, expected_values: np.ndarray, varian
     return p_value
 
 
-def log_result(betting_type: str, minimum: float, maximum: float, final_balance: float):
+def log_result(betting_type: str, minimum: float, maximum: float, final_balance: float, expected_win: float,
+               variance: float):
     logger.info(
         f"{betting_type}: \
         Min = {minimum:.2f}; \
-        Max = {maximum:.2f}. \
-        Final balance: {final_balance:.2f}")
+        Max = {maximum:.2f}; \
+        Final balance: {final_balance:.2f}; \
+        Expected wins: {expected_win:.2f}; \
+        Variance: {variance:.2f}.")
+
+
+def get_expected_resulst(expected_wins: np.ndarray, variance_wins: np.ndarray) -> Tuple[float, float]:
+    return sum(expected_wins), sum(variance_wins)
 
 
 def generate_diagrams():
     all_bets = get_all_bets()
-
     all_bets = get_betting_results(all_bets)
-
-    bets = len(all_bets)
+    number_bets = len(all_bets)
 
     x_axis = range(1, len(all_bets) + 1)
     plt.plot(x_axis, all_bets.naive_balance, 'b-', label='naive')
@@ -124,18 +155,24 @@ def generate_diagrams():
     plt.ylabel('account balance')
 
     naive_min, naive_max, naive_min_coordinates = get_global_extremes_coordinates(all_bets.naive_balance)
+    naive_expected_win, naive_variance = get_expected_resulst(all_bets.naive_expected_wins,
+                                                              all_bets.naive_variance_wins)
     naive_min_annotation_coordinates = (naive_min_coordinates[0] - 60, naive_min_coordinates[1] + 0.3)
     plt.annotate('global min naive', xy=naive_min_coordinates, xytext=naive_min_annotation_coordinates,
                  arrowprops=dict(facecolor='black', shrink=0.01, width=1),
                  )
 
     prob_min, prob_max, prob_min_coordinates = get_global_extremes_coordinates(all_bets.prob_balance)
+    prob_expected_win, prob_variance = get_expected_resulst(all_bets.prob_expected_wins,
+                                                            all_bets.prob_variance_wins)
     prob_min_annotation_coordinates = (prob_min_coordinates[0] - 90, prob_min_coordinates[1] - 1)
     plt.annotate('global min probability and 1/odds', xy=prob_min_coordinates, xytext=prob_min_annotation_coordinates,
                  arrowprops=dict(facecolor='black', shrink=0.01, width=1),
                  )
 
     odds_min, odds_max, _ = get_global_extremes_coordinates(all_bets.odds_balance)
+    odds_expected_win, odds_variance = get_expected_resulst(all_bets.odds_expected_wins,
+                                                            all_bets.odds_variance_wins)
 
     plt.axhline(linewidth=0.5, color='k')
     plt.legend()
@@ -143,11 +180,17 @@ def generate_diagrams():
     plt.savefig('account_balance_development.pdf', bbox_inches='tight')
     plt.show()
 
-    log_result("Naive betting", naive_min, naive_max, all_bets.naive_balance[bets - 1])
-    log_result("Prob betting", prob_min, prob_max, all_bets.prob_balance[bets - 1])
-    log_result("1/pdds betting", odds_min, odds_max, all_bets.odds_balance[bets - 1])
+    log_result("Naive betting", naive_min, naive_max, all_bets.naive_balance[number_bets - 1], naive_expected_win,
+               naive_variance)
+    log_result("Prob betting", prob_min, prob_max, all_bets.prob_balance[number_bets - 1], prob_expected_win,
+               prob_variance)
+    log_result("1/odds betting", odds_min, odds_max, all_bets.odds_balance[number_bets - 1], odds_expected_win,
+               odds_variance)
 
-    get_p_value(all_bets.result, all_bets.probability, all_bets.probability * (1 - all_bets.probability))
+    get_p_value("result", all_bets.result, all_bets.probability, all_bets.probability * (1 - all_bets.probability))
+    get_p_value("naive", all_bets.naive_wins, all_bets.naive_expected_wins, all_bets.naive_variance_wins)
+    get_p_value("prob", all_bets.prob_wins, all_bets.prob_expected_wins, all_bets.prob_variance_wins)
+    get_p_value("odds", all_bets.odds_wins, all_bets.odds_expected_wins, all_bets.odds_variance_wins)
 
     pass
 
