@@ -103,7 +103,7 @@ def get_p_value(computing_type: str, observed_values: np.ndarray, expected_value
     var_hat = sum(variances) / number_observations
     logging.info(
         f"Observations: {number_observations}. \
-        Observed value: {x_mean}, expected value: {mu_hat}, standard deviation: {math.sqrt(var_hat)}")
+        Observed value: {x_mean:.3f}, expected value: {mu_hat:.3f}, standard deviation: {math.sqrt(var_hat):.3f}")
     expected_distribution = stat.norm()
 
     observed_value = math.sqrt(number_observations) * (x_mean - mu_hat) / math.sqrt(var_hat)
@@ -111,7 +111,7 @@ def get_p_value(computing_type: str, observed_values: np.ndarray, expected_value
     cdf_observed = expected_distribution.cdf(observed_value)
     p_value = min(cdf_observed, 1 - cdf_observed) * 2
 
-    logger.info(f"P-value: {p_value}")
+    logger.info(f"P-value: {p_value:.3f}")
 
     if p_value < 0.1:
         logging.info("Reject H0 on 90% level.")
@@ -133,9 +133,10 @@ def log_result(betting_type: str, minimum: float, maximum: float, final_balance:
         f"{betting_type}: \
         Min = {minimum:.2f}; \
         Max = {maximum:.2f}; \
-        Final balance: {final_balance:.2f}; \
-        Expected wins: {expected_win:.2f}; \
-        Variance: {variance:.2f}.")
+        Final bal: {final_balance:.2f}; \
+        ROI: {final_balance/abs(minimum):.2f} \
+        E_win: {expected_win:.2f}; \
+        Var: {variance:.2f}.")
 
 
 def get_expected_resulst(expected_wins: np.ndarray, variance_wins: np.ndarray) -> Tuple[float, float]:
@@ -180,11 +181,11 @@ def generate_diagrams():
     plt.savefig('account_balance_development.pdf', bbox_inches='tight')
     plt.show()
 
-    log_result("Naive betting", naive_min, naive_max, all_bets.naive_balance[number_bets - 1], naive_expected_win,
+    log_result("Naiv betting", naive_min, naive_max, all_bets.naive_balance[number_bets - 1], naive_expected_win,
                naive_variance)
     log_result("Prob betting", prob_min, prob_max, all_bets.prob_balance[number_bets - 1], prob_expected_win,
                prob_variance)
-    log_result("1/odds betting", odds_min, odds_max, all_bets.odds_balance[number_bets - 1], odds_expected_win,
+    log_result("Odds betting", odds_min, odds_max, all_bets.odds_balance[number_bets - 1], odds_expected_win,
                odds_variance)
 
     get_p_value("result", all_bets.result, all_bets.probability, all_bets.probability * (1 - all_bets.probability))
