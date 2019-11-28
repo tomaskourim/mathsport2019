@@ -188,7 +188,7 @@ Tennis is one of the oldest and most traditional sports, which is pursued
 \begin_layout Standard
 There are several different approaches in modeling and simulating tennis
  games.
- The most common ones use Markov chains as the baseline of the model, creating
+ The most common ones use Markov chains as the baseline model, creating
  Markov-like chains usually from one particular part of the game - set by
  set, game by game, point by point or even rally by rally 
 \begin_inset ERT
@@ -286,11 +286,11 @@ cite{kovalchik2015comparative}
 
 \begin_layout Standard
 The final quality of a prediction does not depend on the model used, but
- very strongly also on the input information used.
- Such information can contain data about players (ranking, current form,
- past head-to-head results), about the venue (surface, prize money, ranking
- points available) and very often also bookmaker's odds, which is actually
- sort of an aggregation of all relevant information 
+ very strongly also on the input information.
+ Such information can contain data about players (tournament ranking, current
+ form, past head-to-head results), about the venue (surface, prize money,
+ ranking points available) and very often also bookmaker's odds, which is
+ actually sort of an aggregation of all relevant information 
 \begin_inset ERT
 status open
 
@@ -309,8 +309,8 @@ cite{ja2016ddny}
 \end_layout
 
 \begin_layout Standard
-The present contribution considers the tennis match as a random walk, not
- insisting on its Markov property.
+The present contribution considers the tennis match as a random process,
+ not insisting on its Markov property.
  The match in fact consists of several such processes.
  A series of sets within a match, games within a set, points within a game
  or even strokes within a point can be all considered a random process and
@@ -352,11 +352,10 @@ best-of-five
  The transition probabilities are altered according to the last step of
  the walk using a memory parameter to either reward or punish success by
  increasing or decreasing its probability in the next step.
- It seems more than suitable to model tennis matches as the data suggest
+ It seems more than suitable for modelling tennis matches as the data suggest
  that a success in tennis yields another success, or in other words, that
  winning one particular part of the match increases the chances of winning
  the next part as well.
- This behavior is well described by introduced random walk model.
 \end_layout
 
 \begin_layout Standard
@@ -467,23 +466,8 @@ Naturally, the idea of process transitions depending on the history of process
  itself is not new.
  An inspiration can be found for instance in the statistical modeling of
  recurrent events in lifetime (reliability) analysis.
- Let us mention the continuous time hazard rate models as in 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-cite{percy2007scheduling}
-\end_layout
-
-\end_inset
-
- with the hazard rate changing after each event, implemented in the Cox
- regression model framework.
- As the case analyzed in the present paper is simpler, with discrete time
- and rather short process, the regression model is not considered (though
+ For the case analyzed in the present paper, with discrete time and only
+ several steps in a walk, the regression model is not considered (though
  the use of logistic regression is a natural generalization here) and the
  transition probabilities are changed just by multiplying them by a convenient
  parameter.
@@ -758,15 +742,15 @@ with
 \end_inset
 
 .
- Other alternatives of the model are available as well.
+ Other alternatives of the model can be considered as well.
  For example, parameter 
 \begin_inset Formula $\lambda$
 \end_inset
 
  can depend on available covariates in a logistic manner, the transition
  probabilities can depend explicitly not only on the last step, but on longer
- history or also on the number of steps, the walk can defined in a multidimensio
-nal space or on a graph, and other generalizations.
+ history or also on the number of steps, the walk can be defined in a multidimen
+sional space or on a graph, and other generalizations.
 \end_layout
 
 \begin_layout Standard
@@ -954,8 +938,8 @@ ts, the order is based on the www.oddsportal.com data and/or the respective
 \end_inset
 
  times 2:3.
- It suggests that bookmaker's odds can be used as a probability estimate,
- which is in accordance with previous results, for example 
+ It suggests that bookmaker's odds can be used as a winning probability
+ estimate, which is in accordance with previous results, for example 
 \begin_inset ERT
 status open
 
@@ -985,16 +969,9 @@ pre-match
 \emph on
  in-play
 \emph default
- odds as well, and can be thus used to evaluate the model quality in the
- real life setting (and of course, the dataset contains some basic information
- about the match, such as the tournament it is played on, respective players,
- starting time etc).
- The 2019 US Open was the first Grand Slam tournament the tool was deployed
- on and (similarly to almost all software products) it had some issues that
- only became apparent when deployed into production.
- They include mainly some inconsistencies in Tipsport betting website which
- then further caused the tool behaving in an unexpected way.
- Therefore, out of the 
+ odds as well, and can be thus used to evaluate the model quality in real
+ life setting.
+ There were 
 \begin_inset Formula $127$
 \end_inset
 
@@ -1002,21 +979,17 @@ pre-match
 \begin_inset Formula $448$
 \end_inset
 
- sets played in total during 2019 men tennis US Open, the tool only collected
- 
+ sets played in total during 2019 men tennis US Open, the created dataset
+ contains 
 \begin_inset Formula $423$
 \end_inset
 
- set odds.
- The 
-\emph on
-pre-match
-\emph default
- set odds (i.e.
- first set winning odds) as well as all relevant information regarding the
- match itself were collected by the tool primarily used to collect the training
- dataset, which is better tested and more robust, as well, and this information
- is thus completely available without missing data.
+ set odds (
+\begin_inset Formula $25$
+\end_inset
+
+ set odds missing due to website malfunction, not being provided by the
+ bookmaker or some other problems).
 \end_layout
 
 \begin_layout Section
@@ -1183,7 +1156,7 @@ noprefix "false"
 \begin_inset Formula $\lambda$
 \end_inset
 
- is the main subject of this paper and is described further.
+ is described further.
  Estimating the initial set winning probability is a major task by itself
  and represents one of the elementary problems in tennis modeling (and sports
  predictions in general).
@@ -1264,7 +1237,7 @@ Model evaluation
 \end_layout
 
 \begin_layout Standard
-In order to verify the model's accuracy, several tests were performed.
+In order to verify the model accuracy, several tests were performed.
  First, the dataset was divided into training and testing sets.
  The division can be done naturally by the order of games played.
  Given a specific time, past matches constitute to a training set, future
@@ -1300,20 +1273,8 @@ Next step in model evaluation is the estimation of parameter
 \end_inset
 
 .
- Training sets and maximal-likelihood estimates (MLE) 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-cite{rossi2018mathematical}
-\end_layout
-
-\end_inset
-
- were used for this task.
+ Training sets and maximal-likelihood estimates (MLE) were used for this
+ task.
  The likelihood function is defined as 
 \begin_inset Formula 
 \[
@@ -1683,20 +1644,8 @@ noprefix "false"
 \end_inset
 
 .
- Using the Lyapunov variant of Central Limit Theorem (CLT) 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-cite{billingsley1995probability}
-\end_layout
-
-\end_inset
-
-, the resulting random variable 
+ Using the Lyapunov variant of Central Limit Theorem (CLT), the resulting
+ random variable 
 \begin_inset Formula $y$
 \end_inset
 
