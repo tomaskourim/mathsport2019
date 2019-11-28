@@ -128,25 +128,31 @@ def get_p_value(computing_type: str, observed_values: np.ndarray, expected_value
 
 
 def log_result(betting_type: str, minimum: float, maximum: float, final_balance: float, expected_win: float,
-               variance: float):
+               standard_deviation: float):
     logger.info(
         f"{betting_type}: \
         Min = {minimum:.2f}; \
         Max = {maximum:.2f}; \
-        Final bal: {final_balance:.2f}; \
+        Profit: {final_balance:.2f}; \
         ROI: {final_balance/abs(minimum):.2f} \
         E_win: {expected_win:.2f}; \
-        Var: {variance:.2f}.")
+        Std_dev: {standard_deviation:.2f}.")
 
 
-def get_expected_resulst(expected_wins: np.ndarray, variance_wins: np.ndarray) -> Tuple[float, float]:
-    return sum(expected_wins), sum(variance_wins)
+def get_expected_results(expected_wins: np.ndarray, variance_wins: np.ndarray) -> Tuple[float, float]:
+    return sum(expected_wins),  math.sqrt(sum(variance_wins))
+
+
+def generate_plot(all_bets):
+    pass
 
 
 def generate_diagrams():
     all_bets = get_all_bets()
     all_bets = get_betting_results(all_bets)
     number_bets = len(all_bets)
+
+    generate_plot(all_bets)
 
     x_axis = range(1, len(all_bets) + 1)
     plt.plot(x_axis, all_bets.naive_balance, 'b-', label='naive')
@@ -156,24 +162,24 @@ def generate_diagrams():
     plt.ylabel('account balance')
 
     naive_min, naive_max, naive_min_coordinates = get_global_extremes_coordinates(all_bets.naive_balance)
-    naive_expected_win, naive_variance = get_expected_resulst(all_bets.naive_expected_wins,
+    naive_expected_win, naive_variance = get_expected_results(all_bets.naive_expected_wins,
                                                               all_bets.naive_variance_wins)
     naive_min_annotation_coordinates = (naive_min_coordinates[0] - 60, naive_min_coordinates[1] + 0.3)
-    plt.annotate('global min naive', xy=naive_min_coordinates, xytext=naive_min_annotation_coordinates,
-                 arrowprops=dict(facecolor='black', shrink=0.01, width=1),
-                 )
+    # plt.annotate('global min naive', xy=naive_min_coordinates, xytext=naive_min_annotation_coordinates,
+    #              arrowprops=dict(facecolor='black', shrink=0.01, width=1),
+    #              )
 
     prob_min, prob_max, prob_min_coordinates = get_global_extremes_coordinates(all_bets.prob_balance)
-    prob_expected_win, prob_variance = get_expected_resulst(all_bets.prob_expected_wins,
+    prob_expected_win, prob_variance = get_expected_results(all_bets.prob_expected_wins,
                                                             all_bets.prob_variance_wins)
     prob_min_annotation_coordinates = (prob_min_coordinates[0] - 90, prob_min_coordinates[1] - 1)
-    plt.annotate('global min probability and 1/odds', xy=prob_min_coordinates, xytext=prob_min_annotation_coordinates,
-                 arrowprops=dict(facecolor='black', shrink=0.01, width=1),
-                 )
+    # plt.annotate('global min probability and 1/odds', xy=prob_min_coordinates, xytext=prob_min_annotation_coordinates,
+    #              arrowprops=dict(facecolor='black', shrink=0.01, width=1),
+    #              )
 
     odds_min, odds_max, _ = get_global_extremes_coordinates(all_bets.odds_balance)
-    odds_expected_win, odds_variance = get_expected_resulst(all_bets.odds_expected_wins,
-                                                            all_bets.odds_variance_wins)
+    odds_expected_win, odds_std_dev = get_expected_results(all_bets.odds_expected_wins,
+                                                           all_bets.odds_variance_wins)
 
     plt.axhline(linewidth=0.5, color='k')
     plt.legend()
@@ -186,7 +192,7 @@ def generate_diagrams():
     log_result("Prob betting", prob_min, prob_max, all_bets.prob_balance[number_bets - 1], prob_expected_win,
                prob_variance)
     log_result("Odds betting", odds_min, odds_max, all_bets.odds_balance[number_bets - 1], odds_expected_win,
-               odds_variance)
+               odds_std_dev)
 
     get_p_value("result", all_bets.result, all_bets.probability, all_bets.probability * (1 - all_bets.probability))
     get_p_value("naive", all_bets.naive_wins, all_bets.naive_expected_wins, all_bets.naive_variance_wins)
