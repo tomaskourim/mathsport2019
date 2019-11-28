@@ -10,7 +10,7 @@
 theorems-ams-bytype
 \end_modules
 \maintain_unincluded_children false
-\language english
+\language british
 \language_package default
 \inputencoding utf8
 \fontencoding global
@@ -75,7 +75,7 @@ theorems-ams-bytype
 \paragraph_indentation default
 \is_math_indent 0
 \math_numbering_side default
-\quotes_style english
+\quotes_style british
 \dynamic_quotes 0
 \papercolumns 1
 \papersides 1
@@ -91,14 +91,14 @@ theorems-ams-bytype
 
 \begin_layout Title
 Tennis Match as Random Walk with Memory: Application to Grand Slam Matches
- Modeling
+ Modelling
 \end_layout
 
 \begin_layout Author
 
 \lang american
 Tomáš
-\lang english
+\lang british
  Kouřim
 \begin_inset Formula $^{1,2}$
 \end_inset
@@ -138,7 +138,7 @@ Institute of Information Theory and Automation,
 The contribution introduces a Bernoulli-like random walk with transition
  probabilities depending of its recent steps, thus implicitly depending
  on the entire walk history.
- The main objective is its application to modeling and then to prediction
+ The main objective is its application to modelling and then to prediction
  of tennis matches.
  The model is applied and tested on the tennis men Grand Slam tennis matches
  since 2009.
@@ -156,7 +156,7 @@ The contribution introduces a Bernoulli-like random walk with transition
 Key words:
 \series default
 \emph default
- Random walk, history dependent transition probability, tennis modeling,
+ Random walk, history dependent transition probability, tennis modelling,
  prediction, live betting
 \end_layout
 
@@ -186,7 +186,7 @@ Tennis is one of the oldest and most traditional sports, which is pursued
 \end_layout
 
 \begin_layout Standard
-There are several different approaches in modeling and simulating tennis
+There are several different approaches in modelling and simulating tennis
  games.
  The most common ones use Markov chains as the baseline model, creating
  Markov-like chains usually from one particular part of the game - set by
@@ -245,8 +245,8 @@ cite{dziedzic2015predicting,klaassen2003forecasting}
 
 \end_inset
 
-, those focusing on the modeling the match development (the mentioned Markov-lik
-e models), and also concentrated to partial results during a match - 
+, those focusing on the modelling the match development (the mentioned Markov-li
+ke models), and also concentrated to partial results during a match - 
 \emph on
 in-play 
 \emph default
@@ -314,7 +314,7 @@ The present contribution considers the tennis match as a random process,
  The match in fact consists of several such processes.
  A series of sets within a match, games within a set, points within a game
  or even strokes within a point can be all considered a random process and
- modeled using a random walk.
+ modelled using a random walk.
  These walks are well described by the tennis rules and there exist lots
  of data describing these random processes (i.e.
  various tennis result databases provided by the tennis federation as well
@@ -464,9 +464,9 @@ A basic type of a discrete time random walk is the Bernoulli walk, with
 \begin_layout Standard
 Naturally, the idea of process transitions depending on the history of process
  itself is not new.
- An inspiration can be found for instance in the statistical modeling of
+ An inspiration can be found for instance in the statistical modelling of
  recurrent events in lifetime (reliability) analysis.
- For the case analyzed in the present paper, with discrete time and only
+ For the case analysed in the present paper, with discrete time and only
  several steps in a walk, the regression model is not considered (though
  the use of logistic regression is a natural generalization here) and the
  transition probabilities are changed just by multiplying them by a convenient
@@ -754,7 +754,7 @@ sional space or on a graph, and other generalizations.
 \end_layout
 
 \begin_layout Standard
-The behavior of the proposed random walk types was analyzed in 
+The behaviour of the proposed random walk types was analysed in 
 \begin_inset ERT
 status open
 
@@ -918,10 +918,10 @@ home
 , however, as there are (usually) no home players on the international tournamen
 ts, the order is based on the www.oddsportal.com data and/or the respective
  tournament committees.
- On the other hand, if the bookmaker's favorite (i.e.
+ On the other hand, if the bookmaker's favourite (i.e.
  the player with better odds or the first listed player in case the odds
  are even) is considered, the situation changes significantly.
- The favorites won 
+ The favourites won 
 \begin_inset Formula $3307$
 \end_inset
 
@@ -1158,8 +1158,8 @@ noprefix "false"
 
  is described further.
  Estimating the initial set winning probability is a major task by itself
- and represents one of the elementary problems in tennis modeling (and sports
- predictions in general).
+ and represents one of the elementary problems in tennis modelling (and
+ sports predictions in general).
  For the purpose of this article an estimation based on bookmaker's odds
  will be used.
  Specifically, the closing odds (closing odds means the last odds available
@@ -1802,7 +1802,7 @@ $
 \end_layout
 
 \begin_layout Standard
-To further analyze the robustness of the model it is important to realize
+To further analyse the robustness of the model it is important to realize
  the structure of the data.
  So far, the player, whose winning probability was estimated, was chosen
  arbitrarily based on some external (more or less random) order.
@@ -1814,7 +1814,8 @@ To further analyze the robustness of the model it is important to realize
 .
  In such a dataset it is not very difficult to estimate the average winning
  probability.
- The situation changes if the bookmaker's favorite is considered for predictions.
+ The situation changes if the bookmaker's favourite is considered for prediction
+s.
  Performing the same tests as described in the previous paragraph the data
  allows to reject the null hypothesis (on a 
 \begin_inset Formula $95\%$
@@ -1853,7 +1854,7 @@ ty
 \end_inset
 
  percentage points in first set winning probability.
- Except for the biggest favorites (with first set winning probability over
+ Except for the biggest favourites (with first set winning probability over
  
 \begin_inset Formula $90\%$
 \end_inset
@@ -2126,7 +2127,7 @@ noprefix "false"
 \begin_inset Formula $3$
 \end_inset
 
- additional bets that were canceled due to one of the players forfeiting
+ additional bets that were cancelled due to one of the players forfeiting
  the match because of injury) with the total amount 
 \begin_inset Formula $59.85U$
 \end_inset
@@ -2227,7 +2228,7 @@ Alternative betting strategies
 \end_layout
 
 \begin_layout Standard
-Chosing the correct betting strategy is one of the key elements of successful
+Choosing the correct betting strategy is one of the key elements of successful
  betting.
  It depends on the underlying model, available bookmaker's odds, bankroll,
  internal bookmaker's policies and many other parameters.
@@ -2751,11 +2752,7 @@ Expected profit
 
 \begin_layout Plain Layout
 Profit std.
- 
-\lang british
-dev
-\lang english
-.
+ dev.
 \end_layout
 
 \end_inset
@@ -3062,7 +3059,7 @@ cite{ja2019apmat}
 
 .
  This paper shows that even the rather simple version presented here shows
- sufficient flexibility and can be applied to tennis matches modeling.
+ sufficient flexibility and can be applied to tennis matches modelling.
  The model was first tested statistically on historical data and the optimal
  model parameters were computed using numerical methods.
  The results were then tested in real 
