@@ -1837,6 +1837,47 @@ s.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename C:/Users/1/workspace/mathsport2019/paper/conference_paper/probabilities_histogram.png
+	width 100text%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:First-set-winning"
+
+\end_inset
+
+First set winning probability 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ histogram.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Finally, the testing data can be divided into groups using the initial probabili
 ty 
 \begin_inset Formula $p_{0}$
@@ -1912,52 +1953,7 @@ noprefix "false"
 \begin_inset Float figure
 wide false
 sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename C:/Users/1/workspace/mathsport2019/paper/conference_paper/probabilities_histogram.png
-	width 100text%
-
-\end_inset
-
-
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:First-set-winning"
-
-\end_inset
-
-First set winning probability 
-\begin_inset Formula $p_{0}$
-\end_inset
-
- histogram.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -2180,49 +2176,6 @@ noprefix "false"
  within only 2 weeks, which is an outstanding performance.
 \end_layout
 
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Graphics
-	filename ../../betting_analysis/account_balance_development.pdf
-	width 100text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Account-balance-development"
-
-\end_inset
-
-Account balance development for different betting strategies.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Subsection
 Alternative betting strategies
 \end_layout
@@ -2312,7 +2265,7 @@ noprefix "false"
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -2715,7 +2668,7 @@ Theoretical values of wins and variances for different betting strategies.
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -3017,6 +2970,45 @@ name "tab:The-results-of"
 
 The results of different betting strategies applied to US Open betting using
  the presented model.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../betting_analysis/account_balance_development.pdf
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Account-balance-development"
+
+\end_inset
+
+Account balance development for different betting strategies.
 \end_layout
 
 \end_inset
