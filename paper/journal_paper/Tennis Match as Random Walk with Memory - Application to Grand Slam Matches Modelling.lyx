@@ -2259,6 +2259,30 @@ noprefix "false"
 \end_inset
 
 .
+ The figure shows that the general shape of balance development is very
+ similar for all three strategies.
+ This is caused by the fact that all strategies bet on the same opportunities,
+ i.e.
+ only when the expected win from the bookmaker's odds is positive according
+ to the presented model (
+\begin_inset Formula $a_{i}>\frac{1}{p_{i}}$
+\end_inset
+
+ holds for some offered betting opportunity), and only differ in the amount
+ bet.
+ The naive strategy then reaches the most extreme values, which is caused
+ by its variance, the biggest among selected variants (as shown in Table
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:strategies"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Standard
