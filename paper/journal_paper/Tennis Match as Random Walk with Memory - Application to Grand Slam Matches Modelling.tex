@@ -101,14 +101,14 @@ on the modelling the match development (the mentioned Markov-like
 models), and also concentrated to predict probabilities of partial results during a match ---
 \cite{hunter2009can}, this paper (focusing
 on the prediction of \emph{in-play }set results). Comparison of some
-of the existing methods can be found in Kovalchik \cite{kovalchik2015comparative}.
+of the existing methods can be found in \cite{kovalchik2015comparative}.
 
 The final quality of a prediction does not depend on the model used,
 but very strongly also on the input information. Such information
 can contain data about players (tournament ranking, current form,
 past head-to-head results), about the venue (surface, prize money,
 ranking points available) and very often also bookmaker's odds, which
-is actually sort of an aggregation of all relevant information \cite{ja2016ddny}.
+is actually sort of an aggregation of all relevant information as shown in \cite{ja2016ddny}.
 Bookmaker's odds also serve as an universal benchmark for any prediction
 method and models outperforming bookmakers are thus especially interesting.
 
@@ -118,12 +118,12 @@ several such processes. A series of sets within a match, games within
 a set, points within a game or even strokes within a point can be
 all considered a random process and modelled using a random walk.
 These walks are well described by the tennis rules and there exist
-lots of data describing these random processes (i.e. various tennis
+lots of data describing these random processes (\emph{i.e.} various tennis
 result databases provided by the tennis federation as well as many
 private subjects). An analysis of non-Markov development in tennis
 matches has been provided already in \cite{ja2015ddny}. In the present
 paper, the random walk consisting of a sequence of sets within a match
-is studied. Matches played as a \emph{best-of-five}, i.e. the men
+is studied. Matches played as a \emph{best-of-five}, \emph{i.e.} the men
 Grand Slam tournaments, are considered. In these matches, up to $5$
 steps of the random walk can be observed. The contribution presents
 a new version of random walk model with varying transition probabilities
@@ -151,12 +151,12 @@ concludes this paper.
 A basic type of a discrete time random walk is the Bernoulli walk,
 with random steps (denote them $X_{i}$ at stage $i$) $X_{i}=\pm1$,
 with constant transition probability $P(X_{i}=1)=p_{0}$. It is a
-representation of a Markov chain, i.e. a memory-less random process.
+representation of a Markov chain, \emph{i.e.} a memory-less random process.
 It may fit perfectly to many real processes, however, many others,
 including the tennis match development, are more complex, and a memory
 element has to be introduced in order to correctly describe them.
 Then $p_{0}$ can be regarded as an input parameter based on initial
-match conditions, and then the transition probabilities evolve depending
+match conditions, and the transition probabilities evolve depending
 on the match progress.
 
 Naturally, the idea of process transitions depending on the history
@@ -168,25 +168,23 @@ considered (though the use of logistic regression is a natural generalization
 here) and the transition probabilities are changed just by multiplying
 them by a convenient parameter. An inspiration to such a modification
 of Bernoulli random walk can be found in several papers where the
-length of step was changed in a similar way. Loic Turban presented
+length of step was changed in a similar way. \cite{turban2010random} presented
 a model of a one-dimensional random walk with memory introduced through
-varying step size in \cite{turban2010random}. In the paper, it is
+varying step size. In the paper, it is
 assumed that the step size in the direction of the last step will
 be lowered by a coefficient $\lambda$ and the step in the opposite
 direction will be prolonged so that the sum of absolute values of
 the steps remains constant and equal to $2$. The goal is to stabilize
-the process. Another interesting variant of model is presented in
-Schaltz and Trimper \cite{schutz2004elephants} introducing a special
+the process. Another interesting variant of model is presented in \cite{schutz2004elephants} introducing a special
 type of a random walk with the random increment at time step $t$
 depending on the full history of the process (compared to an elephant's
 memory in the paper). The walk tends to repeat `good decisions'
-(i.e. steps from history). The present application keeps constant
-steps length but instead changes the transition probabilities in a
-similar manner.
+(\emph{i.e.} steps from history). The present application keeps constant
+steps length but instead changes the transition probabilities.
 
 \subsection{Transition probabilities dependent on process history}
 
-The concept of the model has been introduced in \cite{ja2017ddny}.
+The concept of the model has been introduced by \cite{ja2017ddny}.
 It is based on the standard random walk with steps $X_{i}=\pm1,\,i=1,2,...$.
 The distribution of the first random variable $X_{1}$ is given by
 a starting parameter $p_{0}\in[0,\,1]$, so that $P(X_{1}=1)=p_{0}$
@@ -233,7 +231,7 @@ or also on the number of steps, the walk can be defined in a multidimensional
 space or on a graph, and other generalizations.
 
 The behaviour of the proposed random walk types was analysed in \cite{ja2017ddny},
-focusing on the development after a large number of steps (i.e. asymptotic
+focusing on the development after a large number of steps (\emph{i.e.} asymptotic
 properties). In the present application the walk consists of just
 a small number of steps, the long-run properties overview is thus
 omitted here. The main task of this paper is therefore assessing the
@@ -241,7 +239,7 @@ initial probability $p_{0}$ and reliable estimation of parameters
 $\lambda$. Another task is to recognize which type of model is the
 most convenient. In the following real data analysis the `success
 rewarded' model variant was selected, after a thorough data analysis
-proved that tennis match develops according to this model type \cite{ja2014ddny}.
+proved that tennis match develops according to this model type as shown in \cite{ja2014ddny}.
 
 \section{Data description\label{sec:Data-description}}
 
@@ -251,11 +249,11 @@ dataset contains the results from all Grand Slam tournaments from
 2009 to 2018 and corresponding Pinnacle Sports bookmaker's odds (Pinnacle
 Sports bookmaker was chosen as it is considered leading in the sports
 betting industry). It was created using data publicly available from
-website www.oddsportal.com. Every year 4 Grand Slam tournaments (i.e.
+website www.oddsportal.com. Every year 4 Grand Slam tournaments (\emph{i.e.}
 Australian Open, French Open, The Wimbledon and US Open) are played,
 making it $40$ tournaments during the selected period. Each Grand
 Slam has $128$ participants in the men singles category played in
-a single-elimination system (i.e. $127$ games per tournament). Thus,
+a single-elimination system (\emph{i.e.} $127$ games per tournament). Thus,
 there were $5080$ matches available altogether. Some matches were
 not finished due to one of the players forfeiting and such matches
 were omitted from the dataset. Matches without bookmaker's odds were
@@ -272,12 +270,12 @@ player listed first would be normally considered as `home', however,
 as there are (usually) no home players on the international tournaments,
 the order is based on the www.oddsportal.com data and/or the respective
 tournament committees. On the other hand, if the bookmaker's favourite
-(i.e. the player with better odds or the first listed player in case
+(\emph{i.e.} the player with better odds or the first listed player in case
 the odds are even) is considered, the situation changes significantly.
 The favourites won $3307$ matches in total, mostly 3:0, and lost
 $311$ times 0:3, $347$ times 1:3 and $290$ times 2:3. It suggests
 that bookmaker's odds can be used as a winning probability estimate,
-which is in accordance with previous results, for example \cite{ja2016ddny}.
+which is in accordance with previous results, for example in \cite{ja2016ddny}.
 
 Evaluation dataset was created in order to further validate the quality
 of the presented model. It consists of the 2019 men singles US Open
@@ -295,7 +293,7 @@ the bookmaker or some other problems).
 
 Original inspiration of the random walk described in Section \ref{sec:Models-of-random}
 is based on intensive study of historical sport results and their
-development. The data suggest that the probability of success (i.e.
+development. The data suggest that the probability of success (\emph{i.e.}
 scoring, winning a set or a point etc.) evolves according to the random
 walk with varying probabilities. Moreover, it follows from the data
 that sports can be very roughly divided into two categories. Sports
@@ -339,7 +337,6 @@ to obtain probabilities, which in case of only two possible outcomes
 \[
 p_{i}=\frac{1}{a_{i}}-(G-1)[1-\frac{1}{a_{i}G}+2\omega(\frac{1}{a_{i}G}-0.5)],\;i\in\{1,\,2\},
 \]
-
 where $p_{i}$ are the unknown first set winning probabilities, $a_{i}$
 the corresponding odds provided by bookmaker and $G=\sum_{i=1}^{2}\frac{1}{a_{i}}$.
 A parameter $\omega\in[0,\,1]$ is used to spread bookmaker's margin
@@ -357,13 +354,12 @@ a specific time, past matches constitute to a training set, future
 matches to a testing set. For the purpose of this paper, the split
 was done on a yearly basis, the data from one previous tennis season
 were used as a training set to predict winning probabilities in the
-following season, considered the testing set (i.e. 2010 was the first
+following season, considered the testing set (\emph{i.e.} 2010 was the first
 season used as testing data, 2017 was the last season used as training
 data), making it 9 training/testing splits together. Another approach
 to dataset splitting is to consider data from all previous years as
 testing data and from one future year as training data, however, previous
-study shows that the difference between these two approaches is negligible
-\cite{ja2016ddny}.
+study by \cite{ja2016ddny} shows that the difference between these two approaches is negligible.
 
 Next step in model evaluation is the estimation of parameter $\lambda$.
 Training sets and maximal-likelihood estimates (MLE) were used for
@@ -376,7 +372,7 @@ in the training dataset, $p_{i}$ is Player A's winning probability
 in the $i-th$ set obtained using the method described above for each
 match, and $x_{i}$ is the result of the $i-th$ set, $x_{i}=1$ if
 Player A won the $i-th$ set, $x_{i}=0$ otherwise. For computational
-reasons the \emph{log-likelihood }$L_{l}=log(L)$ was used, i.e. the
+reasons the \emph{log-likelihood }$L_{l}=log(L)$ was used, \emph{i.e.} the
 function 
 \[
 L_{l}=\sum_{i=1}^{N_{train}}log(x_{i}p_{i}+(1-x_{i})(1-p_{i}))
@@ -440,7 +436,7 @@ contains all sets from the testing data. Quite the opposite, the model
 assumes that the winning probability of a set directly depends on
 the winning probability of the previous set. This can be easily solved
 by splitting the testing dataset into $4$ subsets containing only
-results from single set of each match, i.e. sets $2$, $3$, $4$
+results from single set of each match, \emph{i.e.} sets $2$, $3$, $4$
 and $5$ (if they were played). The matches can be considered independent
 from each other and so can be the $i-th$ sets of respective matches.
 
@@ -456,12 +452,11 @@ subsets created according to some real life based criteria. The natural
 way how to create such subsets is dividing the matches to the $4$
 different tournaments. This refining yields $180$ subsets: $4$ sets
 in each match evaluated, $4+1$ tournaments every year, $9$ years
-for testing. Using $95%\%
-$ confidence level, only $6$ of the $180$ subsets have data strong
+for testing. Using $95\%$ confidence level, only $6$ of the $180$ subsets have data strong
 enough to reject the null hypothesis. It is worth mentioning that
 the size of some of the datasets regarding fifth sets is only slightly
 above $20$ observations, which can interfere with the assumptions
-justifying the use of Central Limit Theorem.
+justifying the use of CLT.
 
 To further analyse the robustness of the model it is important to
 realize the structure of the data. So far, the player, whose winning
@@ -474,9 +469,8 @@ predictions. Performing the same tests as described in the previous
 paragraph the data allows to reject the null hypothesis (on a $95\%$
 confidence level) on $5$ subsets containing all tournaments and $8$
 single tournament subsets (out of $180$ subsets total).
-
 \begin{figure}
-\centering{}\includegraphics[width=1\textwidth]{C:/Users/1/workspace/mathsport2019/paper/conference_paper/probabilities_histogram}\caption{\label{fig:First-set-winning}First set winning probability $p_{0}$
+\centering{}\includegraphics[width=1\textwidth]{../conference_paper/probabilities_histogram}\caption{\label{fig:First-set-winning}First set winning probability $p_{0}$
 histogram.}
 \end{figure}
 
@@ -491,18 +485,8 @@ Out of the $180$ newly created odds-based subgroups, only $9$ have
 data strong enough to reject $H_{0}$ on a $95\%$ confidence level.
 The entire results of the hypothesis testing (the \emph{p-values }of
 respective tests) can be seen on Fig. \ref{fig:p-values-of-hypothesis}.
-More detailed division, i.e. by tournament and odds, was not performed
+More detailed division, \emph{i.e.} by tournament and odds, was not performed
 as the resulting datasets would not contain enough data.
-
-\begin{figure}
-\begin{centering}
-\includegraphics[width=1\textwidth]{C:/Users/1/workspace/mathsport2019/paper/conference_paper/hypothesis_testing.PNG}\caption{\emph{\label{fig:p-values-of-hypothesis}p-values} of hypothesis tests
-for different testing sets. Red are marked those allowing to reject
-$H_{0}$ on 99\% confidence level, orange on 95\% and yellow on 90\%
-confidence level (or dark, grey and pale highlighting respectively for grayscale print).}
-\par\end{centering}
-\centering{}
-\end{figure}
 
 Overall, the model was tested on $360$ different subsets and only
 $22$ of them ($6.1\%$) provided enough evidence to reject $H_{0}$
@@ -511,11 +495,17 @@ and there is no pattern among them, indicating there is no systematic
 bias in the model. The random walk with varying probabilities thus
 seems to be a robust model which can be used to precisely predict
 set winning probabilities in men tennis Grand Slam matches.
+\begin{figure}
+\centering{}\includegraphics[width=1\textwidth]{../conference_paper/hypothesis_testing.PNG}\caption{\emph{\label{fig:p-values-of-hypothesis}p-values} of hypothesis tests
+for different testing sets. Red are marked those allowing to reject
+$H_{0}$ on 99\% confidence level, orange on 95\% and yellow on 90\%
+confidence level (or dark, grey and pale highlighting respectively for grayscale print).}
+\end{figure}
 
 \section{Model testing\label{sec:Test-by-betting}}
 
 The model was implemented and tested in real life setup where it actively
-bet in-play against Tipsport, the biggest bookmaker in the Czech Republic.
+bet \emph{ in-play} against Tipsport, the biggest bookmaker in the Czech Republic.
 The test was set up in the following manner.
 
 An automated betting and odds scraping tool developed using the Python
@@ -559,11 +549,11 @@ and the detailed description of them is beyond the scope of this paper.
 Besides the implemented strategy, where an amount proportional to
 $p$ was bet on each selected opportunity, two other basic betting
 strategies were applied to test the model. A strategy where always
-$\frac{1}{a}$, i.e. the inverse value of odds, was bet, and a naive
+$\frac{1}{a}$, \emph{i.e.} the inverse value of odds, was bet, and a naive
 strategy with simply $1$ unit put on every bet. The strategies differ
 in the expected wins and their variance. The theoretical properties
 of the betting strategies can be observed in Table \ref{tab:strategies}
-with the special case where $p=\frac{1}{a}$, i.e. in case of fair
+with the special case where $p=\frac{1}{a}$, \emph{i.e.} in case of fair
 odds \cite{ja2015ddny}. The results of the different betting strategies
 applied together with the presented model to bet on 2019 men US Open
 (actual for probability based strategy and theoretical for other strategies)
@@ -572,7 +562,7 @@ account balance for different betting strategies is displayed on Fig.
 \ref{fig:Account-balance-development}. The figure shows that the
 general shape of balance development is very similar for all three
 strategies. This is caused by the fact that all strategies bet on
-the same opportunities, i.e. only when the expected win from the bookmaker's
+the same opportunities, \emph{i.e.} only when the expected win from the bookmaker's
 odds is positive according to the presented model ($a_{i}>\frac{1}{p_{i}}$
 holds for some offered betting opportunity), and only differ in the
 amount bet. The naive strategy then reaches the most extreme values,
