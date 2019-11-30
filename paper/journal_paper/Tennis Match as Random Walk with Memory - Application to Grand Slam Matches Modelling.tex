@@ -470,7 +470,7 @@ paragraph the data allows to reject the null hypothesis (on a $95\%$
 confidence level) on $5$ subsets containing all tournaments and $8$
 single tournament subsets (out of $180$ subsets total).
 \begin{figure}
-\centering{}\includegraphics[width=1\textwidth]{../conference_paper/probabilities_histogram}\caption{\label{fig:First-set-winning}First set winning probability $p_{0}$
+\centering{}\includegraphics[width=0.8\textwidth]{../conference_paper/probabilities_histogram}\caption{\label{fig:First-set-winning}First set winning probability $p_{0}$
 histogram.}
 \end{figure}
 
@@ -512,7 +512,7 @@ An automated betting and odds scraping tool developed using the Python
 programming language and Selenium framework running on a remote server
 (Digital Ocean) was developed and deployed for the purpose of this
 paper. The tool operates with Tipsport's website and scrapes it for
-both \emph{pre-match }as well as\emph{ in-play} odds. It was set up
+both \emph{pre-match }as well as \emph{in-play} odds. It was set up
 to continuously observe Tipsport's odds offerings for 2019 men tennis
 US Open, especially the set winning odds, and store the odds together
 with some general information about the match, such as the respective
@@ -525,9 +525,9 @@ parameter. Every match was observed individually and after each finished
 set next set winning probabilities were computed using the presented
 model. Whenever the actual set winning odds offered by Tipsport for
 one of the players $a_{i}$ were higher than the probability implied
-set winning odds for that player computed by the model, i.e. $a_{i}>\frac{1}{p_{i}}$,
+set winning odds for that player computed by the model, \emph{i.e.} $a_{i}>\frac{1}{p_{i}}$,
 a bet was made. The amount bet was computed as $p_{i}U$, where $U$
-is a base bankroll dependent betting unit. This amount was further
+is a base bankroll-dependent betting unit. This amount was further
 rounded with precision CZK $1$ (due to betting limitations of Tipsport).
 Overall, $128$ bets were made (and $3$ additional bets that were
 cancelled due to one of the players forfeiting the match because of
@@ -550,11 +550,12 @@ Besides the implemented strategy, where an amount proportional to
 $p$ was bet on each selected opportunity, two other basic betting
 strategies were applied to test the model. A strategy where always
 $\frac{1}{a}$, \emph{i.e.} the inverse value of odds, was bet, and a naive
-strategy with simply $1$ unit put on every bet. The strategies differ
-in the expected wins and their variance. The theoretical properties
+strategy with simply $1$ unit put on every bet. 
+
+The strategies differ in the expected wins and their variance. The theoretical properties
 of the betting strategies can be observed in Table \ref{tab:strategies}
 with the special case where $p=\frac{1}{a}$, \emph{i.e.} in case of fair
-odds \cite{ja2015ddny}. The results of the different betting strategies
+odds (see \citealt{ja2015ddny}). The results of the different betting strategies
 applied together with the presented model to bet on 2019 men US Open
 (actual for probability based strategy and theoretical for other strategies)
 are shown in Table \ref{tab:The-results-of}. The development of the
@@ -641,7 +642,7 @@ be subject of further research.
 The source code containing all functionality mentioned in this article
 including the automated betting engine is freely available as open
 source at GitHub (https://github.com/tomaskourim/mathsport2019) together
-with a database containing all data that was used in this paper. Some
+with a database containing data used in this paper. Some
 more results can be also obtained from the same repository.
 
 \section*{Funding}
