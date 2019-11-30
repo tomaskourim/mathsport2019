@@ -134,13 +134,13 @@ def log_result(betting_type: str, minimum: float, maximum: float, final_balance:
         Min = {minimum:.2f}; \
         Max = {maximum:.2f}; \
         Profit: {final_balance:.2f}; \
-        ROI: {final_balance/abs(minimum):.2f} \
+        ROI: {final_balance / abs(minimum):.2f} \
         E_win: {expected_win:.2f}; \
         Std_dev: {standard_deviation:.2f}.")
 
 
 def get_expected_results(expected_wins: np.ndarray, variance_wins: np.ndarray) -> Tuple[float, float]:
-    return sum(expected_wins),  math.sqrt(sum(variance_wins))
+    return sum(expected_wins), math.sqrt(sum(variance_wins))
 
 
 def generate_plot(all_bets):
@@ -155,9 +155,10 @@ def generate_diagrams():
     generate_plot(all_bets)
 
     x_axis = range(1, len(all_bets) + 1)
-    plt.plot(x_axis, all_bets.naive_balance, 'b-', label='naive')
-    plt.plot(x_axis, all_bets.prob_balance, 'r-', label='probability')
-    plt.plot(x_axis, all_bets.odds_balance, 'y-', label='1/odds')
+    plt.plot(x_axis, all_bets.naive_balance, 'b--', label='naive', linewidth=0.9)
+    plt.plot(x_axis, all_bets.prob_balance, 'r-', label='probability', linewidth=0.9)
+    plt.plot(x_axis, all_bets.odds_balance, 'y-.', label='1/odds', linewidth=0.9)
+    plt.axis([0, len(all_bets), -4, 13])
     plt.xlabel('bet number')
     plt.ylabel('account balance')
 
@@ -184,8 +185,10 @@ def generate_diagrams():
     plt.axhline(linewidth=0.5, color='k')
     plt.legend()
 
-    plt.savefig('account_balance_development.pdf', bbox_inches='tight')
-    plt.show()
+    fig = plt.gcf()
+    fig.set_size_inches(7, 4.5)
+    fig.show()
+    fig.savefig('account_balance_development.pdf', bbox_inches='tight', dpi=300)
 
     log_result("Naiv betting", naive_min, naive_max, all_bets.naive_balance[number_bets - 1], naive_expected_win,
                naive_variance)
