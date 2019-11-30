@@ -1,0 +1,77 @@
+%% LyX 2.3.2-2 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[british]{imaman}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{natbib}
+%\usepackage[unicode=true,pdfusetitle,
+% bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
+% breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+% {hyperref}
+
+\usepackage{caption}
+\captionsetup[table]{name=\sc Table}
+\captionsetup[figure]{name=\sc Fig.}
+
+\input standard.tex
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%\addto\captions\british{\renewcommand{\figurename}{Fig.}}
+%\addto\captions\british{\renewcommand{\tablename}{tabdd.}}
+%\renewcommand\spanishtablename{Otro nombre}
+
+\makeatother
+
+\begin{document}
+\title{Tennis Match as Random Walk with Memory: Application to Grand Slam
+Matches Modelling}
+	\author{
+	{\sc Tomáš  Kouřim$^{\dagger}$}\\[2pt]
+	Faculty of Nuclear Sciences and Physical Engineering, \\
+	Czech Technical University in Prague.\\
+	{\rm $^{\dagger}$Corresponding author. Email: tomas.kourim@fjfi.cvut.cz\\[6pt]}
+{\sc and}\\[6pt]
+	{\sc Petr Volf}\\[2pt]
+	Institute of Information Theory and Automation,\\
+	Academy of Sciences of the Czech Republic.\\[6pt]
+{\rm [Received on 30 November 2019]}\vspace*{6pt}\\
+{For Mathsport 2019 special issue.}\vspace*{6pt}
+}
+
+\pagestyle{headings}
+\markboth{T. KOUŘIM AND P. VOLF}{\rm TENNIS MATCH AS RANDOM WALK WITH MEMORY}
+\maketitle
+\selectlanguage{british}%
+\begin{abstract}
+{The contribution introduces a Bernoulli-like random walk with transition
+probabilities depending of its recent steps, thus implicitly depending
+on the entire walk history. The main objective is its application
+to modelling and then to prediction of tennis matches. The model is
+applied and tested on men Grand Slam tennis tournaments since
+2009. The flexibility of the model is tested thoroughly on several
+datasets and the results are presented. It is shown that the model
+correctly describes the majority of all matches. Finally, the model
+is also used for the in-play real life betting with rather encouraging
+results.}
+
+{Random walk, history dependent transition
+probability, tennis modelling, prediction, live betting}
+\end{abstract}
+
+
+
+\bibliographystyle{IMANUM-BIB}
+\bibliography{../conference_paper/doktknih}
+
+\end{document}

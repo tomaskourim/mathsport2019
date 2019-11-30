@@ -1,0 +1,3122 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\begin_modules
+theorems-ams-bytype
+\end_modules
+\maintain_unincluded_children false
+\language british
+\language_package default
+\inputencoding utf8
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style british
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Tennis Match as Random Walk with Memory: Application to Grand Slam Matches
+ Modelling
+\end_layout
+
+\begin_layout Author
+
+\lang american
+Tomáš
+\lang british
+ Kouřim
+\begin_inset Formula $^{1,2}$
+\end_inset
+
+, Petr Volf
+\begin_inset Formula $^{2}$
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset Formula $^{1}$
+\end_inset
+
+ Faculty of Nuclear Sciences and Physical Engineering, 
+\begin_inset Newline newline
+\end_inset
+
+Czech Technical University in Prague
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset Formula $^{2}$
+\end_inset
+
+Institute of Information Theory and Automation,
+\begin_inset Newline newline
+\end_inset
+
+ Academy of Sciences of the Czech Republic
+\end_layout
+
+\begin_layout Abstract
+The contribution introduces a Bernoulli-like random walk with transition
+ probabilities depending of its recent steps, thus implicitly depending
+ on the entire walk history.
+ The main objective is its application to modelling and then to prediction
+ of tennis matches.
+ The model is applied and tested on the tennis men Grand Slam tennis matches
+ since 2009.
+ The flexibility of the model is tested thoroughly on several datasets and
+ the results are presented.
+ It is shown that the model correctly describes the majority of all matches.
+ Finally, the model is also used for the in-play real life betting with
+ rather encouraging results.
+\end_layout
+
+\begin_layout Abstract
+
+\series bold
+\emph on
+Key words:
+\series default
+\emph default
+ Random walk, history dependent transition probability, tennis modelling,
+ prediction, live betting
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Tennis is one of the oldest and most traditional sports, which is pursued
+ worldwide and on all possible levels.
+ It is an industry that operates with billions of dollars every year.
+ It is therefore no wonder that even in such a traditional sport as tennis
+ new methods and technologies are constantly being introduced.
+ Computer imaging is used in the hawk-eye technology helping to determine
+ whether a ball was out, material science allows to manufacture better and
+ better rackets and other equipment, medicine science develops new methods
+ of effective training etc.
+ Mathematics is becoming a very important part of tennis as well as it can
+ produce models simulating game situations and predicting their probabilities.
+ This can be useful for the trainers who can use such models to better prepare
+ their players for their matches, to detect and prevent frauds, but most
+ of all it is used for sports betting.
+ The market of sports betting is despite strict regulations continuously
+ growing both in revenues as in profits.
+ It is therefore no wonder that the demand for accurate sports models is
+ tremendous.
+\end_layout
+
+\begin_layout Standard
+There are several different approaches in modelling and simulating tennis
+ games.
+ The most common ones use Markov chains as the baseline model, creating
+ Markov-like chains usually from one particular part of the game - set by
+ set, game by game, point by point or even rally by rally 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{barnett2005combining,hunter2009can,newton2009monte,spanias2012predicting}
+\end_layout
+
+\end_inset
+
+.
+ Other approaches use some sort of regression (logistic, probit) 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{del2010differences}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{dziedzic2015predicting,klaassen2003forecasting}
+\end_layout
+
+\end_inset
+
+.
+ The methods can be also divided into those focusing on the match result
+ itself 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{dziedzic2015predicting,klaassen2003forecasting}
+\end_layout
+
+\end_inset
+
+, those focusing on the modelling the match development (the mentioned Markov-li
+ke models), and also concentrated to partial results during a match - 
+\emph on
+in-play 
+\emph default
+probabilities 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{hunter2009can}
+\end_layout
+
+\end_inset
+
+, this paper ( focusing on the prediction of 
+\emph on
+in-play 
+\emph default
+set results).
+ Comparison of some of the existing methods can be found in Kovalchik 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{kovalchik2015comparative}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The final quality of a prediction does not depend on the model used, but
+ very strongly also on the input information.
+ Such information can contain data about players (tournament ranking, current
+ form, past head-to-head results), about the venue (surface, prize money,
+ ranking points available) and very often also bookmaker's odds, which is
+ actually sort of an aggregation of all relevant information 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2016ddny}
+\end_layout
+
+\end_inset
+
+.
+ Bookmaker's odds also serve as an universal benchmark for any prediction
+ method and models outperforming bookmakers are thus especially interesting.
+\end_layout
+
+\begin_layout Standard
+The present contribution considers the tennis match as a random process,
+ not insisting on its Markov property.
+ The match in fact consists of several such processes.
+ A series of sets within a match, games within a set, points within a game
+ or even strokes within a point can be all considered a random process and
+ modelled using a random walk.
+ These walks are well described by the tennis rules and there exist lots
+ of data describing these random processes (i.e.
+ various tennis result databases provided by the tennis federation as well
+ as many private subjects).
+ An analysis of non-Markov development in tennis matches has been provided
+ already in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2015ddny}
+\end_layout
+
+\end_inset
+
+.
+ In the present paper, the random walk consisting of a sequence of sets
+ within a match is studied.
+ Matches played as a 
+\emph on
+best-of-five
+\emph default
+, i.e.
+ the men Grand Slam tournaments, are considered.
+ In these matches, up to 
+\begin_inset Formula $5$
+\end_inset
+
+ steps of the random walk can be observed.
+ The contribution presents a new version of random walk model with varying
+ transition probabilities implicitly depending on the history of the walk.
+ The transition probabilities are altered according to the last step of
+ the walk using a memory parameter to either reward or punish success by
+ increasing or decreasing its probability in the next step.
+ It seems more than suitable for modelling tennis matches as the data suggest
+ that a success in tennis yields another success, or in other words, that
+ winning one particular part of the match increases the chances of winning
+ the next part as well.
+\end_layout
+
+\begin_layout Standard
+The remainder of the paper is organized as follows: First, the model of
+ Bernoulli-like random walk with transition probabilities dependent on preceding
+ steps is introduced in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Models-of-random"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Data are described in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Data-description"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Model-description-and"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ the model is evaluated and its flexibility is tested on a historical dataset.
+ The quality of the model is assessed also via its use in real life betting
+ and the results are described in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Test-by-betting"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Finally, Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Conclusion"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ concludes this paper.
+\end_layout
+
+\begin_layout Section
+Models of random walk with memory
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Models-of-random"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A basic type of a discrete time random walk is the Bernoulli walk, with
+ random steps (denote them 
+\begin_inset Formula $X_{i}$
+\end_inset
+
+ at stage 
+\begin_inset Formula $i$
+\end_inset
+
+) 
+\begin_inset Formula $X_{i}=\pm1$
+\end_inset
+
+, with constant transition probability 
+\begin_inset Formula $P(X_{i}=1)=p_{0}$
+\end_inset
+
+.
+ It is a representation of a Markov chain, i.e.
+ a memory-less random process.
+ It may fit perfectly to many real processes, however, many others, including
+ the tennis match development, are more complex, and a memory element has
+ to be introduced in order to correctly describe them.
+ Then 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ can be regarded as an input parameter based on initial match conditions,
+ and then the transition probabilities evolve depending on the match progress.
+\end_layout
+
+\begin_layout Standard
+Naturally, the idea of process transitions depending on the history of process
+ itself is not new.
+ An inspiration can be found for instance in the statistical modelling of
+ recurrent events in lifetime (reliability) analysis.
+ For the case analysed in the present paper, with discrete time and only
+ several steps in a walk, the regression model is not considered (though
+ the use of logistic regression is a natural generalization here) and the
+ transition probabilities are changed just by multiplying them by a convenient
+ parameter.
+ An inspiration to such a modification of Bernoulli random walk can be found
+ in several papers where the length of step was changed in a similar way.
+ Loic Turban presented a model of a one-dimensional random walk with memory
+ introduced through varying step size in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{turban2010random}
+\end_layout
+
+\end_inset
+
+.
+ In the paper, it is assumed that the step size in the direction of the
+ last step will be lowered by a coefficient 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ and the step in the opposite direction will be prolonged so that the sum
+ of absolute values of the steps remains constant and equal to 
+\begin_inset Formula $2$
+\end_inset
+
+.
+ The goal is to stabilize the process.
+ Another interesting variant of model is presented in Schaltz and Trimper
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{schutz2004elephants}
+\end_layout
+
+\end_inset
+
+ introducing a special type of a random walk with the random increment at
+ time step 
+\begin_inset Formula $t$
+\end_inset
+
+ depending on the full history of the process (compared to an elephant's
+ memory in the paper).
+ The walk tends to repeat ``good decisions'' (i.e.
+ steps from history).
+ The present application keeps constant steps length but instead changes
+ the transition probabilities in a similar manner.
+\end_layout
+
+\begin_layout Subsection
+Transition probabilities dependent on process history
+\end_layout
+
+\begin_layout Standard
+The concept of the model has been introduced in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2017ddny}
+\end_layout
+
+\end_inset
+
+.
+ It is based on the standard random walk with steps 
+\begin_inset Formula $X_{i}=\pm1,\,i=1,2,...$
+\end_inset
+
+.
+ The distribution of the first random variable 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ is given by a starting parameter 
+\begin_inset Formula $p_{0}\in[0,\,1]$
+\end_inset
+
+, so that 
+\begin_inset Formula $P(X_{1}=1)=p_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $P(X_{1}=-1)=1-p_{0}$
+\end_inset
+
+.
+ After the 
+\begin_inset Formula $i$
+\end_inset
+
+-th step (for 
+\begin_inset Formula $i\ge1$
+\end_inset
+
+), the probability distribution of the next step 
+\begin_inset Formula $X_{i+1}$
+\end_inset
+
+ is given by the (random) probability 
+\begin_inset Formula $p_{i}$
+\end_inset
+
+, which depends on a coefficient 
+\begin_inset Formula $\lambda\in[0,\,1]$
+\end_inset
+
+ and the last random variable 
+\begin_inset Formula $X_{i},\,i=1,2,...$
+\end_inset
+
+: 
+\begin_inset Formula 
+\[
+p_{i}=\lambda p_{i-1}\,\,\mbox{for}\,\,X_{i}=1,
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+p_{i}=1-\lambda(1-p_{i-1})\,\,\mbox{for}\,\,X_{i}=-1,
+\]
+
+\end_inset
+
+which yields that 
+\begin_inset Formula 
+\begin{equation}
+p_{i}=\lambda p_{i-1}+\frac{1}{2}(1-\lambda)(1-X_{i}).\label{eq:pi-punish}
+\end{equation}
+
+\end_inset
+
+The case with 
+\begin_inset Formula $\lambda=1$
+\end_inset
+
+ corresponds to the standard Markov random walk with constant transition
+ probability, with 
+\begin_inset Formula $\lambda=0$
+\end_inset
+
+ the walk would be a series of alternating steps to the left and right with
+ only the first step direction being chosen randomly.
+ Therefore only 
+\begin_inset Formula $\lambda\in(0,\,1)$
+\end_inset
+
+ is further considered.
+ As after each 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+success
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+ (
+\begin_inset Formula $X_{i}=1$
+\end_inset
+
+) the probability of its repetition in the next step decreases, we can call
+ this scheme a 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+success punished
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+ model.
+ Naturally, the opposite, a 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+success rewarded
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+ variant, is possible, which leads to a similar expression for 
+\begin_inset Formula $\bar{p}_{i}=1-p_{i}$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{equation}
+\bar{p}_{i}=\lambda\bar{p}_{i-1}+\frac{1}{2}(1-\lambda)(1-X_{i})\label{eq:pi-reward}
+\end{equation}
+
+\end_inset
+
+for 
+\begin_inset Formula $i=1,2,...$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Another alternative is a random walk with each event influencing the further
+ development of the walk differently, which can be expressed as
+\begin_inset Formula 
+\begin{equation}
+p_{i}=\frac{1}{2}[(1+X_{i})\lambda_{0}p_{i-1}+(1-X_{i})(1-\lambda_{1}(1-p_{i-1}))],\label{eq:pi-2lambda}
+\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $\lambda_{0},\,\lambda_{1}\in(0,\,1)$
+\end_inset
+
+, or a similar model for parameters 
+\begin_inset Formula $\bar{p}_{i}=1-p_{i}$
+\end_inset
+
+.
+ Other alternatives of the model can be considered as well.
+ For example, parameter 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ can depend on available covariates in a logistic manner, the transition
+ probabilities can depend explicitly not only on the last step, but on longer
+ history or also on the number of steps, the walk can be defined in a multidimen
+sional space or on a graph, and other generalizations.
+\end_layout
+
+\begin_layout Standard
+The behaviour of the proposed random walk types was analysed in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2017ddny}
+\end_layout
+
+\end_inset
+
+, focusing on the development after a large number of steps (i.e.
+ asymptotic properties).
+ In the present application the walk consists of just a small number of
+ steps, the long-run properties overview is thus omitted here.
+ The main task of this paper is therefore assessing the initial probability
+ 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ and reliable estimation of parameters 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ Another task is to recognize which type of model is the most convenient.
+ In the following real data analysis the 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+success rewarded
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+ model variant was selected, after a thorough data analysis proved that
+ tennis match develops according to this model type 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2014ddny}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Data description
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Data-description"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Two datasets were acquired for the purpose of this paper, one for model
+ development and the other for model testing.
+ The development dataset contains the results from all Grand Slam tournaments
+ from 2009 to 2018 and corresponding Pinnacle Sports bookmaker's odds (Pinnacle
+ Sports bookmaker was chosen as it is considered leading in the sports betting
+ industry).
+ It was created using data publicly available from website www.oddsportal.com.
+ Every year 4 Grand Slam tournaments (i.e.
+ Australian Open, French Open, The Wimbledon and US Open) are played, making
+ it 
+\begin_inset Formula $40$
+\end_inset
+
+ tournaments during the selected period.
+ Each Grand Slam has 
+\begin_inset Formula $128$
+\end_inset
+
+ participants in the men singles category played in a single-elimination
+ system (i.e.
+ 
+\begin_inset Formula $127$
+\end_inset
+
+ games per tournament).
+ Thus, there were 
+\begin_inset Formula $5080$
+\end_inset
+
+ matches available altogether.
+ Some matches were not finished due to one of the players forfeiting and
+ such matches were omitted from the dataset.
+ Matches without bookmaker's odds were omitted as well.
+ The final dataset contains 
+\begin_inset Formula $4255$
+\end_inset
+
+ matches with complete data available, played by 
+\begin_inset Formula $432$
+\end_inset
+
+ players in total.
+ The most active player was Novak Djokovic, who participated in 
+\begin_inset Formula $188$
+\end_inset
+
+ matches.
+ On average, each player played 
+\begin_inset Formula $19.7$
+\end_inset
+
+ matches, with the median value of 
+\begin_inset Formula $8$
+\end_inset
+
+ matches played.
+ The most common result was 3:0, occurring 
+\begin_inset Formula $2138$
+\end_inset
+
+ times, on the other hand, 5 sets were played only 
+\begin_inset Formula $808$
+\end_inset
+
+ times.
+\end_layout
+
+\begin_layout Standard
+The order in which the players are listed is rather random.
+ The players listed first won 
+\begin_inset Formula $2201$
+\end_inset
+
+ in total, just slightly over the half.
+ The player listed first would be normally considered as 
+\begin_inset Quotes eld
+\end_inset
+
+home
+\begin_inset Quotes erd
+\end_inset
+
+, however, as there are (usually) no home players on the international tournamen
+ts, the order is based on the www.oddsportal.com data and/or the respective
+ tournament committees.
+ On the other hand, if the bookmaker's favourite (i.e.
+ the player with better odds or the first listed player in case the odds
+ are even) is considered, the situation changes significantly.
+ The favourites won 
+\begin_inset Formula $3307$
+\end_inset
+
+ matches in total, mostly 3:0, and lost 
+\begin_inset Formula $311$
+\end_inset
+
+ times 0:3, 
+\begin_inset Formula $347$
+\end_inset
+
+ times 1:3 and 
+\begin_inset Formula $290$
+\end_inset
+
+ times 2:3.
+ It suggests that bookmaker's odds can be used as a winning probability
+ estimate, which is in accordance with previous results, for example 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2016ddny}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Evaluation dataset was created in order to further validate the quality
+ of the presented model.
+ It consists of the 2019 men singles US Open matches, with the results and
+ set winning odds provided by Tipsport (the biggest Czech bookmaker).
+ The major difference between the two datasets is the fact that the evaluation
+ dataset contains not only 
+\emph on
+pre-match
+\emph default
+ odds, but
+\emph on
+ in-play
+\emph default
+ odds as well, and can be thus used to evaluate the model quality in real
+ life setting.
+ There were 
+\begin_inset Formula $127$
+\end_inset
+
+ matches and 
+\begin_inset Formula $448$
+\end_inset
+
+ sets played in total during 2019 men tennis US Open, the created dataset
+ contains 
+\begin_inset Formula $423$
+\end_inset
+
+ set odds (
+\begin_inset Formula $25$
+\end_inset
+
+ set odds missing due to website malfunction, not being provided by the
+ bookmaker or some other problems).
+\end_layout
+
+\begin_layout Section
+Application of random walk
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Model-description-and"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Original inspiration of the random walk described in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Models-of-random"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is based on intensive study of historical sport results and their development.
+ The data suggest that the probability of success (i.e.
+ scoring, winning a set or a point etc.) evolves according to the random
+ walk with varying probabilities.
+ Moreover, it follows from the data that sports can be very roughly divided
+ into two categories.
+ Sports played for a certain amount of time, such as soccer or ice-hockey,
+ evolve according to the walk defined by expression (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:pi-punish"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ On the other hand, sports where there is necessary to achieve certain number
+ of points, such as tennis or volleyball, appear to follow the pattern defined
+ in equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:pi-reward"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ Therefore the later approach is used to model a tennis game.
+\end_layout
+
+\begin_layout Standard
+The model is used to predict the winning probabilities of sets 
+\begin_inset Formula $2$
+\end_inset
+
+ through 
+\begin_inset Formula $5$
+\end_inset
+
+ and is constructed in a following manner.
+ For each match, the first set winning probability of Player A (the player
+ which is listed first in the database), 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+, is given by an initial probability and a coefficient 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ is fixed for the entire dataset.
+ In order to compute the second set winning probability, the result of the
+ first set is observed and second set winning probability is computed using
+ equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:pi-reward"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ This procedure is repeated for all remaining sets played (there can be
+ either 
+\begin_inset Formula $3$
+\end_inset
+
+, 
+\begin_inset Formula $4$
+\end_inset
+
+ or 
+\begin_inset Formula $5$
+\end_inset
+
+ sets played in total in a 
+\emph on
+best-of-five
+\emph default
+ tennis game).
+\end_layout
+
+\begin_layout Subsection
+Initial probability derivation
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Initial-probability-derivation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The model (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:pi-punish"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) or (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:pi-reward"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) of a random walk with varying probabilities described in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Models-of-random"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ contains two parameters, initial set winning probability 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ and the memory coefficient 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ Finding the optimal value of 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ is described further.
+ Estimating the initial set winning probability is a major task by itself
+ and represents one of the elementary problems in tennis modelling (and
+ sports predictions in general).
+ For the purpose of this article an estimation based on bookmaker's odds
+ will be used.
+ Specifically, the closing odds (closing odds means the last odds available
+ before the match started) by Pinnacle Sports bookmaker for the first set
+ result are used to estimate the probabilities of each player winning the
+ first set.
+ Such odds represent a good estimation of the underlying winning probability
+ and are considered as a baseline in the sports betting industry.
+ The odds, however, have to be transformed into probabilities.
+ A method described in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2015ddny}
+\end_layout
+
+\end_inset
+
+ is used to obtain probabilities, which in case of only two possible outcomes
+ (such as in tennis match) can be expressed as 
+\begin_inset Formula 
+\[
+p_{i}=\frac{1}{a_{i}}-(G-1)[1-\frac{1}{a_{i}G}+2\omega(\frac{1}{a_{i}G}-0.5)],\;i\in\{1,\,2\},
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $p_{i}$
+\end_inset
+
+ are the unknown first set winning probabilities, 
+\begin_inset Formula $a_{i}$
+\end_inset
+
+ the corresponding odds provided by bookmaker and 
+\begin_inset Formula $G=\sum_{i=1}^{2}\frac{1}{a_{i}}$
+\end_inset
+
+.
+ A parameter 
+\begin_inset Formula $\omega\in[0,\,1]$
+\end_inset
+
+ is used to spread bookmaker's margin among the two outcomes and for the
+ purpose of this paper it is set to the value 
+\begin_inset Formula $\omega=0.5$
+\end_inset
+
+.
+ Obtained first set winning probabilities are then used as a given starting
+ probability 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ in the random walk.
+\end_layout
+
+\begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Model-evaluation"
+
+\end_inset
+
+Model evaluation
+\end_layout
+
+\begin_layout Standard
+In order to verify the model accuracy, several tests were performed.
+ First, the dataset was divided into training and testing sets.
+ The division can be done naturally by the order of games played.
+ Given a specific time, past matches constitute to a training set, future
+ matches to a testing set.
+ For the purpose of this paper, the split was done on a yearly basis, the
+ data from one previous tennis season were used as a training set to predict
+ winning probabilities in the following season, considered the testing set
+ (i.e.
+ 2010 was the first season used as testing data, 2017 was the last season
+ used as training data), making it 9 training/testing splits together.
+ Another approach to dataset splitting is to consider data from all previous
+ years as testing data and from one future year as training data, however,
+ previous study shows that the difference between these two approaches is
+ negligible 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2016ddny}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Next step in model evaluation is the estimation of parameter 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ Training sets and maximal-likelihood estimates (MLE) were used for this
+ task.
+ The likelihood function is defined as 
+\begin_inset Formula 
+\[
+L=\prod_{i=1}^{N_{train}}(x_{i}p_{i}+(1-x_{i})(1-p_{i})),
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $N_{train}$
+\end_inset
+
+ is the number of sets 
+\begin_inset Formula $2$
+\end_inset
+
+ through 
+\begin_inset Formula $5$
+\end_inset
+
+ played in the training dataset, 
+\begin_inset Formula $p_{i}$
+\end_inset
+
+ is Player A's winning probability in the 
+\begin_inset Formula $i-th$
+\end_inset
+
+ set obtained using the method described above for each match, and 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ is the result of the 
+\begin_inset Formula $i-th$
+\end_inset
+
+ set, 
+\begin_inset Formula $x_{i}=1$
+\end_inset
+
+ if Player A won the 
+\begin_inset Formula $i-th$
+\end_inset
+
+ set, 
+\begin_inset Formula $x_{i}=0$
+\end_inset
+
+ otherwise.
+ For computational reasons the 
+\emph on
+log-likelihood 
+\emph default
+
+\begin_inset Formula $L_{l}=log(L)$
+\end_inset
+
+ was used, i.e.
+ the function 
+\begin_inset Formula 
+\[
+L_{l}=\sum_{i=1}^{N_{train}}log(x_{i}p_{i}+(1-x_{i})(1-p_{i}))
+\]
+
+\end_inset
+
+was maximized.
+ Numerical methods implemented in Python library SciPy were used to obtain
+ specific values of 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ The optimal values of the coefficient 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ can be seen in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Optimal-values-of"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="10" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Year
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Optimal lambda
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2010
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8074
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2011
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8497
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2012
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8142
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2013
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9162
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2014
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8523
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2015
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8429
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2016
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8920
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2017
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8674
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2018
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8333
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Optimal-values-of"
+
+\end_inset
+
+Optimal values of the coefficient 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ for respective years.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, the model was used to predict set winning probabilities of the
+ unseen data from the training set using initial bookmaker derived odds,
+ equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:pi-reward"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) and memory parameter 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ obtained from the corresponding training set.
+ In order to verify the quality of the model, the average theoretical set
+ winning probability of Player A 
+\begin_inset Formula $\hat{p}=\frac{1}{n}\sum_{i=1}^{N_{test}}p_{i}$
+\end_inset
+
+ and its variance 
+\begin_inset Formula $\hat{\sigma}^{2}=\frac{1}{n}\sum_{i=1}^{N_{test}}p_{i}(1-p_{i})$
+\end_inset
+
+ were computed and so was the observed Player A winning ratio 
+\begin_inset Formula $\bar{x}=\frac{1}{n}\sum_{i=1}^{N_{test}}x_{i}$
+\end_inset
+
+.
+ Using the Lyapunov variant of Central Limit Theorem (CLT), the resulting
+ random variable 
+\begin_inset Formula $y$
+\end_inset
+
+ follows the standard normal distribution 
+\begin_inset Formula 
+\begin{equation}
+y=\frac{\sqrt{N_{test}}(\bar{x}-\hat{p})}{\hat{\sigma}}\thicksim\mathcal{N}(0,\,1).\label{eq:CLT}
+\end{equation}
+
+\end_inset
+
+Then in order to verify the model accuracy, the null hypothesis that the
+ true average Player A set winning probability 
+\begin_inset Formula $\bar{p}$
+\end_inset
+
+ equals 
+\begin_inset Formula $\hat{p}$
+\end_inset
+
+ against the alternative hypothesis 
+\begin_inset Formula $\bar{p}\neq\hat{p}$
+\end_inset
+
+ was tested.
+ Formally, 
+\begin_inset Formula $H_{0}:\bar{p}=\hat{p}$
+\end_inset
+
+, 
+\begin_inset Formula $H_{1}:\bar{p}\neq\hat{p}.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+One of the assumptions of the CLT is that the observed random variables
+ are independent.
+ This is obviously not true in the case when 
+\begin_inset Formula $N_{test}$
+\end_inset
+
+ contains all sets from the testing data.
+ Quite the opposite, the model assumes that the winning probability of a
+ set directly depends on the winning probability of the previous set.
+ This can be easily solved by splitting the testing dataset into 
+\begin_inset Formula $4$
+\end_inset
+
+ subsets containing only results from single set of each match, i.e.
+ sets 
+\begin_inset Formula $2$
+\end_inset
+
+, 
+\begin_inset Formula $3$
+\end_inset
+
+, 
+\begin_inset Formula $4$
+\end_inset
+
+ and 
+\begin_inset Formula $5$
+\end_inset
+
+ (if they were played).
+ The matches can be considered independent from each other and so can be
+ the 
+\begin_inset Formula $i-th$
+\end_inset
+
+ sets of respective matches.
+\end_layout
+
+\begin_layout Standard
+Using this approach, there are 
+\begin_inset Formula $36$
+\end_inset
+
+ testing data subsets together (up to 
+\begin_inset Formula $4$
+\end_inset
+
+ sets considered in each match, 
+\begin_inset Formula $9$
+\end_inset
+
+ yearly testing datasets).
+ On a 
+\begin_inset Formula $95\%$
+\end_inset
+
+ confidence level, only on 
+\begin_inset Formula $2$
+\end_inset
+
+ out of the 
+\begin_inset Formula $36$
+\end_inset
+
+ available subsets provide strong enough evidence to reject the null hypothesis.
+ On the other hand, the null hypothesis is relatively weak.
+ It only says that the prediction is correct on average.
+ In order to verify the quality of the predictions, more detailed tests
+ have to be created.
+ This can be done primarily by testing the null hypothesis on many subsets
+ created according to some real life based criteria.
+ The natural way how to create such subsets is dividing the matches to the
+ 
+\begin_inset Formula $4$
+\end_inset
+
+ different tournaments.
+ This refining yields 
+\begin_inset Formula $180$
+\end_inset
+
+ subsets: 
+\begin_inset Formula $4$
+\end_inset
+
+ sets in each match evaluated, 
+\begin_inset Formula $4+1$
+\end_inset
+
+ tournaments every year, 
+\begin_inset Formula $9$
+\end_inset
+
+ years for testing.
+ Using 
+\begin_inset Formula $95%\%
+$
+\end_inset
+
+ confidence level, only 
+\begin_inset Formula $6$
+\end_inset
+
+ of the 
+\begin_inset Formula $180$
+\end_inset
+
+ subsets have data strong enough to reject the null hypothesis.
+ It is worth mentioning that the size of some of the datasets regarding
+ fifth sets is only slightly above 
+\begin_inset Formula $20$
+\end_inset
+
+ observations, which can interfere with the assumptions justifying the use
+ of Central Limit Theorem.
+\end_layout
+
+\begin_layout Standard
+To further analyse the robustness of the model it is important to realize
+ the structure of the data.
+ So far, the player, whose winning probability was estimated, was chosen
+ arbitrarily based on some external (more or less random) order.
+ As such, the observed winning probability in every subset equals approximately
+ to 
+\begin_inset Formula $\frac{1}{2}$
+\end_inset
+
+.
+ In such a dataset it is not very difficult to estimate the average winning
+ probability.
+ The situation changes if the bookmaker's favourite is considered for prediction
+s.
+ Performing the same tests as described in the previous paragraph the data
+ allows to reject the null hypothesis (on a 
+\begin_inset Formula $95\%$
+\end_inset
+
+ confidence level) on 
+\begin_inset Formula $5$
+\end_inset
+
+ subsets containing all tournaments and 
+\begin_inset Formula $8$
+\end_inset
+
+ single tournament subsets (out of 
+\begin_inset Formula $180$
+\end_inset
+
+ subsets total).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename C:/Users/1/workspace/mathsport2019/paper/conference_paper/probabilities_histogram.png
+	width 100text%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:First-set-winning"
+
+\end_inset
+
+First set winning probability 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ histogram.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, the testing data can be divided into groups using the initial probabili
+ty 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+.
+ Such a division is based on an assumption that the matches with similar
+ bookmaker odds should have similar development.
+ The matches are divided into 
+\begin_inset Formula $5$
+\end_inset
+
+ groups, each containing 
+\begin_inset Formula $10$
+\end_inset
+
+ percentage points in first set winning probability.
+ Except for the biggest favourites (with first set winning probability over
+ 
+\begin_inset Formula $90\%$
+\end_inset
+
+), this division seems reasonable.
+ The data histogram can be seen on Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:First-set-winning"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Out of the 
+\begin_inset Formula $180$
+\end_inset
+
+ newly created odds-based subgroups, only 
+\begin_inset Formula $9$
+\end_inset
+
+ have data strong enough to reject 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ on a 
+\begin_inset Formula $95\%$
+\end_inset
+
+ confidence level.
+ The entire results of the hypothesis testing (the 
+\emph on
+p-values 
+\emph default
+of respective tests) can be seen on Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:p-values-of-hypothesis"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ More detailed division, i.e.
+ by tournament and odds, was not performed as the resulting datasets would
+ not contain enough data.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename C:/Users/1/workspace/mathsport2019/paper/conference_paper/hypothesis_testing.PNG
+	width 100text%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\emph on
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:p-values-of-hypothesis"
+
+\end_inset
+
+p-values
+\emph default
+ of hypothesis tests for different testing sets.
+ Red are marked those allowing to reject 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ on 99% confidence level, orange on 95% and yellow on 90% confidence level.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Overall, the model was tested on 
+\begin_inset Formula $360$
+\end_inset
+
+ different subsets and only 
+\begin_inset Formula $22$
+\end_inset
+
+ of them (
+\begin_inset Formula $6.1\%$
+\end_inset
+
+) provided enough evidence to reject 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ on 
+\begin_inset Formula $95\%$
+\end_inset
+
+ confidence level.
+ These subsets are distributed randomly and there is no pattern among them,
+ indicating there is no systematic bias in the model.
+ The random walk with varying probabilities thus seems to be a robust model
+ which can be used to precisely predict set winning probabilities in men
+ tennis Grand Slam matches.
+\end_layout
+
+\begin_layout Section
+Model testing
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Test-by-betting"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The model was implemented and tested in real life setup where it actively
+ bet in-play against Tipsport, the biggest bookmaker in the Czech Republic.
+ The test was set up in the following manner.
+\end_layout
+
+\begin_layout Standard
+An automated betting and odds scraping tool developed using the Python programmi
+ng language and Selenium framework running on a remote server (Digital Ocean)
+ was developed and deployed for the purpose of this paper.
+ The tool operates with Tipsport's website and scrapes it for both 
+\emph on
+pre-match 
+\emph default
+as well as
+\emph on
+ in-play
+\emph default
+ odds.
+ It was set up to continuously observe Tipsport's odds offerings for 2019
+ men tennis US Open, especially the set winning odds, and store the odds
+ together with some general information about the match, such as the respective
+ players, starting time etc., into a database (Postgresql database).
+ To test the model, Tipsport's starting odds were used to obtain parameter
+ 
+\begin_inset Formula $p_{0}$
+\end_inset
+
+ (as described above) and (according to the results from Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Model-description-and"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) optimized 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ trained on the 
+\begin_inset Formula $2018$
+\end_inset
+
+ tennis season was chosen as the second necessary model parameter.
+ Every match was observed individually and after each finished set next
+ set winning probabilities were computed using the presented model.
+ Whenever the actual set winning odds offered by Tipsport for one of the
+ players 
+\begin_inset Formula $a_{i}$
+\end_inset
+
+ were higher than the probability implied set winning odds for that player
+ computed by the model, i.e.
+ 
+\begin_inset Formula $a_{i}>\frac{1}{p_{i}}$
+\end_inset
+
+, a bet was made.
+ The amount bet was computed as 
+\begin_inset Formula $p_{i}U$
+\end_inset
+
+, where 
+\begin_inset Formula $U$
+\end_inset
+
+ is a base bankroll dependent betting unit.
+ This amount was further rounded with precision CZK 
+\begin_inset Formula $1$
+\end_inset
+
+ (due to betting limitations of Tipsport).
+ Overall, 
+\begin_inset Formula $128$
+\end_inset
+
+ bets were made (and 
+\begin_inset Formula $3$
+\end_inset
+
+ additional bets that were cancelled due to one of the players forfeiting
+ the match because of injury) with the total amount 
+\begin_inset Formula $59.85U$
+\end_inset
+
+ bet.
+ The expected number of wins among these bets was 
+\begin_inset Formula $59.85$
+\end_inset
+
+ whereas the actual number of wins was 
+\begin_inset Formula $57$
+\end_inset
+
+.
+ Using the same hypotheses testing as in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Model-evaluation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the data showed no evidence to reject 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ (
+\begin_inset Formula $p$
+\end_inset
+
+-value 
+\begin_inset Formula $\sim0.59$
+\end_inset
+
+).
+ The minimal account balance over the entire US Open was 
+\begin_inset Formula $-0.52U$
+\end_inset
+
+ and the final balance 
+\begin_inset Formula $2.24U$
+\end_inset
+
+, creating a theoretical return on investment (ROI) of 
+\begin_inset Formula $430\%$
+\end_inset
+
+ within only 2 weeks, which is an outstanding performance.
+\end_layout
+
+\begin_layout Subsection
+Alternative betting strategies
+\end_layout
+
+\begin_layout Standard
+Choosing the correct betting strategy is one of the key elements of successful
+ betting.
+ It depends on the underlying model, available bookmaker's odds, bankroll,
+ internal bookmaker's policies and many other parameters.
+ There exists a large number of possible approaches and the detailed description
+ of them is beyond the scope of this paper.
+ Besides the implemented strategy, where an amount proportional to 
+\begin_inset Formula $p$
+\end_inset
+
+ was bet on each selected opportunity, two other basic betting strategies
+ were applied to test the model.
+ A strategy where always 
+\begin_inset Formula $\frac{1}{a}$
+\end_inset
+
+, i.e.
+ the inverse value of odds, was bet, and a naive strategy with simply 
+\begin_inset Formula $1$
+\end_inset
+
+ unit put on every bet.
+ The strategies differ in the expected wins and their variance.
+ The theoretical properties of the betting strategies can be observed in
+ Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:strategies"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ with the special case where 
+\begin_inset Formula $p=\frac{1}{a}$
+\end_inset
+
+, i.e.
+ in case of fair odds 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2015ddny}
+\end_layout
+
+\end_inset
+
+.
+ The results of the different betting strategies applied together with the
+ presented model to bet on 2019 men US Open (actual for probability based
+ strategy and theoretical for other strategies) are shown in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:The-results-of"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The development of the account balance for different betting strategies
+ is displayed on Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Account-balance-development"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The figure shows that the general shape of balance development is very
+ similar for all three strategies.
+ This is caused by the fact that all strategies bet on the same opportunities,
+ i.e.
+ only when the expected win from the bookmaker's odds is positive according
+ to the presented model (
+\begin_inset Formula $a_{i}>\frac{1}{p_{i}}$
+\end_inset
+
+ holds for some offered betting opportunity), and only differ in the amount
+ bet.
+ The naive strategy then reaches the most extreme values, which is caused
+ by its variance, the biggest among selected variants (as shown in Table
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:strategies"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Strategy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bet
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $E(w)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $E(w|p=\frac{1}{a})$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Var(w)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Var(w|p=\frac{1}{a})$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Naive
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $pa-1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $pa^{2}(1-p)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a(1-\frac{1}{a}$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Odds
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{1}{a}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p-\frac{1}{a}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p(1-p)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{1-\frac{1}{k}}{k}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Prob.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p(pa-1)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p^{3}a^{2}(1-p)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{1-\frac{1}{k}}{k}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+General
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $u$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $u(pa-1)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $u^{2}pa^{2}(1-p)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $u^{2}a(1-\frac{1}{a})$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:strategies"
+
+\end_inset
+
+Theoretical values of wins and variances for different betting strategies.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top" width="1.5cm">
+<column alignment="center" valignment="top" width="1.5cm">
+<column alignment="center" valignment="top" width="1.5cm">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Strategy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Expected profit
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Profit std.
+ dev.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Minimal balance
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Profit
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ROI
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Naive
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $11.1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $15.17$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $-3.62$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.99$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $83\%$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Odds
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.07$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.29$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $-0.72$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.23$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $171\%$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Prob.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.91$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.79$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $-0.52$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.24$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $430\%$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:The-results-of"
+
+\end_inset
+
+The results of different betting strategies applied to US Open betting using
+ the presented model.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../betting_analysis/account_balance_development.pdf
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Account-balance-development"
+
+\end_inset
+
+Account balance development for different betting strategies.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Concluding remarks
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Conclusion"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the present paper, a model of Bernoulli-like random walk with transitions
+ dependent on the walk history was introduced.
+ A number of variations of this model was described by the authors in a
+ recent study 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{ja2019apmat}
+\end_layout
+
+\end_inset
+
+.
+ This paper shows that even the rather simple version presented here shows
+ sufficient flexibility and can be applied to tennis matches modelling.
+ The model was first tested statistically on historical data and the optimal
+ model parameters were computed using numerical methods.
+ The results were then tested in real 
+\emph on
+in-play 
+\emph default
+betting against a commercial bookmaker with rather encouraging results.
+ This show a huge potential of the model being able to describe even the
+ most complicated real life discrete random processes with memory.
+ The application of the model on different real life problems will be subject
+ of further research.
+\end_layout
+
+\begin_layout Standard
+The source code containing all functionality mentioned in this article including
+ the automated betting engine is freely available as open source at GitHub
+ (https://github.com/tomaskourim/mathsport2019) together with a database
+ containing all data that was used in this paper.
+ Some more results can be also obtained from the same repository.
+\end_layout
+
+\begin_layout Section*
+Funding
+\end_layout
+
+\begin_layout Standard
+The research was supported by the grant No.
+ 18-02739S of the Grant Agency of the Czech Republic.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "C:/Users/1/workspace/mathsport2019/paper/conference_paper/doktknih"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
