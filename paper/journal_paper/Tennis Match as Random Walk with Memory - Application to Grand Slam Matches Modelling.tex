@@ -15,6 +15,10 @@
 % breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
 % {hyperref}
 
+\usepackage{caption}
+\captionsetup[table]{name=\sc Table}
+\captionsetup[figure]{name=\sc Fig.}
+
 \input standard.tex
 
 \makeatletter
@@ -22,6 +26,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
 %% Because html converters don't know tabularnewline
 \providecommand{\tabularnewline}{\\}
+
+%\addto\captions\british{\renewcommand{\figurename}{Fig.}}
+%\addto\captions\british{\renewcommand{\tablename}{tabdd.}}
+%\renewcommand\spanishtablename{Otro nombre}
 
 \makeatother
 
@@ -83,15 +91,15 @@ for accurate sports models is tremendous.
 There are several different approaches in modelling and simulating
 tennis games. The most common ones use Markov chains as the baseline
 model, creating Markov-like chains usually from one particular part
-of the game - set by set, game by game, point by point or even rally
-by rally \cite{barnett2005combining,hunter2009can,newton2009monte,spanias2012predicting}.
-Other approaches use some sort of regression (logistic, probit) \cite{del2010differences},
-\cite{dziedzic2015predicting,klaassen2003forecasting}. The methods
+of the game --- set by set, game by game, point by point or even rally
+by rally (\citealt{barnett2005combining,hunter2009can,newton2009monte,spanias2012predicting}).
+Other approaches use some sort of regression --- logistic as in \cite{del2010differences}, or probit as in
+\cite{dziedzic2015predicting} or \cite{klaassen2003forecasting}. The methods
 can be also divided into those focusing on the match result itself
-\cite{dziedzic2015predicting,klaassen2003forecasting}, those focusing
+(\citealt{dziedzic2015predicting,klaassen2003forecasting}), those focusing
 on the modelling the match development (the mentioned Markov-like
-models), and also concentrated to partial results during a match -
-\emph{in-play }probabilities \cite{hunter2009can}, this paper ( focusing
+models), and also concentrated to predict probabilities of partial results during a match ---
+\cite{hunter2009can}, this paper (focusing
 on the prediction of \emph{in-play }set results). Comparison of some
 of the existing methods can be found in Kovalchik \cite{kovalchik2015comparative}.
 
@@ -405,7 +413,7 @@ Year & Optimal lambda\tabularnewline
 \end{tabular}
 \par\end{centering}
 \caption{\label{tab:Optimal-values-of}Optimal values of the coefficient $\lambda$
-for respective years.}
+for respective years}
 \end{table}
 
 Finally, the model was used to predict set winning probabilities of
@@ -478,11 +486,11 @@ the matches with similar bookmaker odds should have similar development.
 The matches are divided into $5$ groups, each containing $10$ percentage
 points in first set winning probability. Except for the biggest favourites
 (with first set winning probability over $90\%$), this division seems
-reasonable. The data histogram can be seen on Figure \ref{fig:First-set-winning}.
+reasonable. The data histogram can be seen on Fig. \ref{fig:First-set-winning}.
 Out of the $180$ newly created odds-based subgroups, only $9$ have
 data strong enough to reject $H_{0}$ on a $95\%$ confidence level.
 The entire results of the hypothesis testing (the \emph{p-values }of
-respective tests) can be seen on Figure \ref{fig:p-values-of-hypothesis}.
+respective tests) can be seen on Fig. \ref{fig:p-values-of-hypothesis}.
 More detailed division, i.e. by tournament and odds, was not performed
 as the resulting datasets would not contain enough data.
 
@@ -491,7 +499,7 @@ as the resulting datasets would not contain enough data.
 \includegraphics[width=1\textwidth]{C:/Users/1/workspace/mathsport2019/paper/conference_paper/hypothesis_testing.PNG}\caption{\emph{\label{fig:p-values-of-hypothesis}p-values} of hypothesis tests
 for different testing sets. Red are marked those allowing to reject
 $H_{0}$ on 99\% confidence level, orange on 95\% and yellow on 90\%
-confidence level.}
+confidence level (or dark, grey and pale highlighting respectively for grayscale print).}
 \par\end{centering}
 \centering{}
 \end{figure}
@@ -560,7 +568,7 @@ odds \cite{ja2015ddny}. The results of the different betting strategies
 applied together with the presented model to bet on 2019 men US Open
 (actual for probability based strategy and theoretical for other strategies)
 are shown in Table \ref{tab:The-results-of}. The development of the
-account balance for different betting strategies is displayed on Figure
+account balance for different betting strategies is displayed on Fig.
 \ref{fig:Account-balance-development}. The figure shows that the
 general shape of balance development is very similar for all three
 strategies. This is caused by the fact that all strategies bet on
@@ -589,7 +597,7 @@ General & $u$ & $u(pa-1)$ & $0$ & $u^{2}pa^{2}(1-p)$ & $u^{2}a(1-\frac{1}{a})$\t
 \end{tabular}
 \par\end{centering}
 \caption{\label{tab:strategies}Theoretical values of wins and variances for
-different betting strategies.}
+different betting strategies}
 
 \end{table}
 
@@ -609,7 +617,7 @@ Prob. & $4.91$ & $5.79$ & $-0.52$ & $2.24$ & $430\%$\tabularnewline
 \end{tabular}
 \par\end{centering}
 \caption{\label{tab:The-results-of}The results of different betting strategies
-applied to US Open betting using the presented model.}
+applied to US Open betting using the presented model}
 \end{table}
 
 
@@ -651,7 +659,7 @@ more results can be also obtained from the same repository.
 This work was supported by the Grant
 Agency of the Czech Republic [18-02739S].
 
-\bibliographystyle{te}
+\bibliographystyle{IMANUM-BIB}
 \bibliography{../conference_paper/doktknih}
 
 \end{document}
