@@ -47,7 +47,7 @@ class Tipsport(Bookmaker):
         tournament_year_ids = []
         tournament_ids = []
         for e in elements:
-            texts.append(e.find_element_by_xpath(".//h2").text)
+            texts.append(e.text)
             tournament_year_ids.append(e.get_attribute("data-competition-annual-id"))
             tournament_ids.append(str(json.loads(e.get_attribute("data-model"))['id']))
 
@@ -77,6 +77,8 @@ class Tipsport(Bookmaker):
             tv_location = text.find("    ")
             if tv_location > 0:
                 text = text[0:tv_location]
+            # remove tournament brackets
+            text = text.replace("\nPAVOUK", "")
             if "muži" in text:
                 tournament["sex"] = "men"
                 text = text.replace(", Tenis muži - ", "")
@@ -89,9 +91,10 @@ class Tipsport(Bookmaker):
             if "dvouhra" in text:
                 tournament["type"] = "singles"
                 text = text.replace("dvouhra", "")
-            elif "čtyřhra" in text:
+            elif "čtyřhra" in text or "4hra" in text:
                 tournament["type"] = "doubles"
                 text = text.replace("čtyřhra", "")
+                text = text.replace(", 4hra", "")
             elif "družstva" in text:
                 tournament["type"] = "teams"
                 text = text.replace("družstva", "")
@@ -104,9 +107,9 @@ class Tipsport(Bookmaker):
             elif "antuka" in text:
                 tournament["surface"] = "clay"
                 text = text.replace(" - antuka", "")
-            elif "tvrdý povrch" in text:
+            elif "tvrdý p." in text:
                 tournament["surface"] = "hard"
-                text = text.replace(" - tvrdý povrch", "")
+                text = text.replace(" - tvrdý p.", "")
             else:
                 tournament["surface"] = None
 
