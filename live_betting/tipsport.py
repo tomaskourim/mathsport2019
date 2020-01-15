@@ -121,13 +121,12 @@ class Tipsport(Bookmaker):
     def get_matches_tournament(self, tournament: pd.DataFrame) -> pd.DataFrame:
         self.driver.get("".join([self.tennis_tournament_base_url, str(tournament.tournament_bookmaker_id)]))
         time.sleep(self.seconds_to_sleep)
-        elements = self.driver.find_elements_by_xpath("//div[@class='rowMatchWrapper']")
+        elements = self.driver.find_elements_by_xpath("//div[@data-matchid]")
         home = []
         away = []
         matchid = []
         start_time_utc = []
-        for e in elements:
-            base_info = e.find_element_by_xpath("./div")
+        for base_info in elements:
             players = base_info.get_attribute("data-matchname")
             if "celkově" in players:
                 continue
@@ -142,7 +141,7 @@ class Tipsport(Bookmaker):
             away.append(players_splitted[1])
             matchid.append(base_info.get_attribute("data-matchid"))
             starting_time = datetime.datetime.strptime(
-                e.find_elements_by_xpath(".//div[@class='actualState']")[1].text, '%d.%m.%Y %H:%M')
+                base_info.find_elements_by_xpath(".//div[@class='o-matchRow__dateClosed']")[1].text, '%d.%m.%Y %H:%M')
             starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
             start_time_utc.append(starting_time)
 
