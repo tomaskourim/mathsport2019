@@ -249,7 +249,7 @@ class Tipsport(Bookmaker):
 
     def get_starting_time(self) -> datetime:
         starting_time = datetime.datetime.strptime(
-            self.driver.find_elements_by_xpath("//div[@class='actualState']")[1].text, '%d.%m.%Y %H:%M')
+            self.driver.find_elements_by_xpath("//div[@class='o-matchRow__dateClosed']")[1].text, '%d.%m.%Y %H:%M')
         starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
         return starting_time
 
