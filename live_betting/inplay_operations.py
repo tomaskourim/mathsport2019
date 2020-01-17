@@ -56,8 +56,9 @@ def evaluate_bet_on_set(book_id: int, bookmaker_matchid: str, set_number: int, h
             won = True
         else:
             won = False
-        query = "UPDATE bet SET result = %s WHERE bookmaker_id='%s' AND match_bookmaker_id=%s AND match_part=%s"
-        db_returned = execute_sql_postgres(query, [won, book_id, bookmaker_matchid, match_part], True)
+        query = "UPDATE bet SET result = %s, result_corrected = %s WHERE bookmaker_id='%s' " \
+                "AND match_bookmaker_id=%s AND match_part=%s"
+        db_returned = execute_sql_postgres(query, [won, won, book_id, bookmaker_matchid, match_part], True)
         if "success" not in db_returned:
             logging.error(
                 f"Imposible to save bet result. Matchid: {bookmaker_matchid}. Query: {query}. Error: {db_returned}")

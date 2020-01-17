@@ -47,7 +47,7 @@ class Tipsport(Bookmaker):
         tournament_year_ids = []
         tournament_ids = []
         for e in elements:
-            texts.append(e.find_element_by_xpath(".//h2").text)
+            texts.append(e.text)
             tournament_year_ids.append(e.get_attribute("data-competition-annual-id"))
             tournament_ids.append(str(json.loads(e.get_attribute("data-model"))['id']))
 
@@ -77,6 +77,8 @@ class Tipsport(Bookmaker):
             tv_location = text.find("    ")
             if tv_location > 0:
                 text = text[0:tv_location]
+            # remove tournament brackets
+            text = text.replace("\nPAVOUK", "")
             if "muži" in text:
                 tournament["sex"] = "men"
                 text = text.replace(", Tenis muži - ", "")
@@ -89,9 +91,10 @@ class Tipsport(Bookmaker):
             if "dvouhra" in text:
                 tournament["type"] = "singles"
                 text = text.replace("dvouhra", "")
-            elif "čtyřhra" in text:
+            elif "čtyřhra" in text or "4hra" in text:
                 tournament["type"] = "doubles"
                 text = text.replace("čtyřhra", "")
+                text = text.replace(", 4hra", "")
             elif "družstva" in text:
                 tournament["type"] = "teams"
                 text = text.replace("družstva", "")
@@ -104,9 +107,9 @@ class Tipsport(Bookmaker):
             elif "antuka" in text:
                 tournament["surface"] = "clay"
                 text = text.replace(" - antuka", "")
-            elif "tvrdý povrch" in text:
+            elif "tvrdý p." in text:
                 tournament["surface"] = "hard"
-                text = text.replace(" - tvrdý povrch", "")
+                text = text.replace(" - tvrdý p.", "")
             else:
                 tournament["surface"] = None
 
@@ -118,13 +121,12 @@ class Tipsport(Bookmaker):
     def get_matches_tournament(self, tournament: pd.DataFrame) -> pd.DataFrame:
         self.driver.get("".join([self.tennis_tournament_base_url, str(tournament.tournament_bookmaker_id)]))
         time.sleep(self.seconds_to_sleep)
-        elements = self.driver.find_elements_by_xpath("//div[@class='rowMatchWrapper']")
+        elements = self.driver.find_elements_by_xpath("//div[@data-matchid]")
         home = []
         away = []
         matchid = []
         start_time_utc = []
-        for e in elements:
-            base_info = e.find_element_by_xpath("./div")
+        for base_info in elements:
             players = base_info.get_attribute("data-matchname")
             if "celkově" in players:
                 continue
@@ -139,7 +141,7 @@ class Tipsport(Bookmaker):
             away.append(players_splitted[1])
             matchid.append(base_info.get_attribute("data-matchid"))
             starting_time = datetime.datetime.strptime(
-                e.find_elements_by_xpath(".//div[@class='actualState']")[1].text, '%d.%m.%Y %H:%M')
+                base_info.find_elements_by_xpath(".//div[@class='o-matchRow__dateClosed']")[1].text, '%d.%m.%Y %H:%M')
             starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
             start_time_utc.append(starting_time)
 
@@ -247,7 +249,7 @@ class Tipsport(Bookmaker):
 
     def get_starting_time(self) -> datetime:
         starting_time = datetime.datetime.strptime(
-            self.driver.find_elements_by_xpath("//div[@class='actualState']")[1].text, '%d.%m.%Y %H:%M')
+            self.driver.find_elements_by_xpath("//div[@class='o-matchRow__dateClosed']")[1].text, '%d.%m.%Y %H:%M')
         starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
         return starting_time
 

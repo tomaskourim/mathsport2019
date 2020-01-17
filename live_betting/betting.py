@@ -59,7 +59,7 @@ def get_clambda() -> float:
     probabilities = pd.DataFrame(get_probabilities_from_odds(matches_data, odds_probability_type))
     matches_data = matches_data.assign(probability_predicted_player=probabilities[0],
                                        probability_not_predicted_player=probabilities[1])
-    training_set = matches_data[matches_data["year"] == datetime.datetime.utcnow().year - 1]
+    training_set = matches_data[matches_data["year"] == datetime.datetime.utcnow().year - 2]
     c_lambda = find_single_lambda(training_set)
     logger.info(f"Optimal lambda is {c_lambda}")
     return c_lambda
@@ -74,7 +74,7 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
         book.handle_match(bookmaker_matchid, c_lambda)
     except Exception as error:
         logger.exception(f"Top level error while handling match {bookmaker_matchid}. Error: {error}")
-        save_screenshot(book.driver, f"top_match_handling", bookmaker_matchid)
+        save_screenshot(book.driver, f"top_match_handling_{error}", bookmaker_matchid)
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
         book.close()
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     total_handler.setLevel(logging.DEBUG)
     info_handler.setLevel(logging.INFO)
     error_handler.setLevel(logging.WARNING)
-    stdout_handler.setLevel(logging.WARNING)
+    stdout_handler.setLevel(logging.INFO)
 
     # Create formatters and add it to handlers
     logging_format = logging.Formatter('%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
