@@ -147,7 +147,7 @@ if __name__ == '__main__':
             scan_update(main_book)
         except Exception as error:
             logger.exception(f"While updating DB error occurred: {error}")
-            save_screenshot(main_book.driver, f"mainrun", 'null')
+            save_screenshot(main_book.driver, f"mainrun_{error}", 'null')
         end_time = datetime.datetime.now()
         logger.info(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute
