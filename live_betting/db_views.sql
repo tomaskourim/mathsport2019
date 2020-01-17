@@ -17,7 +17,7 @@ ORDER BY start_time_utc;
 
 -- bets overview
 SELECT book_id, home, away, name AS tournament_name, sex, type, surface, start_time_utc, bet_type, match_part, odd,
-    probability, result, utc_time_recorded
+    odd_corrected, probability, result, result_corrected, utc_time_recorded
 FROM (SELECT *, mb.match_bookmaker_id AS book_id
       FROM bet
                JOIN matches_bookmaker mb
@@ -38,7 +38,7 @@ FROM (
              JOIN matches m ON mb.match_id = m.id
              JOIN tournament t ON m.tournament_id = t.id) AS r
 WHERE start_time_utc >= '2020-01-16 17:00:00.000000'
-ORDER BY book_id, start_time_utc DESC, match_part;
+ORDER BY tournament_name, sex, type, book_id, start_time_utc DESC, match_part;
 
 -- inplay
 SELECT book_id, home, away, name AS tournament_name, sex, type, surface, start_time_utc, utc_time_recorded
@@ -52,9 +52,83 @@ FROM (
 ORDER BY book_id, start_time_utc DESC, home;
 
 -- match course
-SELECT match_bookmaker_id, home, away, start_time_utc, set_number, result, utc_time_recorded
+SELECT name, sex, type, match_bookmaker_id, home, away, start_time_utc, set_number, result, utc_time_recorded
 FROM match_course
          JOIN matches m ON match_course.match_id = m.id
          JOIN matches_bookmaker mb ON m.id = mb.match_id
+         JOIN tournament t ON m.tournament_id = t.id
 WHERE start_time_utc > '2020-01-16 17:00:00.000000'
-ORDER BY start_time_utc, match_bookmaker_id, set_number;
+ORDER BY name, sex, type, match_bookmaker_id, start_time_utc, match_bookmaker_id, set_number;
+
+
+-- results and expected results
+SELECT sum(probability) AS expected_wins, sum(CASE WHEN result_corrected IS TRUE THEN 1 ELSE 0 END) AS actual_wins
+FROM bet
+WHERE utc_time_recorded >= '2020-01-16 17:00:00.000000' AND result_corrected NOTNULL;
+
+--------------------------------------------------------------
+--theoretical results (if odds were as algorithms expected)
+-- edge
+SELECT *, probability - 1 / odd AS edge
+FROM bet
+WHERE utc_time_recorded >= '2020-01-16 17:00:00.000000' AND result_corrected NOTNULL
+ORDER BY edge DESC;
+
+-- expected money wins and actual wins - naive betting summed
+SELECT sum(probability * (odd - 1) - (1 - probability)) AS expected_win,
+    sum(CASE WHEN result_corrected IS TRUE THEN odd - 1 ELSE -1 END) AS win
+FROM bet
+WHERE utc_time_recorded >= '2020-01-16 17:00:00.000000' AND result_corrected NOTNULL;
+
+-- expected money wins and actual wins - probability betting summed
+SELECT sum(probability * (probability * odd - probability) - (1 - probability) * probability) AS expected_win,
+    sum(CASE WHEN result_corrected IS TRUE
+                 THEN probability * odd - probability
+             ELSE -probability END) AS win
+FROM bet
+WHERE utc_time_recorded >= '2020-01-16 17:00:00.000000' AND result_corrected NOTNULL;
+
+-- expected money wins and actual wins - 1/odds betting summed
+SELECT sum(probability * (1 - 1 / odd) - (1 - probability) * (1 / odd)) AS expected_win,
+    sum(CASE WHEN result_corrected IS TRUE
+                 THEN (1 - 1 / odd)
+             ELSE (-1 / odd) END) AS win
+FROM bet
+WHERE utc_time_recorded >= '2020-01-16 17:00:00.000000' AND result_corrected NOTNULL;
+
+--actual results (actual bet odds)
+-- edge
+SELECT *, probability - 1 / actual_odd AS edge
+FROM (
+    SELECT *, CASE WHEN odd_corrected NOTNULL THEN odd_corrected ELSE odd END AS actual_odd
+    FROM bet) AS bet_with_actual_odds
+WHERE utc_time_recorded >= '2020-01-16 17:00:00.000000' AND result_corrected NOTNULL
+ORDER BY edge DESC;
+
+-- expected money wins and actual wins - naive betting summed
+SELECT sum(probability * (actual_odd - 1) - (1 - probability)) AS expected_win,
+    sum(CASE WHEN result_corrected IS TRUE THEN actual_odd - 1 ELSE -1 END) AS win
+FROM (
+    SELECT *, CASE WHEN odd_corrected NOTNULL THEN odd_corrected ELSE odd END AS actual_odd
+    FROM bet) AS bet_with_actual_odds
+WHERE utc_time_recorded >= '2020-01-16 17:00:00.000000' AND result_corrected NOTNULL;
+
+-- expected money wins and actual wins - probability betting summed
+SELECT sum(probability * (probability * actual_odd - probability) - (1 - probability) * probability) AS expected_win,
+    sum(CASE WHEN result_corrected IS TRUE
+                 THEN probability * actual_odd - probability
+             ELSE -probability END) AS win
+FROM (
+    SELECT *, CASE WHEN odd_corrected NOTNULL THEN odd_corrected ELSE odd END AS actual_odd
+    FROM bet) AS bet_with_actual_odds
+WHERE utc_time_recorded >= '2020-01-16 17:00:00.000000' AND result_corrected NOTNULL;
+
+-- expected money wins and actual wins - 1/odds betting summed
+SELECT sum(probability * (1 - 1 / actual_odd) - (1 - probability) * (1 / actual_odd)) AS expected_win,
+    sum(CASE WHEN result_corrected IS TRUE
+                 THEN (1 - 1 / actual_odd)
+             ELSE (-1 / actual_odd) END) AS win
+FROM (
+    SELECT *, CASE WHEN odd_corrected NOTNULL THEN odd_corrected ELSE odd END AS actual_odd
+    FROM bet) AS bet_with_actual_odds
+WHERE utc_time_recorded >= '2020-01-16 17:00:00.000000' AND result_corrected NOTNULL;
