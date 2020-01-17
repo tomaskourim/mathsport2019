@@ -365,6 +365,7 @@ class Tipsport(Bookmaker):
         write_id(self.driver, 'amountPaid',
                  str(max(self.minimal_bet_amount, round(probability * self.base_bet_amount))))
         click_id(self.driver, 'submitButton')
+        save_screenshot(self.driver, f"bet_{bet_type}_{odd}", bookmaker_matchid)
         time.sleep(self.seconds_to_sleep)
         try:
             self.driver.find_element_by_xpath("//td[@class='ticketMessage successfullySaved']")
