@@ -201,7 +201,7 @@ class Tipsport(Bookmaker):
         if starting_time - utc_time < datetime.timedelta(seconds=30):
             if "disabled" in elem_odds[0].get_attribute("class") and "disabled" in elem_odds[1].get_attribute(
                     "class"):
-                logging.info(f"Match started at UTC: {utc_time}")
+                logging.info(f"Match {bookmaker_matchid} started at UTC: {utc_time}")
                 return True
         return False
 
@@ -465,7 +465,7 @@ class Tipsport(Bookmaker):
         else:
             away_games = int(away_games_raw)
 
-        logging.info(f"Current score sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
+        logging.info(f"Current score for match {bookmaker_matchid}: sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
         point_score = ""  # TODO actually get it
         return (home_sets, away_sets), (home_games, away_games), point_score
 
