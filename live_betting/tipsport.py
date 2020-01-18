@@ -192,7 +192,6 @@ class Tipsport(Bookmaker):
                 starting_time = self.get_starting_time()
                 break
             except NoSuchElementException:
-                save_screenshot(self.driver, f"to_start_by_error", bookmaker_matchid)
                 time.sleep(self.seconds_to_sleep)
                 errors = errors + 1
                 if errors > 3:
@@ -202,7 +201,7 @@ class Tipsport(Bookmaker):
         if starting_time - utc_time < datetime.timedelta(seconds=30):
             if "disabled" in elem_odds[0].get_attribute("class") and "disabled" in elem_odds[1].get_attribute(
                     "class"):
-                logging.info(f"Match started at UTC: {utc_time}")
+                logging.info(f"Match {bookmaker_matchid} started at UTC: {utc_time}")
                 return True
         return False
 
@@ -279,7 +278,7 @@ class Tipsport(Bookmaker):
             except Exception as error:
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
-                save_screenshot(self.driver, f"live_set{set_number}_{error}", bookmaker_matchid)
+                save_screenshot(self.driver, f"live_set{set_number}_{str(error)}", bookmaker_matchid)
                 time.sleep(self.seconds_to_sleep)
 
     pass
@@ -343,7 +342,7 @@ class Tipsport(Bookmaker):
             except Exception as error:
                 logging.exception(
                     f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
-                save_screenshot(self.driver, f"placing_bet_set{set_number}_{error}", bookmaker_matchid)
+                save_screenshot(self.driver, f"placing_bet_set{set_number}_{str(error)}", bookmaker_matchid)
                 if self.next_set_started(bookmaker_matchid, set_number):
                     logging.info(f"Match {bookmaker_matchid}: Set{set_number} started.")
                     break
@@ -466,7 +465,7 @@ class Tipsport(Bookmaker):
         else:
             away_games = int(away_games_raw)
 
-        logging.info(f"Current score sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
+        logging.info(f"Current score for match {bookmaker_matchid}: sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
         point_score = ""  # TODO actually get it
         return (home_sets, away_sets), (home_games, away_games), point_score
 
