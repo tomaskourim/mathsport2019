@@ -9,7 +9,7 @@ from typing import Tuple
 
 from database_operations import execute_sql, create_connection, execute_many_sql
 
-ORIGINAL_DATABASE_PATH = 'C://tennis.sqlite'
+ORIGINAL_DATABASE_PATH = 'C://tennis//tennis.sqlite'
 
 
 # function used for removing nested lists in python.
