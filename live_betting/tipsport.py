@@ -212,6 +212,7 @@ class Tipsport(Bookmaker):
             odds = (float(elem_odds[1].text), float(elem_odds[3].text))
         except:
             odds = (float(elem_odds[1].text), float(elem_odds[4].text))
+        save_screenshot(self.driver, f"odds_gathered_{odds[0]}_{odds[1]}")
         return odds
 
     def wait_half_to_matchstart(self):
@@ -360,11 +361,13 @@ class Tipsport(Bookmaker):
         elems_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
         elem_odds = elems_odds[odd_index]
         elem_odds.click()
-        time.sleep(self.short_seconds_to_sleep)
+        save_screenshot(self.driver, f"bet_prepared_{bet_type}_{odd}", bookmaker_matchid)
+        time.sleep(self.short_seconds_to_sleep / 2)
         write_id(self.driver, 'amountPaid',
                  str(max(self.minimal_bet_amount, round(probability * self.base_bet_amount))))
         click_id(self.driver, 'submitButton')
-        save_screenshot(self.driver, f"bet_{bet_type}_{odd}", bookmaker_matchid)
+        save_screenshot(self.driver, f"bet_created_{bet_type}_{odd}", bookmaker_matchid)
+        logging.info(f"Waiting for {self.seconds_to_sleep} seconds in bet placing in match {bookmaker_matchid}")
         time.sleep(self.seconds_to_sleep)
         try:
             self.driver.find_element_by_xpath("//td[@class='ticketMessage successfullySaved']")
@@ -465,7 +468,8 @@ class Tipsport(Bookmaker):
         else:
             away_games = int(away_games_raw)
 
-        logging.info(f"Current score for match {bookmaker_matchid}: sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
+        logging.info(
+            f"Current score for match {bookmaker_matchid}: sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
         point_score = ""  # TODO actually get it
         return (home_sets, away_sets), (home_games, away_games), point_score
 
