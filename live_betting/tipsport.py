@@ -170,7 +170,7 @@ class Tipsport(Bookmaker):
             return current_odds
 
         while not self.match_started(bookmaker_matchid):
-            current_odds = self.get_set_odds(1)
+            current_odds = self.get_set_odds(1, bookmaker_matchid)
             if current_odds != last_odds:
                 save_set_odds(current_odds, self.database_id, bookmaker_matchid, 1)
                 last_odds = current_odds
@@ -205,14 +205,14 @@ class Tipsport(Bookmaker):
                 return True
         return False
 
-    def get_set_odds(self, set_number: int) -> tuple:
+    def get_set_odds(self, set_number: int, bookmaker_matchid: str) -> tuple:
         elem_base = self.get_base_odds_element(set_number)
         elem_odds = elem_base.find_elements_by_xpath("./../../..//div[@class='tdEventCells']//span")
         try:
             odds = (float(elem_odds[1].text), float(elem_odds[3].text))
         except:
             odds = (float(elem_odds[1].text), float(elem_odds[4].text))
-        save_screenshot(self.driver, f"odds_gathered_{odds[0]}_{odds[1]}")
+        save_screenshot(self.driver, f"odds_gathered_{odds[0]}_{odds[1]}", bookmaker_matchid)
         return odds
 
     def wait_half_to_matchstart(self):
@@ -324,7 +324,7 @@ class Tipsport(Bookmaker):
         while True:
             try:
                 # get odds for next set
-                set_odds = self.get_set_odds(set_number)
+                set_odds = self.get_set_odds(set_number, bookmaker_matchid)
                 save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number)
                 # bet on next set if possible
                 if home_probability > 1 / set_odds[0]:
