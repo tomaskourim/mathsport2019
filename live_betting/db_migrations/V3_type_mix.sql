@@ -1,0 +1,1 @@
+ALTER TYPE sex ADD VALUE 'mix';
