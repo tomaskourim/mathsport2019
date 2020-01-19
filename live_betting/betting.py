@@ -77,7 +77,7 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
         book.handle_match(bookmaker_matchid, c_lambda)
     except Exception as error:
         logger.exception(f"Top level error while handling match {bookmaker_matchid}. Error: {error}")
-        save_screenshot(book.driver, f"top_match_handling", bookmaker_matchid)
+        save_screenshot(book.driver, f"top_match_handling_{str(error)}", bookmaker_matchid)
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
         book.close()
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     total_handler.setLevel(logging.DEBUG)
     info_handler.setLevel(logging.INFO)
     error_handler.setLevel(logging.WARNING)
-    stdout_handler.setLevel(logging.WARNING)
+    stdout_handler.setLevel(logging.INFO)
 
     # Create formatters and add it to handlers
     logging_format = logging.Formatter('%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(message)s')
@@ -150,7 +150,7 @@ if __name__ == '__main__':
             scan_update(main_book)
         except Exception as error:
             logger.exception(f"While updating DB error occurred: {error}")
-            save_screenshot(main_book.driver, f"mainrun", 'null')
+            save_screenshot(main_book.driver, f"mainrun_{str(error)}", 'null')
         end_time = datetime.datetime.now()
         logger.info(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute

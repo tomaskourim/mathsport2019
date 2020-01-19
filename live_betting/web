@@ -1,0 +1,915 @@
+<div id="js-multiview">
+    <div class="m-matchesDetail">
+        <div class="js-matchDetail3326431">
+            <div class="js-scoreboard">
+                <div class="o-scoreboard o-scoreboard--unpinned" style="top: 0px; position: relative;">
+                    <div class="o-scoreboard__header container-fluid">
+                        <div class="row no-gutters">
+                            <div class="m-scoreboardCategory col-xs">
+                                <div class="row no-wrap no-gutters">
+                                    <div class="col-xs col-xs-auto">
+                                        <svg class="a-icon a-icon--21"><title>Tenis</title>
+                                            <use xlink:href="#ss43"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="col-xs-10 m-scoreboardCategory__title"
+                                         title="Seelig Kyle - Hidalgo Diego  Tenis Tenis muži - dvouhra > Rochester 19A - antuka">
+                                        <div class="m-scoreboardCategory__match">Seelig Kyle - Hidalgo Diego</div>
+                                        <div class="m-scoreboardCategory__competition">Tenis muži - dvouhra &gt;
+                                            Rochester 19A - antuka <img src="https://www.tipsport.org/images/blank.png"
+                                                                        title="Informace o utkání"
+                                                                        class="sprIco spr-i025-1-15-normal-hover mousePointer marL-leftS"
+                                                                        width="15" height="15"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-scoreboardButtons col-xs col-xs-auto"></div>
+                            <div class="o-scoreboard__fnc col-xs-auto col-xs"><img
+                                    src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                    class="Scoreboard sprIco mousePointer spr-i009-0-15-normal-hover" title="Připnout">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <div class="m-scoreboardScore">
+                                <div class="m-scoreboardScore__info flexContainerColumn">
+                                    <div class="m-scoreboardScore__status" title="2. set">2. set</div>
+                                    <div class="m-scoreboardScore__player" title="Seelig Kyle">
+                                        <div class="row middle-xs no-wrap">
+                                            <div class="col-xs col-xs-auto">
+                                                <svg class="a-icon a-icon--11">
+                                                    <use xlink:href="#ss43"></use>
+                                                </svg>
+                                            </div>
+                                            <div class="col-xs col-xs-auto no-gutters-col">
+                                                <div class="m-scoreboardScore__playerName">Seelig Kyle</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="m-scoreboardScore__player" title="Hidalgo Diego">
+                                        <div class="row middle-xs no-wrap">
+                                            <div class="col-xs col-xs-auto">
+                                                <div class="a-icon a-icon--11"></div>
+                                            </div>
+                                            <div class="col-xs col-xs-auto no-gutters-col">
+                                                <div class="m-scoreboardScore__playerName">Hidalgo Diego</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-scoreboardScore__result flexContainerRow">
+                                    <div class="flexContainerColumn">
+                                        <div class="flexContainerRow">
+                                            <div class="m-scoreboardScore__score m-scoreboardScore__score--totalHead m-scoreboardScore__score--total">
+                                                sety<sup></sup></div>
+                                            <div class="m-scoreboardScore__score m-scoreboardScore__score--head">
+                                                1<sup></sup></div>
+                                            <div class="m-scoreboardScore__score m-scoreboardScore__score--head">
+                                                2<sup></sup></div>
+                                            <div class="m-scoreboardScore__score m-scoreboardScore__score--head">
+                                                3<sup></sup></div>
+                                            <div class="m-scoreboardScore__score m-scoreboardScore__score--head">
+                                                body<sup></sup></div>
+                                        </div>
+                                        <div class="flexContainerRow">
+                                            <div class="m-scoreboardScore__score m-scoreboardScore__score--total">
+                                                0<sup></sup></div>
+                                            <div class="m-scoreboardScore__score">6<sup>4</sup></div>
+                                            <div class="m-scoreboardScore__score">2</div>
+                                            <div class="m-scoreboardScore__score">-</div>
+                                            <div class="m-scoreboardScore__score">30<sup></sup></div>
+                                        </div>
+                                        <div class="flexContainerRow">
+                                            <div class="m-scoreboardScore__score m-scoreboardScore__score--total">
+                                                1<sup></sup></div>
+                                            <div class="m-scoreboardScore__score">7<sup>7</sup></div>
+                                            <div class="m-scoreboardScore__score">3</div>
+                                            <div class="m-scoreboardScore__score">-</div>
+                                            <div class="m-scoreboardScore__score">30<sup></sup></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="m-milestones">
+                            <div class="m-milestones__header"><span class="m-milestones__headerName"><div
+                                    class="row middle-xs"><div class="col-xs col-xs-auto no-gutters-col"></div><div
+                                    class="col-xs col-xs-auto"><svg class="a-icon a-icon--11"><use
+                                    xlink:href="#ss43"></use></svg></div><div class="col-xs col-xs-auto no-gutters-col">2. set -  (5. gam - 2:3) Hidalgo Diego:0</div></div></span><span
+                                    class="m-milestones__headerButton milestone__headerButton"><img
+                                    src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                    class="sprIco spr-i018-1-11-normal" title="" alt=""></span></div>
+                            <div class="m-milestones__list" style="display: none;">
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">2. set - (4. gam - 2:2) Seelig
+                                            Kyle:15
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">2. set - (3. gam - 1:2) Hidalgo
+                                            Diego:40
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">2. set - (2. gam - 1:1) Seelig
+                                            Kyle:15
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">2. set - (1. gam - 0:1) Hidalgo
+                                            Diego:15
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (13. gam - 6(4):7)
+                                            Hidalgo Diego
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (12. gam - 6:6) Hidalgo
+                                            Diego:30
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (11. gam - 6:5) Seelig
+                                            Kyle:40
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (10. gam - 5:5) Hidalgo
+                                            Diego:30
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (9. gam - 5:4) Seelig
+                                            Kyle:0
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (8. gam - 4:4) Seelig
+                                            Kyle:15 <span><img src="https://www.tipsport.org/images/blank.png"
+                                                               class="sprIco spr-c029-0-11-normal" width="11"
+                                                               height="11"></span>BREAK!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (7. gam - 3:4) Hidalgo
+                                            Diego:30 <span><img src="https://www.tipsport.org/images/blank.png"
+                                                                class="sprIco spr-c029-0-11-normal" width="11"
+                                                                height="11"></span>BREAK!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (6. gam - 3:3) Hidalgo
+                                            Diego:40
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (5. gam - 3:2) Seelig
+                                            Kyle:40
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (4. gam - 2:2) Seelig
+                                            Kyle:0 <span><img src="https://www.tipsport.org/images/blank.png"
+                                                              class="sprIco spr-c029-0-11-normal" width="11"
+                                                              height="11"></span>BREAK!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (3. gam - 1:2) Hidalgo
+                                            Diego:30 <span><img src="https://www.tipsport.org/images/blank.png"
+                                                                class="sprIco spr-c029-0-11-normal" width="11"
+                                                                height="11"></span>BREAK!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (2. gam - 1:1) Hidalgo
+                                            Diego:40
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-milestones__milestone">
+                                    <div class="row middle-xs">
+                                        <div class="col-xs col-xs-auto no-gutters-col"></div>
+                                        <div class="col-xs col-xs-auto">
+                                            <svg class="a-icon a-icon--11">
+                                                <use xlink:href="#ss43"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="col-xs col-xs-auto no-gutters-col">1. set - (1. gam - 1:0) Seelig
+                                            Kyle:15
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="m-scoreboardMsgs"></div>
+            <ul class="tab liveMatchTab">
+                <li class="selected"><span class="tabC">Kurzy</span></li>
+            </ul>
+            <div>
+                <div class="js-events">
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Vítěz zápasu">Vítěz zápasu</span></div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-WINNER_2W-1"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901703229">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074549881" data-id="1074549881"
+                                         data-event-id="901703229"><span class="name" title="Seelig">Seelig</span><span
+                                            class="value">5.45</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                    <div class="tdEventTable opportunity opportunity1074549882" data-id="1074549882"
+                                         data-event-id="901703229"><span class="name" title="D.Hidalgo">D.Hidalgo</span><span
+                                            class="value">1.10</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Vítěz 2. setu">Vítěz 2. setu</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-WINNER_2W-s"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901785153">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074753978" data-id="1074753978"
+                                         data-event-id="901785153"><span class="name" title="Seelig">Seelig</span><span
+                                            class="value">3.18</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                    <div class="tdEventTable opportunity opportunity1074753979" data-id="1074753979"
+                                         data-event-id="901785153"><span class="name" title="D.Hidalgo">D.Hidalgo</span><span
+                                            class="value">1.26</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Vítěz gamu ve 2. setu">Vítěz gamu ve 2. setu</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-WINNER_G-s"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901790078">
+                                <div class="tdEventName" title="6. gamu">6. gamu</div>
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074767498" data-id="1074767498"
+                                         data-event-id="901790078"><span class="name" title="Seelig">Seelig</span><span
+                                            class="value">1.74</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                    <div class="tdEventTable opportunity opportunity1074767499" data-id="1074767499"
+                                         data-event-id="901790078"><span class="name" title="D.Hidalgo">D.Hidalgo</span><span
+                                            class="value">1.96</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="trEventTable b901790145">
+                                <div class="tdEventName" title="7. gamu">7. gamu</div>
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074767655" data-id="1074767655"
+                                         data-event-id="901790145"><span class="name" title="Seelig">Seelig</span><span
+                                            class="value">2.90</span></div>
+                                    <div class="tdEventTable opportunity opportunity1074767656" data-id="1074767656"
+                                         data-event-id="901790145"><span class="name" title="D.Hidalgo">D.Hidalgo</span><span
+                                            class="value">1.31</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column3" data-column="3">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Kdo vyhraje ve 2. setu">Kdo vyhraje ve 2. setu</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-DOUBLE_GAMES-s"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901790077">
+                                <div class="tdEventName" title="7. a 8. gam">7. a 8. gam</div>
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074767495" data-id="1074767495"
+                                         data-event-id="901790077"><span class="name" title="Seelig">Seelig</span><span
+                                            class="value">4.65</span></div>
+                                    <div class="tdEventTable opportunity opportunity1074767496" data-id="1074767496"
+                                         data-event-id="901790077"><span class="name"
+                                                                         title="Každý jeden">Každý jeden</span><span
+                                            class="value">1.70</span></div>
+                                    <div class="tdEventTable opportunity opportunity1074767497" data-id="1074767497"
+                                         data-event-id="901790077"><span class="name" title="D.Hidalgo">D.Hidalgo</span><span
+                                            class="value">2.95</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Počet gamů v zápasu">Počet gamů v zápasu</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-ASIAN_TOTAL-1"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901785147">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074753964" data-id="1074753964"
+                                         data-event-id="901785147"><span class="name" title="Méně než 22.5">Méně než 22.5</span><span
+                                            class="value">2.16</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                    <div class="tdEventTable opportunity opportunity1074753965" data-id="1074753965"
+                                         data-event-id="901785147"><span class="name" title="Více než 22.5">Více než 22.5</span><span
+                                            class="value">1.56</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                </div>
+                            </div>
+                            <div class="trEventTable b901786248">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074756897" data-id="1074756897"
+                                         data-event-id="901786248"><span class="name" title="Méně než 23.5">Méně než 23.5</span><span
+                                            class="value">1.62</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                    <div class="tdEventTable opportunity opportunity1074756898" data-id="1074756898"
+                                         data-event-id="901786248"><span class="name" title="Více než 23.5">Více než 23.5</span><span
+                                            class="value">2.08</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                </div>
+                            </div>
+                            <div class="trEventTable b901786736">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074758165" data-id="1074758165"
+                                         data-event-id="901786736"><span class="name" title="Méně než 24.5">Méně než 24.5</span><span
+                                            class="value">1.62</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                    <div class="tdEventTable opportunity opportunity1074758166" data-id="1074758166"
+                                         data-event-id="901786736"><span class="name" title="Více než 24.5">Více než 24.5</span><span
+                                            class="value">2.08</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Počet gamů ve 2. setu">Počet gamů ve 2. setu</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-ASIAN_TOTAL-s"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901789381">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074765614" data-id="1074765614"
+                                         data-event-id="901789381"><span class="name"
+                                                                         title="Méně než 9.5">Méně než 9.5</span><span
+                                            class="value">2.03</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                    <div class="tdEventTable opportunity opportunity1074765615" data-id="1074765615"
+                                         data-event-id="901789381"><span class="name"
+                                                                         title="Více než 9.5">Více než 9.5</span><span
+                                            class="value">1.67</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                </div>
+                            </div>
+                            <div class="trEventTable b901789383">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074765618" data-id="1074765618"
+                                         data-event-id="901789383"><span class="name" title="Méně než 10.5">Méně než 10.5</span><span
+                                            class="value">1.31</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                    <div class="tdEventTable opportunity opportunity1074765619" data-id="1074765619"
+                                         data-event-id="901789383"><span class="name" title="Více než 10.5">Více než 10.5</span><span
+                                            class="value">2.90</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Počet vyhraných gamů Seelig v zápasu">Počet vyhraných gamů Seelig v zápasu</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-TOTAL_PARTICIPANT-1"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901785161">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074753994" data-id="1074753994"
+                                         data-event-id="901785161"><span class="name"
+                                                                         title="Méně než 9.5">Méně než 9.5</span><span
+                                            class="value">2.16</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                    <div class="tdEventTable opportunity opportunity1074753995" data-id="1074753995"
+                                         data-event-id="901785161"><span class="name"
+                                                                         title="Více než 9.5">Více než 9.5</span><span
+                                            class="value">1.56</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                </div>
+                            </div>
+                            <div class="trEventTable b901785177">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074754053" data-id="1074754053"
+                                         data-event-id="901785177"><span class="name" title="Méně než 10.5">Méně než 10.5</span><span
+                                            class="value">1.62</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                    <div class="tdEventTable opportunity opportunity1074754054" data-id="1074754054"
+                                         data-event-id="901785177"><span class="name" title="Více než 10.5">Více než 10.5</span><span
+                                            class="value">2.08</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                </div>
+                            </div>
+                            <div class="trEventTable b901785167">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074754019" data-id="1074754019"
+                                         data-event-id="901785167"><span class="name" title="Méně než 11.5">Méně než 11.5</span><span
+                                            class="value">1.44</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                    <div class="tdEventTable opportunity opportunity1074754020" data-id="1074754020"
+                                         data-event-id="901785167"><span class="name" title="Více než 11.5">Více než 11.5</span><span
+                                            class="value">2.41</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name"
+                                                             title="Počet vyhraných gamů D.Hidalgo v zápasu">Počet vyhraných gamů D.Hidalgo v zápasu</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-TOTAL_PARTICIPANT-1"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901785269">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074754181" data-id="1074754181"
+                                         data-event-id="901785269"><span class="name" title="Méně než 13.5">Méně než 13.5</span><span
+                                            class="value">1.54</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                    <div class="tdEventTable opportunity opportunity1074754182" data-id="1074754182"
+                                         data-event-id="901785269"><span class="name" title="Více než 13.5">Více než 13.5</span><span
+                                            class="value">2.18</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Handicap 2. set">Handicap 2. set</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-ASIAN_HANDICAP_2W_HOME-s"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901789387">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074765638 disabled"><span
+                                            class="name">Seelig -1.5</span><img
+                                            src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                            class="sprIco spr-i131-0-15-inactive"></div>
+                                    <div class="tdEventTable opportunity opportunity1074765639 disabled"><span
+                                            class="name">D.Hidalgo +1.5</span><img
+                                            src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                            class="sprIco spr-i131-0-15-inactive"></div>
+                                </div>
+                            </div>
+                            <div class="trEventTable b901789382">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074765616" data-id="1074765616"
+                                         data-event-id="901789382"><span class="name"
+                                                                         title="Seelig +1.5">Seelig +1.5</span><span
+                                            class="value">2.41</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                    <div class="tdEventTable opportunity opportunity1074765617" data-id="1074765617"
+                                         data-event-id="901789382"><span class="name" title="D.Hidalgo -1.5">D.Hidalgo -1.5</span><span
+                                            class="value">1.44</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="trEventTable b901789380">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074765612" data-id="1074765612"
+                                         data-event-id="901789380"><span class="name"
+                                                                         title="Seelig +2.5">Seelig +2.5</span><span
+                                            class="value">1.56</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                    <div class="tdEventTable opportunity opportunity1074765613" data-id="1074765613"
+                                         data-event-id="901789380"><span class="name" title="D.Hidalgo -2.5">D.Hidalgo -2.5</span><span
+                                            class="value">2.16</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Handicap (gamy v zápasu)">Handicap (gamy v zápasu)</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-ASIAN_HANDICAP_2W_AWAY-1"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901785172">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074754043" data-id="1074754043"
+                                         data-event-id="901785172"><span class="name"
+                                                                         title="Seelig +2.5">Seelig +2.5</span><span
+                                            class="value">2.70</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                    <div class="tdEventTable opportunity opportunity1074754044" data-id="1074754044"
+                                         data-event-id="901785172"><span class="name" title="D.Hidalgo -2.5">D.Hidalgo -2.5</span><span
+                                            class="value">1.35</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="trEventTable b901785157">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074753986" data-id="1074753986"
+                                         data-event-id="901785157"><span class="name"
+                                                                         title="Seelig +3.5">Seelig +3.5</span><span
+                                            class="value">1.62</span><span
+                                            class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                    <div class="tdEventTable opportunity opportunity1074753987" data-id="1074753987"
+                                         data-event-id="901785157"><span class="name" title="D.Hidalgo -3.5">D.Hidalgo -3.5</span><span
+                                            class="value">2.08</span><span
+                                            class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Počet gamů v zápase (sudý/lichý)">Počet gamů v zápase (sudý/lichý)</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-POINTS_ODD_EVEN-1"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901785165">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074754016" data-id="1074754016"
+                                         data-event-id="901785165"><span class="name" title="Sudý">Sudý</span><span
+                                            class="value">1.91</span></div>
+                                    <div class="tdEventTable opportunity opportunity1074754015" data-id="1074754015"
+                                         data-event-id="901785165"><span class="name" title="Lichý">Lichý</span><span
+                                            class="value">1.80</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Počet gamů ve 2. setu (sudý/lichý)">Počet gamů ve 2. setu (sudý/lichý)</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-POINTS_ODD_EVEN-s"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="trEventTable b901789385">
+                                <div class="tdEventCells">
+                                    <div class="tdEventTable opportunity opportunity1074765623" data-id="1074765623"
+                                         data-event-id="901789385"><span class="name" title="Sudý">Sudý</span><span
+                                            class="value">1.68</span></div>
+                                    <div class="tdEventTable opportunity opportunity1074765622" data-id="1074765622"
+                                         data-event-id="901789385"><span class="name" title="Lichý">Lichý</span><span
+                                            class="value">2.01</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Přesný výsledek 2. setu">Přesný výsledek 2. setu</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-EXACT_RESULT-s"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="columnTable tEXACT_RESULTgp2-s0">
+                                <div class="tdEventTable opportunity opportunity1074765627" data-id="1074765627"
+                                     data-event-id="901789386"><span class="name" title="6:3">6:3</span><span
+                                        class="value">22.00</span><span
+                                        class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                <div class="tdEventTable opportunity opportunity1074765628" data-id="1074765628"
+                                     data-event-id="901789386"><span class="name" title="6:4">6:4</span><span
+                                        class="value">6.50</span><span
+                                        class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                <div class="tdEventTable opportunity opportunity1074765629" data-id="1074765629"
+                                     data-event-id="901789386"><span class="name" title="7:5">7:5</span><span
+                                        class="value">13.00</span><span
+                                        class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                <div class="tdEventTable opportunity opportunity1074765630" data-id="1074765630"
+                                     data-event-id="901789386"><span class="name" title="7:6">7:6</span><span
+                                        class="value">11.25</span><span
+                                        class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                            </div>
+                            <div class="columnTable tEXACT_RESULTgp2-s1">
+                                <div class="tdEventTable opportunity opportunity1074765633" data-id="1074765633"
+                                     data-event-id="901789386"><span class="name" title="2:6">2:6</span><span
+                                        class="value">5.25</span><span
+                                        class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                </div>
+                                <div class="tdEventTable opportunity opportunity1074765634" data-id="1074765634"
+                                     data-event-id="901789386"><span class="name" title="3:6">3:6</span><span
+                                        class="value">2.90</span><span
+                                        class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                </div>
+                                <div class="tdEventTable opportunity opportunity1074765635" data-id="1074765635"
+                                     data-event-id="901789386"><span class="name" title="4:6">4:6</span><span
+                                        class="value">4.95</span><span
+                                        class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                <div class="tdEventTable opportunity opportunity1074765636" data-id="1074765636"
+                                     data-event-id="901789386"><span class="name" title="5:7">5:7</span><span
+                                        class="value">8.75</span><span
+                                        class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                                <div class="tdEventTable opportunity opportunity1074765637" data-id="1074765637"
+                                     data-event-id="901789386"><span class="name" title="6:7">6:7</span><span
+                                        class="value">8.25</span><span
+                                        class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Přesný výsledek (na dva vítězné)">Přesný výsledek (na dva vítězné)</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-EXACT_RESULT-v"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="columnTable tEXACT_RESULTgp2-v0">
+                                <div class="tdEventTable opportunity opportunity1074753973" data-id="1074753973"
+                                     data-event-id="901785151"><span class="name" title="2:1">2:1</span><span
+                                        class="value">5.50</span><span
+                                        class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                            </div>
+                            <div class="columnTable tEXACT_RESULTgp2-v1">
+                                <div class="tdEventTable opportunity opportunity1074753975" data-id="1074753975"
+                                     data-event-id="901785151"><span class="name" title="0:2">0:2</span><span
+                                        class="value">1.25</span><span
+                                        class="arrowDownTran arrowDownTran-enter arrowDownTran-enter-active"></span>
+                                </div>
+                                <div class="tdEventTable opportunity opportunity1074753974" data-id="1074753974"
+                                     data-event-id="901785151"><span class="name" title="1:2">1:2</span><span
+                                        class="value">6.25</span><span
+                                        class="arrowUpTran arrowUpTran-enter arrowUpTran-enter-active"></span></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                    <div class="eventTable column2" data-column="2">
+                        <div class="eventTableHeader">
+                            <div class="eventTableRow"><span class="name" title="Přesný výsledek 7. gam, 2. set">Přesný výsledek 7. gam, 2. set</span>
+                            </div>
+                            <img src="https://www.tipsport.org/images/blank.png" width="11" height="11"
+                                 class="unwrap sprIco spr-i003-1-11-normal"><img
+                                src="https://www.tipsport.org/images/blank.png" width="15" height="15"
+                                class="mySelectionEventTableIcon sprIco spr-i008-1-15-normal-hover"
+                                data-supersportid="43" data-my-selection-id="43-EXACT_RESULT_GAME_EXT-s"
+                                title="Přidá událost do oblíbených"></div>
+                        <div class="tbodyEventTable">
+                            <div class="columnTable tid9017901440">
+                                <div class="tdEventTable opportunity opportunity1074767647" data-id="1074767647"
+                                     data-event-id="901790144"><span class="name" title="Seelig čistou hrou">Seelig čistou hrou</span><span
+                                        class="value">26.00</span></div>
+                                <div class="tdEventTable opportunity opportunity1074767648" data-id="1074767648"
+                                     data-event-id="901790144"><span class="name"
+                                                                     title="Seelig ku 15">Seelig ku 15</span><span
+                                        class="value">11.00</span></div>
+                                <div class="tdEventTable opportunity opportunity1074767649" data-id="1074767649"
+                                     data-event-id="901790144"><span class="name"
+                                                                     title="Seelig ku 30">Seelig ku 30</span><span
+                                        class="value">7.75</span></div>
+                                <div class="tdEventTable opportunity opportunity1074767650" data-id="1074767650"
+                                     data-event-id="901790144"><span class="name" title="Seelig přes shodu">Seelig přes shodu</span><span
+                                        class="value">8.00</span></div>
+                            </div>
+                            <div class="columnTable tid9017901441">
+                                <div class="tdEventTable opportunity opportunity1074767651" data-id="1074767651"
+                                     data-event-id="901790144"><span class="name" title="D.Hidalgo čistou hrou">D.Hidalgo čistou hrou</span><span
+                                        class="value">6.00</span></div>
+                                <div class="tdEventTable opportunity opportunity1074767652" data-id="1074767652"
+                                     data-event-id="901790144"><span class="name" title="D.Hidalgo ku 15">D.Hidalgo ku 15</span><span
+                                        class="value">4.05</span></div>
+                                <div class="tdEventTable opportunity opportunity1074767653" data-id="1074767653"
+                                     data-event-id="901790144"><span class="name" title="D.Hidalgo ku 30">D.Hidalgo ku 30</span><span
+                                        class="value">3.90</span></div>
+                                <div class="tdEventTable opportunity opportunity1074767654" data-id="1074767654"
+                                     data-event-id="901790144"><span class="name" title="D.Hidalgo přes shodu">D.Hidalgo přes shodu</span><span
+                                        class="value">4.45</span></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                    <div class="backToOffer"><a href="/live" class="a-btn">ZOBRAZIT VŠECHNY LIVE ZÁPASY</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

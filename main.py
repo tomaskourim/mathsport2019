@@ -200,7 +200,7 @@ if __name__ == '__main__':
         description="Main script of the paper. Computes odds using random walks with memory and evaluates them against \
         real Grand Slam tennis matches and their results.")
     parser.add_argument("--first_year", help="The first tennis season to be considered", default=2009, required=False)
-    parser.add_argument("--last_year", help="The last tennis season to be considered", default=2018, required=False)
+    parser.add_argument("--last_year", help="The last tennis season to be considered", default=2019, required=False)
     parser.add_argument("--odds_probability_type", help="How to get probabilities from odds",
                         default='1.set', required=False)
     parser.add_argument("--database_path", help="Path to the original database", required=False)

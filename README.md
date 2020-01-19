@@ -55,7 +55,7 @@ Change password for the new Postgres user
 Load SQL schema
 
     cd live_betting
-    psql -U bettor -h localhost -f schema.sql bettor
+    psql -U bettor -h localhost -f V1_schema.sql bettor
 
 
 ## Install chrome & selenium
