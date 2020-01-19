@@ -9,7 +9,7 @@ from typing import Tuple
 
 from database_operations import execute_sql, create_connection, execute_many_sql
 
-ORIGINAL_DATABASE_PATH = 'C://tennis.sqlite'
+ORIGINAL_DATABASE_PATH = 'C://tennis//tennis.sqlite'
 
 
 # function used for removing nested lists in python.
@@ -78,7 +78,7 @@ def get_matches(tournament: list, first_year: int) -> list:
 
     # last round of Wimbledon qualification is sometimes played as best-of-five. Starting times obtained manually
     wimbledon_utimes = (1245657600, 1277114400, 1308567600, 1340620500, 1372070400, 1403520000, 1435574400, 1467024000,
-                        1499078400, 1530527700)
+                        1499078400, 1530527700, 1561975500)
     if 'Wimbledon' in tournament[1]:
         utime_of_first_game_of_tournament = wimbledon_utimes[tournament[4] - first_year]
 
@@ -155,11 +155,11 @@ def get_odds(bookmaker: str, matchids_original: list) -> list:
 
 
 def prepare_database(first_year: int, last_year: int, bookmaker: str):
-    # select tournaments (10 years, 40 tournaments)
+    # select tournaments (11 years, 44 tournaments)
     tournaments = get_tournaments(first_year, last_year)
     matches = []
 
-    # iterate over each tournament, select matches, (40 * 127 = 5 080 matches)
+    # iterate over each tournament, select matches, (44 * 127 = 5 588 matches)
     for tournament in tournaments:
         matches.append(get_matches(tournament, first_year))
 
@@ -270,7 +270,7 @@ if __name__ == '__main__':
         description="Prepares a relevant, lightweight database for the purpose of this project out of a much larger \
         and complex database available to the author.")
     parser.add_argument("--first_year", help="The first tennis season to be considered", default=2009, required=False)
-    parser.add_argument("--last_year", help="The last tennis season to be considered", default=2018, required=False)
+    parser.add_argument("--last_year", help="The last tennis season to be considered", default=2019, required=False)
     parser.add_argument("--bookmaker", help="The bookmaker to be considered", default='pinnacle-sports', required=False)
     parser.add_argument("--original_database_path", help="Path to the original database", required=False)
 
