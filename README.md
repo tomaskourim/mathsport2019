@@ -52,13 +52,13 @@ Load SQL schema from folder live_betting/db_migrations
     ...    
 
 ### Deploy betting server
-#### Necessary packages
 
 Clone repo and go to folder
 
     git clone https://github.com/tomaskourim/mathsport2019.git
     cd mathsport2019
-
+    
+#### Necessary packages
 Install pip and other necessary prerequisites
 
     sudo apt update
