@@ -59,7 +59,7 @@ def get_clambda() -> float:
     probabilities = pd.DataFrame(get_probabilities_from_odds(matches_data, odds_probability_type))
     matches_data = matches_data.assign(probability_predicted_player=probabilities[0],
                                        probability_not_predicted_player=probabilities[1])
-    training_set = matches_data[matches_data["year"] == datetime.datetime.utcnow().year - 2]
+    training_set = matches_data[matches_data["year"] == datetime.datetime.utcnow().year - 1]
     c_lambda = find_single_lambda(training_set)
     logger.info(f"Optimal lambda is {c_lambda}")
     return c_lambda
