@@ -47,7 +47,7 @@ class Tipsport(Bookmaker):
         tournament_year_ids = []
         tournament_ids = []
         for e in elements:
-            texts.append(e.find_element_by_xpath(".//h2").text)
+            texts.append(e.text)
             tournament_year_ids.append(e.get_attribute("data-competition-annual-id"))
             tournament_ids.append(str(json.loads(e.get_attribute("data-model"))['id']))
 
@@ -77,6 +77,8 @@ class Tipsport(Bookmaker):
             tv_location = text.find("    ")
             if tv_location > 0:
                 text = text[0:tv_location]
+            # remove tournament brackets
+            text = text.replace("\nPAVOUK", "")
             if "muži" in text:
                 tournament["sex"] = "men"
                 text = text.replace(", Tenis muži - ", "")
@@ -92,10 +94,10 @@ class Tipsport(Bookmaker):
             if "dvouhra" in text:
                 tournament["type"] = "singles"
                 text = text.replace("dvouhra", "")
-            elif "čtyřhra" in text or '4hra' in text:
+            elif "čtyřhra" in text or "4hra" in text:
                 tournament["type"] = "doubles"
                 text = text.replace("čtyřhra", "")
-                text = text.replace("4hra", "")
+                text = text.replace(", 4hra", "")
             elif "družstva" in text:
                 tournament["type"] = "teams"
                 text = text.replace("družstva", "")
@@ -108,9 +110,8 @@ class Tipsport(Bookmaker):
             elif "antuka" in text:
                 tournament["surface"] = "clay"
                 text = text.replace(" - antuka", "")
-            elif "tvrdý " in text:
+            elif "tvrdý p." in text:
                 tournament["surface"] = "hard"
-                text = text.replace(" - tvrdý povrch", "")
                 text = text.replace(" - tvrdý p.", "")
             else:
                 tournament["surface"] = None
@@ -124,13 +125,12 @@ class Tipsport(Bookmaker):
     def get_matches_tournament(self, tournament: pd.DataFrame) -> pd.DataFrame:
         self.driver.get("".join([self.tennis_tournament_base_url, str(tournament.tournament_bookmaker_id)]))
         time.sleep(self.seconds_to_sleep)
-        elements = self.driver.find_elements_by_xpath("//div[@class='rowMatchWrapper']")
+        elements = self.driver.find_elements_by_xpath("//div[@data-matchid]")
         home = []
         away = []
         matchid = []
         start_time_utc = []
-        for e in elements:
-            base_info = e.find_element_by_xpath("./div")
+        for base_info in elements:
             players = base_info.get_attribute("data-matchname")
             if "celkově" in players:
                 continue
@@ -145,7 +145,7 @@ class Tipsport(Bookmaker):
             away.append(players_splitted[1])
             matchid.append(base_info.get_attribute("data-matchid"))
             starting_time = datetime.datetime.strptime(
-                e.find_elements_by_xpath(".//div[@class='actualState']")[1].text, '%d.%m.%Y %H:%M')
+                base_info.find_elements_by_xpath(".//div[@class='o-matchRow__dateClosed']")[1].text, '%d.%m.%Y %H:%M')
             starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
             start_time_utc.append(starting_time)
 
@@ -174,7 +174,7 @@ class Tipsport(Bookmaker):
             return current_odds
 
         while not self.match_started(bookmaker_matchid):
-            current_odds = self.get_set_odds(1)
+            current_odds = self.get_set_odds(1, bookmaker_matchid)
             if current_odds != last_odds:
                 save_set_odds(current_odds, self.database_id, bookmaker_matchid, 1)
                 last_odds = current_odds
@@ -196,7 +196,6 @@ class Tipsport(Bookmaker):
                 starting_time = self.get_starting_time()
                 break
             except NoSuchElementException:
-                save_screenshot(self.driver, f"to_start_by_error", bookmaker_matchid)
                 time.sleep(self.seconds_to_sleep)
                 errors = errors + 1
                 if errors > 3:
@@ -206,17 +205,18 @@ class Tipsport(Bookmaker):
         if starting_time - utc_time < datetime.timedelta(seconds=30):
             if "disabled" in elem_odds[0].get_attribute("class") and "disabled" in elem_odds[1].get_attribute(
                     "class"):
-                logging.info(f"Match started at UTC: {utc_time}")
+                logging.info(f"Match {bookmaker_matchid} started at UTC: {utc_time}")
                 return True
         return False
 
-    def get_set_odds(self, set_number: int) -> tuple:
+    def get_set_odds(self, set_number: int, bookmaker_matchid: str) -> tuple:
         elem_base = self.get_base_odds_element(set_number)
         elem_odds = elem_base.find_elements_by_xpath("./../../..//div[@class='tdEventCells']//span")
         try:
             odds = (float(elem_odds[1].text), float(elem_odds[3].text))
         except:
             odds = (float(elem_odds[1].text), float(elem_odds[4].text))
+        save_screenshot(self.driver, f"odds_gathered_{odds[0]}_{odds[1]}", bookmaker_matchid)
         return odds
 
     def wait_half_to_matchstart(self):
@@ -253,7 +253,7 @@ class Tipsport(Bookmaker):
 
     def get_starting_time(self) -> datetime:
         starting_time = datetime.datetime.strptime(
-            self.driver.find_elements_by_xpath("//div[@class='actualState']")[1].text, '%d.%m.%Y %H:%M')
+            self.driver.find_elements_by_xpath("//div[@class='o-matchRow__dateClosed']")[1].text, '%d.%m.%Y %H:%M')
         starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
         return starting_time
 
@@ -283,13 +283,13 @@ class Tipsport(Bookmaker):
             except Exception as error:
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
-                save_screenshot(self.driver, f"live_set{set_number}", bookmaker_matchid)
+                save_screenshot(self.driver, f"live_set{set_number}_{str(error)}", bookmaker_matchid)
                 time.sleep(self.seconds_to_sleep)
 
     pass
 
     def match_finished(self, bookmaker_matchid: str, current_set_score: tuple) -> bool:
-        if max(current_set_score) < 3:  # TODO handle best-of-three matches
+        if max(current_set_score) < 2:  # TODO handle best-of-five matches
             try:
                 self.driver.find_element_by_xpath("//span[@class='removalCountdownText']")
             except NoSuchElementException:
@@ -328,7 +328,7 @@ class Tipsport(Bookmaker):
         while True:
             try:
                 # get odds for next set
-                set_odds = self.get_set_odds(set_number)
+                set_odds = self.get_set_odds(set_number, bookmaker_matchid)
                 save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number)
                 # bet on next set if possible
                 if home_probability > 1 / set_odds[0]:
@@ -347,7 +347,7 @@ class Tipsport(Bookmaker):
             except Exception as error:
                 logging.exception(
                     f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
-                save_screenshot(self.driver, f"placing_bet_set{set_number}", bookmaker_matchid)
+                save_screenshot(self.driver, f"placing_bet_set{set_number}_{str(error)}", bookmaker_matchid)
                 if self.next_set_started(bookmaker_matchid, set_number):
                     logging.info(f"Match {bookmaker_matchid}: Set{set_number} started.")
                     break
@@ -365,10 +365,13 @@ class Tipsport(Bookmaker):
         elems_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
         elem_odds = elems_odds[odd_index]
         elem_odds.click()
-        time.sleep(self.short_seconds_to_sleep)
+        save_screenshot(self.driver, f"bet_prepared_{bet_type}_{odd}", bookmaker_matchid)
+        time.sleep(self.short_seconds_to_sleep / 2)
         write_id(self.driver, 'amountPaid',
                  str(max(self.minimal_bet_amount, round(probability * self.base_bet_amount))))
         click_id(self.driver, 'submitButton')
+        save_screenshot(self.driver, f"bet_created_{bet_type}_{odd}", bookmaker_matchid)
+        logging.info(f"Waiting for {self.seconds_to_sleep} seconds in bet placing in match {bookmaker_matchid}")
         time.sleep(self.seconds_to_sleep)
         try:
             self.driver.find_element_by_xpath("//td[@class='ticketMessage successfullySaved']")
@@ -469,7 +472,8 @@ class Tipsport(Bookmaker):
         else:
             away_games = int(away_games_raw)
 
-        logging.info(f"Current score sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
+        logging.info(
+            f"Current score for match {bookmaker_matchid}: sets {home_sets}:{away_sets}, games {home_games}:{away_games}")
         point_score = ""  # TODO actually get it
         return (home_sets, away_sets), (home_games, away_games), point_score
 
@@ -483,7 +487,7 @@ class Tipsport(Bookmaker):
 
     @staticmethod
     def get_score_after_match(set_score, game_score, point_score):
-        if max(set_score) == 2:  # match about to end #TODO handle non-Grand Slam
+        if max(set_score) == 1:  # match about to end #TODO handle Grand Slam
             if game_score == (6, 6):  # set about to end in tiebreak #TODO what about Wimbledon and infinite sets
                 point_score = point_score.replace('(', '').replace(')', '')
                 point_home = int(point_score.split(':')[0])

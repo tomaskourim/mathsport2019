@@ -400,7 +400,7 @@ p_{t}=\lambda p_{t-1}+\frac{1}{2}(1-\lambda)(1-X_{t}).\label{eq:suc_punished}
 \begin_layout Standard
 This definition of a random walk means that the opposite direction is always
  preferred and that the walk tends to return back to the origin.
- Alternatively, inverse approach can be applied and the same decision can
+ Alternatively, inverse approach can be applied and the same direction can
  be supported.
  Formally, the expression for the 
 \begin_inset Formula $t-th$
@@ -520,7 +520,7 @@ Such player/team would be normally considered as ``home'', however, as there
 
 \end_inset
 
- won 2201 in total, just slightly over the half.
+ won 2201 matches in total, just slightly over the half.
  On the other hand, if the bookmaker's favorite (i.e.
  the player with better odds or the first listed player in case the odds
  are even) is considered, the situation changes significantly.
@@ -1305,7 +1305,7 @@ Up to 4 sets considered in each match, 9 yearly testing datasets.
 \end_inset
 
  together.
- On a 95% confidence level, only on 2 out of the 36 available subsets provide
+ On a 95% confidence level, only 2 out of the 36 available subsets provide
  strong enough evidence to reject the null hypothesis.
  On the other hand, the null hypothesis is relatively weak.
  It only says that the prediction is correct on average.

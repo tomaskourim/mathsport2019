@@ -53,7 +53,7 @@ def analyze_data(matches_data: pd.DataFrame, odds_probability_type: str):
                                        probability_not_predicted_player=probabilities[1])
 
     matches_data.probability_predicted_player.plot.hist(grid=True, rwidth=0.4, bins=PROBABILITY_BINS)
-    plt.xlabel('First set favorite winning probability')
+    plt.xlabel('First set favourite winning probability')
     plt.title(r'Histogram of winning probabilities')
     plt.show()
 

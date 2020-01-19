@@ -148,3 +148,18 @@ CREATE TABLE match_course (
     FOREIGN KEY (match_id) REFERENCES matches(id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (match_id, set_number)
 );
+
+
+CREATE TABLE bet_manually_updated (
+    id                 BIGSERIAL   NOT NULL PRIMARY KEY,
+    bookmaker_id       BIGINT      NOT NULL,
+    match_bookmaker_id VARCHAR     NOT NULL,
+    bet_type           BETTYPE     NOT NULL,
+    match_part         MATCHPART   NOT NULL,
+    odd                FLOAT       NOT NULL,
+    probability        FLOAT       NOT NULL,
+    result             BOOLEAN,
+    utc_time_recorded  TIMESTAMPTZ NOT NULL,
+    FOREIGN KEY (bookmaker_id, match_bookmaker_id) REFERENCES matches_bookmaker(bookmaker_id, match_bookmaker_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE (bookmaker_id, match_bookmaker_id, bet_type, match_part)
+);
