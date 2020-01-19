@@ -21,13 +21,14 @@ from main import find_single_lambda
 def get_starting_matches() -> List[tuple]:
     utc_time = pytz.utc.localize(datetime.datetime.utcnow())
     limit_start_time = utc_time + datetime.timedelta(minutes=TIME_TO_MATCHSTART_MINUTES)
+    # input correct tournament
     query = "SELECT match_bookmaker_id FROM \
                 (SELECT * FROM matches WHERE start_time_utc > %s AND start_time_utc < %s) AS matches \
                 JOIN \
                 matches_bookmaker ON matches.id = match_id \
                 JOIN \
                 tournament ON matches.tournament_id = tournament.id \
-                WHERE name = 'US Open' AND sex = 'men' AND type = 'singles' \
+                WHERE name = 'ATP Australian Open' AND sex = 'men' AND type = 'singles' \
                 EXCEPT \
                 SELECT match_bookmaker_id FROM inplay"
     params = [utc_time, limit_start_time]
