@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from typing import Tuple
 
@@ -34,5 +35,8 @@ def save_screenshot(driver: webdriver, info_text: str, bookmaker_matchid: str):
     while os.path.isfile(screen_filename):
         screen_order = screen_order + 1
         screen_filename = f"screens/{bookmaker_matchid}-{info_text}-{screen_order}.png"
-    driver.save_screenshot(screen_filename)
-    pass
+    try:
+        driver.save_screenshot(screen_filename)
+    except Exception:
+        logging.exception(
+            f"Error while saving screenshot in match {bookmaker_matchid}. Original error message text: {info_text}")
