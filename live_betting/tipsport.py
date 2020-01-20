@@ -212,7 +212,7 @@ class Tipsport(Bookmaker):
             odds = (float(elem_odds[1].text), float(elem_odds[3].text))
         except:
             odds = (float(elem_odds[1].text), float(elem_odds[4].text))
-        save_screenshot(self.driver, f"odds_gathered_{odds[0]}_{odds[1]}", bookmaker_matchid)
+        save_screenshot(self.driver, f"set{set_number}_odds_gathered_{odds[0]}_{odds[1]}", bookmaker_matchid)
         return odds
 
     def wait_half_to_matchstart(self):
@@ -282,8 +282,6 @@ class Tipsport(Bookmaker):
                 save_screenshot(self.driver, f"live_set{set_number}_{str(error)}", bookmaker_matchid)
                 time.sleep(self.seconds_to_sleep)
 
-    pass
-
     def match_finished(self, bookmaker_matchid: str, current_set_score: tuple) -> bool:
         if max(current_set_score) < 2:  # TODO handle best-of-five matches
             try:
@@ -314,7 +312,7 @@ class Tipsport(Bookmaker):
                 time.sleep(MINUTES_PER_GAME * 10)  # wait a moment
 
     def evaluate_last_bet(self, last_set_score: tuple, current_set_score: tuple, bookmaker_matchid: str,
-                          set_number: int, home_won: bool):
+                          set_number: int, home_won: bool):  # TODO to generic Bookmaker class or elsewhere
         if set_number > 1:
             logging.info(f"Betting evaluation: matchid={bookmaker_matchid}, last score: {last_set_score}, \
             current score: {current_set_score}, set number {set_number}. Home won = {home_won}")
@@ -361,12 +359,12 @@ class Tipsport(Bookmaker):
         elems_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
         elem_odds = elems_odds[odd_index]
         elem_odds.click()
-        save_screenshot(self.driver, f"bet_prepared_{bet_type}_{odd}", bookmaker_matchid)
+        save_screenshot(self.driver, f"set{set_number}_bet_prepared_{bet_type}_{odd}", bookmaker_matchid)
         time.sleep(self.short_seconds_to_sleep / 2)
         write_id(self.driver, 'amountPaid',
                  str(max(self.minimal_bet_amount, round(probability * self.base_bet_amount))))
         click_id(self.driver, 'submitButton')
-        save_screenshot(self.driver, f"bet_created_{bet_type}_{odd}", bookmaker_matchid)
+        save_screenshot(self.driver, f"set{set_number}_bet_created_{bet_type}_{odd}", bookmaker_matchid)
         logging.info(f"Waiting for {self.seconds_to_sleep} seconds in bet placing in match {bookmaker_matchid}")
         time.sleep(self.seconds_to_sleep)
         try:
