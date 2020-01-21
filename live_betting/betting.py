@@ -78,7 +78,7 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
         book.handle_match(bookmaker_matchid, c_lambda)
     except Exception as err:
         logger.exception(f"Top level error while handling match {bookmaker_matchid}. Error: {err}")
-        save_screenshot(book.driver, f"top_match_handling_{str(err)}", bookmaker_matchid)
+        save_screenshot(book.driver, f"top_match_handling_{str(err)[:5]}", bookmaker_matchid)
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
         book.close()
@@ -151,7 +151,7 @@ if __name__ == '__main__':
             scan_update(main_book)
         except Exception as error:
             logger.exception(f"While updating DB error occurred: {error}")
-            save_screenshot(main_book.driver, f"mainrun_{str(error)}", 'null')
+            save_screenshot(main_book.driver, f"mainrun_{str(error)[:5]}", 'null')
         end_time = datetime.datetime.now()
         logger.info(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute
