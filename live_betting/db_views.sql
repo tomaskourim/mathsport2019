@@ -2,8 +2,8 @@
 SELECT match_bookmaker_id
 FROM (SELECT *
       FROM matches
-      WHERE start_time_utc > '2020-01-20 14:00:00.000000' AND
-          start_time_utc < '2020-01-20 07:00:00.000000') AS matches
+      WHERE start_time_utc > '2020-01-21 20:00:00.000000' AND
+          start_time_utc < '2020-01-21 23:00:00.000000') AS matches
          JOIN matches_bookmaker ON matches.id = match_id EXCEPT
 SELECT match_bookmaker_id
 FROM inplay;
@@ -12,7 +12,7 @@ FROM inplay;
 SELECT home, away, start_time_utc, name, sex, type, surface, year
 FROM matches
          JOIN tournament t ON matches.tournament_id = t.id
-WHERE start_time_utc > '2020-01-20 14:00:00.000000'
+WHERE start_time_utc > '2020-01-21 20:00:00.000000'
 ORDER BY start_time_utc;
 
 -- bets overview
@@ -28,8 +28,8 @@ WHERE start_time_utc >= '2020-01-20 14:00:00.000000'
 ORDER BY utc_time_recorded DESC, book_id, match_part;
 
 -- odds
-SELECT book_id, home, away, name AS tournament_name, sex, type, surface, start_time_utc, odds_type, match_part, odd1,
-    odd2
+SELECT book_id, home, away, match_part, odd1, odd2, name AS tournament_name, start_time_utc, odds_type,
+    utc_time_recorded
 FROM (
     SELECT *, mb.match_bookmaker_id AS book_id
     FROM odds
@@ -40,8 +40,18 @@ FROM (
 WHERE start_time_utc >= '2020-01-20 14:00:00.000000'
 ORDER BY tournament_name, sex, type, book_id, start_time_utc DESC, match_part;
 
+-- match course
+SELECT match_bookmaker_id AS book_id, home, away, result, name AS tournament_name, start_time_utc, set_number,
+    utc_time_recorded
+FROM match_course
+         JOIN matches m ON match_course.match_id = m.id
+         JOIN matches_bookmaker mb ON m.id = mb.match_id
+         JOIN tournament t ON m.tournament_id = t.id
+WHERE start_time_utc > '2020-01-20 14:00:00.000000'
+ORDER BY name, sex, type, match_bookmaker_id, start_time_utc, match_bookmaker_id, set_number;
+
 -- inplay
-SELECT book_id, home, away, name AS tournament_name, sex, type, surface, start_time_utc, utc_time_recorded
+SELECT book_id, home, away, name AS tour_name, sex, type, surface, start_time_utc, utc_time_recorded
 FROM (
     SELECT *, mb.match_bookmaker_id AS book_id
     FROM inplay
@@ -50,15 +60,6 @@ FROM (
              JOIN matches m ON mb.match_id = m.id
              JOIN tournament t ON m.tournament_id = t.id) AS r
 ORDER BY book_id, start_time_utc DESC, home;
-
--- match course
-SELECT name, sex, type, match_bookmaker_id, home, away, start_time_utc, set_number, result, utc_time_recorded
-FROM match_course
-         JOIN matches m ON match_course.match_id = m.id
-         JOIN matches_bookmaker mb ON m.id = mb.match_id
-         JOIN tournament t ON m.tournament_id = t.id
-WHERE start_time_utc > '2020-01-20 14:00:00.000000'
-ORDER BY name, sex, type, match_bookmaker_id, start_time_utc, match_bookmaker_id, set_number;
 
 
 -- results and expected results
