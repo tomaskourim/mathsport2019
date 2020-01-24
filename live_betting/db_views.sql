@@ -3,7 +3,7 @@ SELECT match_bookmaker_id
 FROM (SELECT *
       FROM matches
       WHERE start_time_utc > '2020-01-23 20:00:00.000000' AND
-          start_time_utc < '2020-01-23 23:00:00.000000') AS matches
+          start_time_utc < '2020-01-24 20:00:00.000000') AS matches
          JOIN matches_bookmaker ON matches.id = match_id EXCEPT
 SELECT match_bookmaker_id
 FROM inplay;
@@ -48,7 +48,7 @@ FROM match_course
          JOIN matches m ON match_course.match_id = m.id
          JOIN matches_bookmaker mb ON m.id = mb.match_id
          JOIN tournament t ON m.tournament_id = t.id
-WHERE start_time_utc > '2020-01-19 20:00:00.000000'
+WHERE start_time_utc > '2020-01-23 20:00:00.000000'
 ORDER BY name, sex, type, match_bookmaker_id, start_time_utc, match_bookmaker_id, set_number;
 
 --incorrect results
@@ -58,7 +58,7 @@ FROM (
     FROM (
         SELECT match_id, result, count(*) AS sets_won
         FROM match_course
-        WHERE utc_time_recorded > '2020-01-19 20:00:00.000000'
+        WHERE utc_time_recorded > '2020-01-23 20:00:00.000000'
         GROUP BY match_id, result) AS gid
     GROUP BY match_id) AS gwin
 WHERE winning_sets != 3;
@@ -83,11 +83,37 @@ FROM (SELECT *,
 (SELECT *
  FROM match_course
           JOIN matches_bookmaker ON match_course.match_id = matches_bookmaker.match_id
+          JOIN matches m ON match_course.match_id = m.id
 ) AS mc
 ON mc.bookmaker_id = o.bookmaker_id AND mc.match_bookmaker_id = o.match_bookmaker_id AND mc.set_number = o.set_number
-WHERE mc.utc_time_recorded > '2020-01-19 20:00:00.000000' AND o.id ISNULL;
+WHERE mc.start_time_utc > '2020-01-23 20:00:00.000000' AND o.id ISNULL;
 
 --missing match course
+SELECT *
+FROM (SELECT odds.*, m2.start_time_utc AS start,
+          CASE
+              WHEN match_part = 'set1'
+                  THEN 1
+              WHEN match_part = 'set2'
+                  THEN 2
+              WHEN match_part = 'set3'
+                  THEN 3
+              WHEN match_part = 'set4'
+                  THEN 4
+              WHEN match_part = 'set5'
+                  THEN 5
+              END AS set_number
+      FROM odds
+               JOIN matches_bookmaker mb
+      ON odds.bookmaker_id = mb.bookmaker_id AND odds.match_bookmaker_id = mb.match_bookmaker_id
+               JOIN matches m2 ON mb.match_id = m2.id) AS o
+         LEFT JOIN
+(SELECT *
+ FROM match_course
+          JOIN matches_bookmaker ON match_course.match_id = matches_bookmaker.match_id
+) AS mc
+ON mc.bookmaker_id = o.bookmaker_id AND mc.match_bookmaker_id = o.match_bookmaker_id AND mc.set_number = o.set_number
+WHERE start > '2020-01-23 20:00:00.000000'  AND mc.utc_time_recorded ISNULL;
 
 -- inplay
 SELECT book_id, home, away, name AS tour_name, sex, type, surface, start_time_utc, utc_time_recorded
