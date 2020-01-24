@@ -64,6 +64,28 @@ FROM (
 WHERE winning_sets != 3;
 
 --missing odds
+SELECT *
+FROM (SELECT *,
+          CASE
+              WHEN match_part = 'set1'
+                  THEN 1
+              WHEN match_part = 'set2'
+                  THEN 2
+              WHEN match_part = 'set3'
+                  THEN 3
+              WHEN match_part = 'set4'
+                  THEN 4
+              WHEN match_part = 'set5'
+                  THEN 5
+              END AS set_number
+      FROM odds) AS o
+         RIGHT JOIN
+(SELECT *
+ FROM match_course
+          JOIN matches_bookmaker ON match_course.match_id = matches_bookmaker.match_id
+) AS mc
+ON mc.bookmaker_id = o.bookmaker_id AND mc.match_bookmaker_id = o.match_bookmaker_id AND mc.set_number = o.set_number
+WHERE mc.utc_time_recorded > '2020-01-19 20:00:00.000000' AND o.id ISNULL;
 
 --missing match course
 
