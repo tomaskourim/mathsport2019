@@ -90,7 +90,7 @@ WHERE mc.start_time_utc > '2020-01-23 20:00:00.000000' AND o.id ISNULL;
 
 --missing match course
 SELECT *
-FROM (SELECT odds.*, m2.start_time_utc AS start,
+FROM (SELECT odds.*, m2.start_time_utc,
           CASE
               WHEN match_part = 'set1'
                   THEN 1
@@ -113,7 +113,7 @@ FROM (SELECT odds.*, m2.start_time_utc AS start,
           JOIN matches_bookmaker ON match_course.match_id = matches_bookmaker.match_id
 ) AS mc
 ON mc.bookmaker_id = o.bookmaker_id AND mc.match_bookmaker_id = o.match_bookmaker_id AND mc.set_number = o.set_number
-WHERE start > '2020-01-23 20:00:00.000000'  AND mc.utc_time_recorded ISNULL;
+WHERE start_time_utc > '2020-01-23 20:00:00.000000'  AND mc.utc_time_recorded ISNULL;
 
 -- inplay
 SELECT book_id, home, away, name AS tour_name, sex, type, surface, start_time_utc, utc_time_recorded
