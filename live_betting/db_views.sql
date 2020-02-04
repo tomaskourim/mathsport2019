@@ -67,7 +67,7 @@ WHERE match_bookmaker_id IN (
         GROUP BY match_id) AS gwin
              JOIN matches ON gwin.match_id = matches.id
              JOIN matches_bookmaker mb ON matches.id = mb.match_id
-    WHERE winning_sets != 2 EXCEPT
+    WHERE winning_sets != 3 EXCEPT
     SELECT match_bookmaker_id
     FROM inplay)
 ORDER BY match_bookmaker_id;
