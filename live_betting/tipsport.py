@@ -359,12 +359,14 @@ class Tipsport(Bookmaker):
         elems_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
         elem_odds = elems_odds[odd_index]
         elem_odds.click()
-        save_screenshot(self.driver, f"set{set_number}_bet_prepared_{bet_type}_{odd}_time{datetime.datetime.now()}", bookmaker_matchid)
+        save_screenshot(self.driver, f"set{set_number}_bet_prepared_{bet_type}_{odd}_time{datetime.datetime.now()}",
+                        bookmaker_matchid)
         # time.sleep(self.short_seconds_to_sleep / 2)
         write_id(self.driver, 'amountPaid',
                  str(max(self.minimal_bet_amount, round(probability * self.base_bet_amount))))
         click_id(self.driver, 'submitButton')
-        save_screenshot(self.driver, f"set{set_number}_bet_created_{bet_type}_{odd}_time{datetime.datetime.now()}", bookmaker_matchid)
+        save_screenshot(self.driver, f"set{set_number}_bet_created_{bet_type}_{odd}_time{datetime.datetime.now()}",
+                        bookmaker_matchid)
         logging.info(f"Waiting for {self.seconds_to_sleep} seconds in bet placing in match {bookmaker_matchid}")
         time.sleep(self.seconds_to_sleep)
         try:
@@ -380,7 +382,8 @@ class Tipsport(Bookmaker):
 
     def next_set_started(self, bookmaker_matchid: str, set_number: int) -> bool:
         _, _, point_score = self.get_score(set_number, bookmaker_matchid, (0, 0), (0, 0), "")
-        if point_score == '(00:00)':  # TODO it is eager to start, some corner cases should be handled
+        # TODO it is eager to start, some corner cases should be handled
+        if point_score == '(00:00)' or point_score == '0:0':
             return False
         else:
             return True
@@ -411,8 +414,13 @@ class Tipsport(Bookmaker):
                 self.driver.find_element_by_xpath(
                     "//div[contains(text(),'byl ukončen, vyberte si další z naší nabídky aktuálně probíhajících')]")
                 return self.get_score_after_match(last_set_score, last_game_score, last_point_score)
-        if 'Za ' in raw_text or 'Začátek plánován' in raw_text or 'se rozehr' in raw_text or 'ošetřování' in raw_text:
+        if 'Za ' in raw_text or 'Začátek plánován' in raw_text or 'se rozehr' in raw_text or 'ošetřování' in raw_text \
+                or 'Přerušeno' in raw_text:
             return last_set_score, last_game_score, last_point_score
+        return self.get_score_from_video_raw_text(set_number, raw_text, last_point_score)
+
+    def get_score_from_video_raw_text(self, set_number: int, raw_text: str, last_point_score: str) -> \
+            Tuple[Tuple[int, ...], Tuple[int, ...], str]:
         raw_text = raw_text.replace(',', '')
         raw_text = raw_text.replace('*', '')  # supertiebreak doubles has * marking serving pair
         raw_text = re.sub('\(\\d+\)', '', raw_text)
@@ -421,7 +429,8 @@ class Tipsport(Bookmaker):
         if '-' in raw_text:
             set_games = raw_text.split(' - ')[1].split(' ')
             point_score = set_games[len(set_games) - 1]
-            if sum(set_score) == len(set_games) - 2:
+            if sum(set_score) == len(set_games) - 2 or "super tiebreak" in raw_text and (
+                    sum(set_score) == len(set_games) - 1):
                 game_score = set_games[set_number - 1].split(':')
             else:
                 set_score, game_score = self.get_score_from_mistake(set_games)
