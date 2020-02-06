@@ -275,7 +275,7 @@ class Tipsport(Bookmaker):
                     break
                 home_probability = c_lambda * home_probability + 1 / 2 * (1 - c_lambda) * (1 + (1 if home_won else -1))
                 set_number = set_number + 1
-                self.bet_next_set(bookmaker_matchid, set_number, home_probability)
+                # self.bet_next_set(bookmaker_matchid, set_number, home_probability)
             except Exception as error:
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
