@@ -161,7 +161,7 @@ class Tipsport(Bookmaker):
                         Starting home probability is {home_probability}.")
         self.handle_inplay(bookmaker_matchid, home_probability, c_lambda)
 
-    def handle_prematch(self, bookmaker_matchid) -> tuple:
+    def handle_prematch(self, bookmaker_matchid: str) -> tuple:
         last_odds = (None, None)
         current_odds = (None, None)
         self.driver.get("".join([self.tennis_match_base_url, bookmaker_matchid]))
@@ -183,7 +183,16 @@ class Tipsport(Bookmaker):
                 break
         return current_odds
 
-    def match_started(self, bookmaker_matchid) -> bool:
+    def match_available(self, bookmaker_matchid: str) -> bool:
+        if self.driver.current_url == "https://www.tipsport.cz/kurzy/zapas-neni-v-nabidce":
+            logging.warning(f"Match {bookmaker_matchid} no longer available")
+            return False
+        else:
+            return True
+
+    def match_started(self, bookmaker_matchid: str) -> bool:
+        if not self.match_available(bookmaker_matchid):
+            return True
         utc_time = pytz.utc.localize(datetime.datetime.utcnow())
         errors = 0
         while True:
@@ -224,6 +233,8 @@ class Tipsport(Bookmaker):
         pass
 
     def open_odds_menu(self, bookmaker_matchid: str) -> bool:
+        if not self.match_available(bookmaker_matchid):
+            return False
         errors = 0
         while errors < 4:
             try:
