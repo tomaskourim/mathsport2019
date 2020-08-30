@@ -1,13 +1,12 @@
 import datetime
-import json
 import logging
 import re
-import time
 from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
 import pytz
+import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -30,6 +29,7 @@ class Tipsport(Bookmaker):
         self.tennis_match_live_base_url = "https://www.tipsport.cz/live/tenis/"
         self.base_bet_amount = 50
         self.minimal_bet_amount = 5
+        self.starting_time_format = '%d.%m.%Y%H:%M'
 
     def login(self):
         username, password = load_credentials(CREDENTIALS_PATH)
@@ -141,7 +141,8 @@ class Tipsport(Bookmaker):
             away.append(players_splitted[1])
             matchid.append(str(base_info.get_attribute("data-atid")).split('||')[2])
             starting_time = datetime.datetime.strptime(
-                base_info.find_elements_by_xpath(".//div[@class='o-matchRow__dateClosed']")[1].text, '%d.%m.%Y%H:%M')
+                base_info.find_elements_by_xpath(".//div[@class='o-matchRow__dateClosed']")[1].text,
+                self.starting_time_format)
             starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
             start_time_utc.append(starting_time)
 
@@ -226,7 +227,7 @@ class Tipsport(Bookmaker):
         errors = 0
         while errors < 4:
             try:
-                click_id(self.driver, "matchName" + bookmaker_matchid)
+                click_xpath(self.driver, f"//span[@data-m='{bookmaker_matchid}']")
                 time.sleep(self.short_seconds_to_sleep)
                 return True
             except NoSuchElementException:
@@ -238,18 +239,19 @@ class Tipsport(Bookmaker):
 
     def get_base_odds_element(self, set_number: int) -> WebElement:
         if set_number == 5:
-            return self.driver.find_element_by_xpath(f"//span[@title='Vítěz zápasu']")
+            return self.driver.find_element_by_xpath(f"//span[text()='Vítěz zápasu']")
         elif set_number == 3:
             try:
-                return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
+                return self.driver.find_element_by_xpath(f"//span[text()='Vítěz {set_number}. setu']")
             except NoSuchElementException:
-                return self.driver.find_element_by_xpath(f"//span[@title='Vítěz zápasu']")
+                return self.driver.find_element_by_xpath(f"//span[text()='Vítěz zápasu']")
         else:
-            return self.driver.find_element_by_xpath(f"//span[@title='Vítěz {set_number}. setu']")
+            return self.driver.find_element_by_xpath(f"//span[text()='Vítěz {set_number}. setu']")
 
     def get_starting_time(self) -> datetime:
         starting_time = datetime.datetime.strptime(
-            self.driver.find_elements_by_xpath("//div[@class='o-matchRow__dateClosed']")[1].text, '%d.%m.%Y %H:%M')
+            self.driver.find_elements_by_xpath("//div[@class='o-matchRow__dateClosed']")[1].text,
+            self.starting_time_format)
         starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
         return starting_time
 
