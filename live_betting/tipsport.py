@@ -17,7 +17,7 @@ from live_betting.config_betting import CREDENTIALS_PATH
 from live_betting.config_betting import MINUTES_PER_GAME
 from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set, home_won_set, save_bet
 from live_betting.prematch_operations import get_matchid
-from live_betting.utils import load_credentials, write_id, click_id, save_screenshot
+from live_betting.utils import load_credentials, write_id, click_id, save_screenshot, click_xpath
 from odds_to_probabilities import probabilities_from_odds
 
 
@@ -121,13 +121,13 @@ class Tipsport(Bookmaker):
     def get_matches_tournament(self, tournament: pd.DataFrame) -> pd.DataFrame:
         self.driver.get("".join([self.tennis_tournament_base_url, str(tournament.tournament_bookmaker_id)]))
         time.sleep(self.seconds_to_sleep)
-        elements = self.driver.find_elements_by_xpath("//div[@data-matchid]")
+        elements = self.driver.find_elements_by_xpath("//div[@class='o-matchRow']")
         home = []
         away = []
         matchid = []
         start_time_utc = []
         for base_info in elements:
-            players = base_info.get_attribute("data-matchname")
+            players = base_info.find_element_by_xpath(".//span[@class='o-matchRow__matchName']").text
             if "celkově" in players:
                 continue
             players_splitted = players.split(" - ")
@@ -139,9 +139,9 @@ class Tipsport(Bookmaker):
                 continue
             home.append(players_splitted[0])
             away.append(players_splitted[1])
-            matchid.append(base_info.get_attribute("data-matchid"))
+            matchid.append(str(base_info.get_attribute("data-atid")).split('||')[2])
             starting_time = datetime.datetime.strptime(
-                base_info.find_elements_by_xpath(".//div[@class='o-matchRow__dateClosed']")[1].text, '%d.%m.%Y %H:%M')
+                base_info.find_elements_by_xpath(".//div[@class='o-matchRow__dateClosed']")[1].text, '%d.%m.%Y%H:%M')
             starting_time = pytz.timezone('Europe/Berlin').localize(starting_time).astimezone(pytz.utc)
             start_time_utc.append(starting_time)
 
