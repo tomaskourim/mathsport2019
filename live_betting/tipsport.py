@@ -41,15 +41,15 @@ class Tipsport(Bookmaker):
     def get_tournaments(self) -> pd.DataFrame():
         self.driver.get("https://www.tipsport.cz/kurzy/tenis-43#superSportId=43")
         time.sleep(self.seconds_to_sleep)  # some time in seconds for the website to load
-        self.scroll_to_botton()
-        elements = self.driver.find_elements_by_xpath("//div[@class='colCompetition']")
+        self.scroll_to_bottom()
+        elements = self.driver.find_elements_by_xpath("//div[@class='o-competitionRow']")
         texts = []
         tournament_year_ids = []
         tournament_ids = []
         for e in elements:
-            texts.append(e.text)
-            tournament_year_ids.append(e.get_attribute("data-competition-annual-id"))
-            tournament_ids.append(str(json.loads(e.get_attribute("data-model"))['id']))
+            texts.append(e.find_element_by_xpath(".//div[@class='colCompetition']").text)
+            tournament_year_ids.append(str(e.get_attribute("data-atid")).split('||')[3])
+            tournament_ids.append(str(e.get_attribute("data-atid")).split('||')[2])
 
         tournaments = self.obtain_tournaments_from_texts(texts)
         tournaments["tournament_bookmaker_year_id"] = tournament_year_ids
