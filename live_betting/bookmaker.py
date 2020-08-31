@@ -33,7 +33,7 @@ class Bookmaker:
         return execute_sql_postgres("SELECT id FROM bookmaker WHERE home_url=%s AND name=%s",
                                     [self._home_url, self.name])[0]
 
-    def scroll_to_botton(self):
+    def scroll_to_bottom(self):
 
         # Get scroll height
         last_height = self.driver.execute_script("return document.body.scrollHeight")
