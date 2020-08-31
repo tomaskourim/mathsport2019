@@ -1,11 +1,11 @@
 import datetime
 import logging
 import threading
-import time
 from typing import List
 
 import pandas as pd
 import pytz
+import time
 
 from config import COLUMN_NAMES
 from data_operations import transform_home_favorite, get_probabilities_from_odds
@@ -28,7 +28,7 @@ def get_starting_matches() -> List[tuple]:
                 matches_bookmaker ON matches.id = match_id \
                 JOIN \
                 tournament ON matches.tournament_id = tournament.id \
-                WHERE name = 'ATP Australian Open' AND sex = 'men' AND type = 'singles' \
+                WHERE name IN ('ATP Australian Open','ATP US Open') AND sex = 'men' AND type = 'singles' \
                 EXCEPT \
                 SELECT match_bookmaker_id FROM inplay"
     params = [utc_time, limit_start_time]
