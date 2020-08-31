@@ -108,7 +108,7 @@ def save_matches(matches: pd.DataFrame, tournament_id: int, book_id: int):
 
 def process_tournaments_save_matches(book: Bookmaker, tournaments: pd.DataFrame):
     for i, tournament in tournaments.iterrows():
-        # logging.info("------------------------------------------------------")
+        logging.debug("------------------------------------------------------")
         try:
             matches = book.get_matches_tournament(tournament)
             if len(matches) > 0:
