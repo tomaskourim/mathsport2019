@@ -280,6 +280,7 @@ class Tipsport(Bookmaker):
             try:
                 # wait for the set to finish
                 current_set_score = self.wait_for_set_end(set_number, last_set_score, bookmaker_matchid)
+                logging.info(f"End of set{set_number} in match {bookmaker_matchid}. Score = {current_set_score}")
                 home_won = home_won_set(current_set_score, last_set_score, set_number, matchid)
                 self.evaluate_last_bet(last_set_score, current_set_score, bookmaker_matchid, set_number, home_won)
                 last_set_score = current_set_score
@@ -315,6 +316,7 @@ class Tipsport(Bookmaker):
             # TODO if no score is returned, assume the match is over and try to guess the result
             set_score, game_score, point_score = self.get_score(set_number, bookmaker_matchid,
                                                                 last_set_state, game_score, point_score)
+            logging.info(f"Current score for match {bookmaker_matchid} is: {set_score}; {game_score}; {point_score}")
             if last_set_state != set_score:
                 return set_score
             elif max(game_score) < 5:
