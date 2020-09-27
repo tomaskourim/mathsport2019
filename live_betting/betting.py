@@ -28,9 +28,10 @@ def get_starting_matches() -> List[tuple]:
                 matches_bookmaker ON matches.id = match_id \
                 JOIN \
                 tournament ON matches.tournament_id = tournament.id \
-                WHERE name IN ('ATP Australian Open','ATP US Open') AND sex = 'men' AND type = 'singles' \
-                EXCEPT \
-                SELECT match_bookmaker_id FROM inplay"
+                WHERE name IN ('ATP Australian Open','ATP US Open', 'ATP French Open', 'ATP Australian Open') AND " \
+            "sex = 'men' AND type = 'singles' \
+            EXCEPT \
+            SELECT match_bookmaker_id FROM inplay"
     params = [utc_time, limit_start_time]
     return execute_sql_postgres(query, params, False, True)
 
