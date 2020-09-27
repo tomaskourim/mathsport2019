@@ -280,6 +280,7 @@ class Tipsport(Bookmaker):
             try:
                 # wait for the set to finish
                 current_set_score = self.wait_for_set_end(set_number, last_set_score, bookmaker_matchid)
+                logging.info(f"End of set{set_number} in match {bookmaker_matchid}. Score = {current_set_score}")
                 home_won = home_won_set(current_set_score, last_set_score, set_number, matchid)
                 self.evaluate_last_bet(last_set_score, current_set_score, bookmaker_matchid, set_number, home_won)
                 last_set_score = current_set_score
@@ -315,6 +316,7 @@ class Tipsport(Bookmaker):
             # TODO if no score is returned, assume the match is over and try to guess the result
             set_score, game_score, point_score = self.get_score(set_number, bookmaker_matchid,
                                                                 last_set_state, game_score, point_score)
+            logging.info(f"Current score for match {bookmaker_matchid} is: {set_score}; {game_score}; {point_score}")
             if last_set_state != set_score:
                 return set_score
             elif max(game_score) < 5:
@@ -410,7 +412,6 @@ class Tipsport(Bookmaker):
         except NoSuchElementException:
             # w/out live video stream
             return self.get_score_without_video(set_number, bookmaker_matchid)
-        pass
 
     def get_score_with_video(self, set_number: int, bookmaker_matchid: str, last_set_score: tuple,
                              last_game_score: tuple, last_point_score: str) -> \
@@ -428,7 +429,7 @@ class Tipsport(Bookmaker):
                     "//div[contains(text(),'byl ukončen, vyberte si další z naší nabídky aktuálně probíhajících')]")
                 return self.get_score_after_match(last_set_score, last_game_score, last_point_score)
         if 'Za ' in raw_text or 'Začátek plánován' in raw_text or 'se rozehr' in raw_text or 'ošetřování' in raw_text \
-                or 'Přerušeno' or 'Skreč' in raw_text:
+                or 'Přerušeno' in raw_text or 'Skreč' in raw_text:
             return last_set_score, last_game_score, last_point_score
         return self.get_score_from_video_raw_text(set_number, raw_text, last_point_score)
 
