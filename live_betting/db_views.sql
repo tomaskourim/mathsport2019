@@ -1,3 +1,9 @@
+-- match detail
+SELECT *
+FROM matches_bookmaker
+         JOIN matches m ON matches_bookmaker.match_id = m.id
+WHERE match_bookmaker_id = '3788802';
+
 SELECT DISTINCT home, away, start_time_utc, name
 FROM match_course
          JOIN matches m ON match_course.match_id = m.id
