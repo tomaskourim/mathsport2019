@@ -13,21 +13,24 @@ WHERE name IN ('ATP Australian Open', 'ATP US Open', 'ATP French Open', 'ATP Wim
 GROUP BY match_id, home, away, start_time_utc, name
 ORDER BY start_time_utc;
 
-
 -- matches to start
-SELECT match_bookmaker_id
-FROM (SELECT *
-      FROM matches
-      WHERE start_time_utc > '2020-09-29 08:00:00.000000' AND
-          start_time_utc < '2020-09-29 10:00:00.000000') AS matches
-         JOIN matches_bookmaker ON matches.id = match_id
-         JOIN
-tournament ON matches.tournament_id = tournament.id
-WHERE name IN ('ATP Australian Open', 'ATP US Open', 'ATP French Open', 'ATP Wimbledon') AND sex = 'men' AND
-    type = 'singles'
-    EXCEPT
-SELECT match_bookmaker_id
-FROM inplay;
+SELECT home, away, start_time_utc, match_bookmaker_id
+FROM matches
+         JOIN matches_bookmaker mb ON matches.id = mb.match_id
+WHERE match_bookmaker_id IN (SELECT match_bookmaker_id
+                             FROM (SELECT *
+                                   FROM matches
+                                   WHERE start_time_utc > '2020-10-06 12:00:00.000000' AND
+                                       start_time_utc < '2020-10-06 15:00:00.000000') AS matches
+                                      JOIN matches_bookmaker ON matches.id = match_id
+                                      JOIN
+                             tournament ON matches.tournament_id = tournament.id
+                             WHERE name IN ('ATP Australian Open', 'ATP US Open', 'ATP French Open',
+                                            'ATP Wimbledon') AND sex = 'men' AND
+                                 type = 'singles'
+                                 EXCEPT
+                             SELECT match_bookmaker_id
+                             FROM inplay);
 
 -- matches overview
 SELECT home, away, start_time_utc, name, sex, type, surface, year
