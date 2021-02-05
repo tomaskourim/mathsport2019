@@ -155,11 +155,11 @@ def get_odds(bookmaker: str, matchids_original: list) -> list:
 
 
 def prepare_database(first_year: int, last_year: int, bookmaker: str):
-    # select tournaments (11 years, 44 tournaments)
+    # select tournaments (12 years, 47 tournaments - no Wimbledon in 2020)
     tournaments = get_tournaments(first_year, last_year)
     matches = []
 
-    # iterate over each tournament, select matches, (44 * 127 = 5 588 matches)
+    # iterate over each tournament, select matches, (47 * 127 = 5 969 matches)
     for tournament in tournaments:
         matches.append(get_matches(tournament, first_year))
 
@@ -270,7 +270,7 @@ if __name__ == '__main__':
         description="Prepares a relevant, lightweight database for the purpose of this project out of a much larger \
         and complex database available to the author.")
     parser.add_argument("--first_year", help="The first tennis season to be considered", default=2009, required=False)
-    parser.add_argument("--last_year", help="The last tennis season to be considered", default=2019, required=False)
+    parser.add_argument("--last_year", help="The last tennis season to be considered", default=2020, required=False)
     parser.add_argument("--bookmaker", help="The bookmaker to be considered", default='pinnacle-sports', required=False)
     parser.add_argument("--original_database_path", help="Path to the original database", required=False)
 
