@@ -1,13 +1,14 @@
 import datetime
 import logging
 import re
+import time
 from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
 import pytz
-import time
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 
 from config import FAIR_ODDS_PARAMETER
@@ -16,7 +17,7 @@ from live_betting.config_betting import CREDENTIALS_PATH
 from live_betting.config_betting import MINUTES_PER_GAME
 from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set, home_won_set, save_bet
 from live_betting.prematch_operations import get_matchid
-from live_betting.utils import load_credentials, write_id, click_id, save_screenshot, click_xpath
+from live_betting.utils import load_credentials, write_id, click_id, save_screenshot, click_xpath, send_keys_id
 from odds_to_probabilities import probabilities_from_odds
 
 
@@ -34,6 +35,7 @@ class Tipsport(Bookmaker):
     def login(self):
         username, password = load_credentials(CREDENTIALS_PATH)
         write_id(self.driver, "userNameId", username)
+        send_keys_id(self.driver, "userNameId", Keys.DELETE)
         write_id(self.driver, "passwordId", password)
         click_id(self.driver, "btnLogin")
         time.sleep(self.seconds_to_sleep)  # some time in seconds for the website to load
@@ -449,16 +451,18 @@ class Tipsport(Bookmaker):
             else:
                 set_score, game_score = self.get_score_from_mistake(set_games)
         else:
-            game_score = raw_text[-4:-1].split(':')
+            raw_text = raw_text.replace(')', '').replace('(', '')
+            raw_text_split = raw_text.split(" ")
+            game_score = raw_text_split[len(raw_text_split) - 1].split(':')
             point_score = last_point_score  # TODO actually do something
         game_score = [int(x) for x in game_score]
         return tuple(set_score), tuple(game_score), point_score
 
     def get_score_without_video(self, set_number: int, bookmaker_matchid: str) -> \
             Tuple[Tuple[int, int], Tuple[int, int], str]:
-        elems = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
-        home_raw = elems[1].text
-        away_raw = elems[2].text
+        elements = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
+        home_raw = elements[1].text
+        away_raw = elements[2].text
         logging.info(f"No video score for match {bookmaker_matchid}: Home raw: {home_raw}, away_raw: {away_raw}")
 
         home_split = home_raw.split('\n')

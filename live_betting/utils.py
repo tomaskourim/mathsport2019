@@ -4,6 +4,7 @@ import os
 from typing import Tuple
 
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 
 def load_credentials(credentials_file_path: str) -> Tuple[str, str]:
@@ -19,6 +20,11 @@ def write_id(driver: webdriver, element_id: str, text: str):
     elem = driver.find_element_by_id(element_id)
     elem.clear()
     elem.send_keys(text)
+
+
+def send_keys_id(driver: webdriver, element_id: str, key: Keys):
+    elem = driver.find_element_by_id(element_id)
+    elem.send_keys(key)
 
 
 def click_id(driver: webdriver, element_id: str):
