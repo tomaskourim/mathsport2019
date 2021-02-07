@@ -21,7 +21,7 @@ def write_xpath(driver: webdriver, xpath: str, text: str):
 def write_id(driver: webdriver, element_id: str, text: str):
     elem = driver.find_element_by_id(element_id)
     elem.click()
-    time.sleep(5)
+    time.sleep(2)
     elem.send_keys(text)
 
 
