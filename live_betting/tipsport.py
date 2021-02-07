@@ -133,15 +133,15 @@ class Tipsport(Bookmaker):
             players = base_info.find_element_by_xpath(".//span[@class='o-matchRow__matchName']").text
             if "celkově" in players:
                 continue
-            players_splitted = players.split(" - ")
-            if len(players_splitted) != 2:
-                players_splitted = players.split("-")
-            if len(players_splitted) != 2:
+            players_split = players.split(" - ")
+            if len(players_split) != 2:
+                players_split = players.split("-")
+            if len(players_split) != 2:
                 logging.warning(
                     f"Impossible to find two players in tournament {tournament.tournament_name}. Found text: {players}")
                 continue
-            home.append(players_splitted[0])
-            away.append(players_splitted[1])
+            home.append(players_split[0])
+            away.append(players_split[1])
             matchid.append(str(base_info.get_attribute("data-atid")).split('||')[2])
             starting_time = datetime.datetime.strptime(
                 base_info.find_elements_by_xpath(".//div[@class='o-matchRow__dateClosed']")[1].text,
