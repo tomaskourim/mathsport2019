@@ -7,7 +7,7 @@ from typing import List, Tuple
 import numpy as np
 import pandas as pd
 import pytz
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 from selenium.webdriver.remote.webelement import WebElement
 
 from config import FAIR_ODDS_PARAMETER
@@ -296,7 +296,7 @@ class Tipsport(Bookmaker):
             except Exception as error:
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
-                save_screenshot(self.driver, f"set{set_number}_live_{str(error)[:5]}", bookmaker_matchid)
+                save_screenshot(self.driver, f"set{set_number}_live_{str(error)[:15]}", bookmaker_matchid)
                 time.sleep(self.seconds_to_sleep)
 
     def match_finished(self, bookmaker_matchid: str, current_set_score: tuple) -> bool:
@@ -357,9 +357,12 @@ class Tipsport(Bookmaker):
                         f" and computed prob. {1 - home_probability}")
                 break
             except Exception as error:
-                logging.exception(
-                    f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
-                save_screenshot(self.driver, f"set{set_number}_placing_bet_{str(error)[:5]}", bookmaker_matchid)
+                if isinstance(error, ElementClickInterceptedException):
+                    self.driver.refresh()
+                else:
+                    logging.exception(
+                        f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
+                save_screenshot(self.driver, f"set{set_number}_placing_bet_{str(error)[:15]}", bookmaker_matchid)
                 if self.next_set_started(bookmaker_matchid, set_number):
                     logging.info(f"Match {bookmaker_matchid}: Set{set_number} started.")
                     break
