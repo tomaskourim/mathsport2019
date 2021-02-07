@@ -1,9 +1,11 @@
 import json
 import logging
 import os
+import time
 from typing import Tuple
 
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
 
@@ -18,8 +20,14 @@ def write_xpath(driver: webdriver, xpath: str, text: str):
 
 def write_id(driver: webdriver, element_id: str, text: str):
     elem = driver.find_element_by_id(element_id)
-    elem.clear()
+    elem.click()
+    time.sleep(2)
     elem.send_keys(text)
+
+
+def clear_id(driver: webdriver, element_id: str):
+    elem = driver.find_element_by_id(element_id)
+    elem.clear()
 
 
 def send_keys_id(driver: webdriver, element_id: str, key: Keys):
@@ -43,6 +51,9 @@ def save_screenshot(driver: webdriver, info_text: str, bookmaker_matchid: str):
         screen_filename = f"screens/{bookmaker_matchid}-{info_text}-{screen_order}.png"
     try:
         driver.save_screenshot(screen_filename)
+    except TimeoutException:
+        logging.error(
+            f'Timeout while saving screenshot in match {bookmaker_matchid}. Original error message text: {info_text}')
     except Exception:
         logging.exception(
             f"Error while saving screenshot in match {bookmaker_matchid}. Original error message text: {info_text}")
