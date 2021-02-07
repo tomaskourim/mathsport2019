@@ -8,7 +8,6 @@ import numpy as np
 import pandas as pd
 import pytz
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 
 from config import FAIR_ODDS_PARAMETER
@@ -17,8 +16,7 @@ from live_betting.config_betting import CREDENTIALS_PATH
 from live_betting.config_betting import MINUTES_PER_GAME
 from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set, home_won_set, save_bet
 from live_betting.prematch_operations import get_matchid
-from live_betting.utils import load_credentials, write_id, click_id, save_screenshot, click_xpath, send_keys_id, \
-    clear_id
+from live_betting.utils import load_credentials, write_id, click_id, save_screenshot, click_xpath, clear_id
 from odds_to_probabilities import probabilities_from_odds
 
 
@@ -381,10 +379,8 @@ class Tipsport(Bookmaker):
         elem_odds.click()
         save_screenshot(self.driver, f"set{set_number}_bet_prepared_{bet_type}_{odd}_time{datetime.datetime.now()}",
                         bookmaker_matchid)
-        # time.sleep(self.short_seconds_to_sleep / 2)
         clear_id(self.driver, 'amountPaid')
-        write_id(self.driver, 'amountPaid', self.compute_bet(probability)
-                 )
+        write_id(self.driver, 'amountPaid', self.compute_bet(probability))
         click_id(self.driver, 'submitButton')
         save_screenshot(self.driver, f"set{set_number}_bet_created_{bet_type}_{odd}_time{datetime.datetime.now()}",
                         bookmaker_matchid)
@@ -532,5 +528,5 @@ class Tipsport(Bookmaker):
         else:
             raise Exception(f"Unexpected set score: {set_score}, {game_score}, {point_score}")
 
-    def compute_bet(self, probability:float)->str:
+    def compute_bet(self, probability: float) -> str:
         return str(max(self.minimal_bet_amount, round(probability * self.base_bet_amount)))

@@ -17,6 +17,15 @@ class testTipsport(unittest.TestCase):
         bet_amount = main_book.compute_bet(0.07713517328285746)
         self.assertEqual(str(main_book.minimal_bet_amount), bet_amount)
 
+        bet_amount = main_book.compute_bet(0.5)
+        self.assertEqual(str(round(main_book.base_bet_amount / 2.0)), bet_amount)
+
+        bet_amount = main_book.compute_bet(1)
+        self.assertEqual(str(round(main_book.base_bet_amount)), bet_amount)
+
+        bet_amount = main_book.compute_bet(0.84)
+        self.assertEqual('42', bet_amount)
+
 
 if __name__ == '__main__':
     unittest.main()
