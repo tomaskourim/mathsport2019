@@ -1,13 +1,13 @@
 import datetime
 import logging
 import re
+import time
 from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
 import pytz
-import time
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 from selenium.webdriver.remote.webelement import WebElement
 
 from config import FAIR_ODDS_PARAMETER
@@ -16,7 +16,7 @@ from live_betting.config_betting import CREDENTIALS_PATH
 from live_betting.config_betting import MINUTES_PER_GAME
 from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set, home_won_set, save_bet
 from live_betting.prematch_operations import get_matchid
-from live_betting.utils import load_credentials, write_id, click_id, save_screenshot, click_xpath
+from live_betting.utils import load_credentials, write_id, click_id, save_screenshot, click_xpath, clear_id
 from odds_to_probabilities import probabilities_from_odds
 
 
@@ -33,7 +33,10 @@ class Tipsport(Bookmaker):
 
     def login(self):
         username, password = load_credentials(CREDENTIALS_PATH)
-        write_id(self.driver, "userNameId", username)
+        time.sleep(5)
+        write_id(self.driver, "userNameId", username.split('@')[0])
+        time.sleep(5)
+        write_id(self.driver, "userNameId", username.split('@')[1])
         write_id(self.driver, "passwordId", password)
         click_id(self.driver, "btnLogin")
         time.sleep(self.seconds_to_sleep)  # some time in seconds for the website to load
@@ -293,7 +296,7 @@ class Tipsport(Bookmaker):
             except Exception as error:
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
-                save_screenshot(self.driver, f"set{set_number}_live_{str(error)[:5]}", bookmaker_matchid)
+                save_screenshot(self.driver, f"set{set_number}_live_{str(error)[:15]}", bookmaker_matchid)
                 time.sleep(self.seconds_to_sleep)
 
     def match_finished(self, bookmaker_matchid: str, current_set_score: tuple) -> bool:
@@ -354,14 +357,17 @@ class Tipsport(Bookmaker):
                         f" and computed prob. {1 - home_probability}")
                 break
             except Exception as error:
-                logging.exception(
-                    f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
-                save_screenshot(self.driver, f"set{set_number}_placing_bet_{str(error)[:5]}", bookmaker_matchid)
+                if isinstance(error, ElementClickInterceptedException):
+                    self.driver.refresh()
+                else:
+                    logging.exception(
+                        f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
+                save_screenshot(self.driver, f"set{set_number}_placing_bet_{str(error)[:15]}", bookmaker_matchid)
                 if self.next_set_started(bookmaker_matchid, set_number):
                     logging.info(f"Match {bookmaker_matchid}: Set{set_number} started.")
                     break
                 else:
-                    time.sleep(self.seconds_to_sleep / 2)  # wait just a moment
+                    time.sleep(self.seconds_to_sleep / 5)  # wait just a moment
 
     def bet_set(self, bet_type: str, bookmaker_matchid: str, set_number: int, odd: float, probability: float):
         if bet_type == 'home':
@@ -371,14 +377,13 @@ class Tipsport(Bookmaker):
         else:
             raise Exception(f"Unexpected bet type: {bet_type}")
         elem_base = self.get_base_odds_element(set_number)
-        elems_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
-        elem_odds = elems_odds[odd_index]
+        elements_odds = elem_base.find_elements_by_xpath("../../..//div[@class='tdEventCells']/div")
+        elem_odds = elements_odds[odd_index]
         elem_odds.click()
         save_screenshot(self.driver, f"set{set_number}_bet_prepared_{bet_type}_{odd}_time{datetime.datetime.now()}",
                         bookmaker_matchid)
-        # time.sleep(self.short_seconds_to_sleep / 2)
-        write_id(self.driver, 'amountPaid',
-                 str(max(self.minimal_bet_amount, round(probability * self.base_bet_amount))))
+        clear_id(self.driver, 'amountPaid')
+        write_id(self.driver, 'amountPaid', self.compute_bet(probability))
         click_id(self.driver, 'submitButton')
         save_screenshot(self.driver, f"set{set_number}_bet_created_{bet_type}_{odd}_time{datetime.datetime.now()}",
                         bookmaker_matchid)
@@ -449,16 +454,18 @@ class Tipsport(Bookmaker):
             else:
                 set_score, game_score = self.get_score_from_mistake(set_games)
         else:
-            game_score = raw_text[-4:-1].split(':')
+            raw_text = raw_text.replace(')', '').replace('(', '')
+            raw_text_split = raw_text.split(" ")
+            game_score = raw_text_split[len(raw_text_split) - 1].split(':')
             point_score = last_point_score  # TODO actually do something
         game_score = [int(x) for x in game_score]
         return tuple(set_score), tuple(game_score), point_score
 
     def get_score_without_video(self, set_number: int, bookmaker_matchid: str) -> \
             Tuple[Tuple[int, int], Tuple[int, int], str]:
-        elems = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
-        home_raw = elems[1].text
-        away_raw = elems[2].text
+        elements = self.driver.find_elements_by_xpath("//div[@class='flexContainerRow']")
+        home_raw = elements[1].text
+        away_raw = elements[2].text
         logging.info(f"No video score for match {bookmaker_matchid}: Home raw: {home_raw}, away_raw: {away_raw}")
 
         home_split = home_raw.split('\n')
@@ -523,3 +530,6 @@ class Tipsport(Bookmaker):
             return set_score, game_score, point_score
         else:
             raise Exception(f"Unexpected set score: {set_score}, {game_score}, {point_score}")
+
+    def compute_bet(self, probability: float) -> str:
+        return str(max(self.minimal_bet_amount, round(probability * self.base_bet_amount)))

@@ -1,11 +1,12 @@
 import datetime
 import logging
 import threading
+import time
 from typing import List
 
 import pandas as pd
 import pytz
-import time
+from selenium.common.exceptions import TimeoutException
 
 from config import COLUMN_NAMES
 from data_operations import transform_home_favorite, get_probabilities_from_odds
@@ -150,9 +151,11 @@ if __name__ == '__main__':
         start_time_run = datetime.datetime.now()
         try:
             scan_update(main_book)
+        except TimeoutException:
+            logging.error(f'Timeout while updating DB.')
         except Exception as error:
             logger.exception(f"While updating DB error occurred: {error}")
-            save_screenshot(main_book.driver, f"mainrun_{str(error)[:5]}", 'null')
+            save_screenshot(main_book.driver, f"main_run_{str(error)[:15]}", 'main_run')
         end_time = datetime.datetime.now()
         logger.info(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute
