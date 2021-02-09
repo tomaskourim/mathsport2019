@@ -83,7 +83,7 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
         save_screenshot(book.driver, f"top_match_handling_{str(err)[:5]}", bookmaker_matchid)
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
-        book.close()
+        book.quit()
 
     logger.info(f"Finished handling match: {bookmaker_matchid}")
     pass
@@ -155,7 +155,10 @@ if __name__ == '__main__':
             logging.error(f'Timeout while updating DB.')
         except Exception as error:
             logger.exception(f"While updating DB error occurred: {error}")
-            save_screenshot(main_book.driver, f"main_run_{str(error)[:15]}", 'main_run')
+            save_screenshot(main_book.driver, f"main_run_{str(error)}", 'main_run')
+        finally:
+            main_book.quit()
         end_time = datetime.datetime.now()
         logger.info(f"Duration update run: {(end_time - start_time_run)}")
         time.sleep(60)  # wait a minute
+        main_book = Tipsport()

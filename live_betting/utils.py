@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import time
+from string import punctuation
 from typing import Tuple
 
 from selenium import webdriver
@@ -45,10 +46,12 @@ def click_xpath(driver: webdriver, xpath: str):
 
 def save_screenshot(driver: webdriver, info_text: str, bookmaker_matchid: str):
     screen_order = 1
-    screen_filename = f"screens/{bookmaker_matchid}-{info_text}-{screen_order}.png"
+    for punct in punctuation:
+        info_text = info_text.replace(punct, '_')
+    screen_filename = f'screens/{bookmaker_matchid}-{info_text}-{screen_order}.png'
     while os.path.isfile(screen_filename):
         screen_order = screen_order + 1
-        screen_filename = f"screens/{bookmaker_matchid}-{info_text}-{screen_order}.png"
+        screen_filename = f'screens/{bookmaker_matchid}-{info_text}-{screen_order}.png'
     try:
         driver.save_screenshot(screen_filename)
     except TimeoutException:
@@ -56,4 +59,4 @@ def save_screenshot(driver: webdriver, info_text: str, bookmaker_matchid: str):
             f'Timeout while saving screenshot in match {bookmaker_matchid}. Original error message text: {info_text}')
     except Exception:
         logging.exception(
-            f"Error while saving screenshot in match {bookmaker_matchid}. Original error message text: {info_text}")
+            f'Error while saving screenshot in match {bookmaker_matchid}. Original error message text: {info_text}')

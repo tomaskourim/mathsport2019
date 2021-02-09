@@ -296,7 +296,7 @@ class Tipsport(Bookmaker):
             except Exception as error:
                 logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
                 errors_in_match = errors_in_match + 1
-                save_screenshot(self.driver, f"set{set_number}_live_{str(error)[:15]}", bookmaker_matchid)
+                save_screenshot(self.driver, f"set{set_number}_live_{str(error)}", bookmaker_matchid)
                 time.sleep(self.seconds_to_sleep)
 
     def match_finished(self, bookmaker_matchid: str, current_set_score: tuple) -> bool:
@@ -362,7 +362,7 @@ class Tipsport(Bookmaker):
                 else:
                     logging.exception(
                         f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
-                save_screenshot(self.driver, f"set{set_number}_placing_bet_{str(error)[:15]}", bookmaker_matchid)
+                save_screenshot(self.driver, f"set{set_number}_placing_bet_{str(error)}", bookmaker_matchid)
                 if self.next_set_started(bookmaker_matchid, set_number):
                     logging.info(f"Match {bookmaker_matchid}: Set{set_number} started.")
                     break
