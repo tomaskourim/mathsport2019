@@ -26,7 +26,7 @@ class Bookmaker:
         self.short_seconds_to_sleep = 2
         self.database_id = self.get_book_id()
 
-    def close(self):
+    def quit(self):
         self.driver.quit()
 
     def get_book_id(self):
