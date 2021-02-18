@@ -101,9 +101,9 @@ if __name__ == '__main__':
     logger.setLevel('DEBUG')
 
     # Create handlers
-    total_handler = logging.FileHandler('logfile_total.log', mode='w')
-    info_handler = logging.FileHandler('logfile_info.log')
-    error_handler = logging.FileHandler('logfile_error.log')
+    total_handler = logging.FileHandler('logfile_total.log', mode='w', encoding="utf-8")
+    info_handler = logging.FileHandler('logfile_info.log', encoding="utf-8")
+    error_handler = logging.FileHandler('logfile_error.log', encoding="utf-8")
     stdout_handler = logging.StreamHandler()
 
     total_handler.setLevel(logging.DEBUG)
