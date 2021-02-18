@@ -357,12 +357,15 @@ class Tipsport(Bookmaker):
                         f" and computed prob. {1 - home_probability}")
                 break
             except Exception as error:
+                save_screenshot(self.driver, f"set{set_number}_placing_bet_{str(error)}", bookmaker_matchid)
                 if isinstance(error, ElementClickInterceptedException):
+                    logging.error(
+                        f"ElementClickInterceptedException while handling bets and odds on match {bookmaker_matchid}, "
+                        f"set{set_number}: {error}")
                     self.driver.refresh()
                 else:
                     logging.exception(
                         f"Error while handling bets and odds on match {bookmaker_matchid}, set{set_number}: {error}")
-                save_screenshot(self.driver, f"set{set_number}_placing_bet_{str(error)}", bookmaker_matchid)
                 if self.next_set_started(bookmaker_matchid, set_number):
                     logging.info(f"Match {bookmaker_matchid}: Set{set_number} started.")
                     break
