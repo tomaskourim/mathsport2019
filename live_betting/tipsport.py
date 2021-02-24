@@ -344,13 +344,19 @@ class Tipsport(Bookmaker):
                 save_set_odds(set_odds, self.database_id, bookmaker_matchid, set_number)
                 # bet on next set if possible
                 if home_probability > 1 / set_odds[0]:
-                    self.bet_set('home', bookmaker_matchid, set_number, set_odds[0], home_probability)
+                    # self.bet_set('home', bookmaker_matchid, set_number, set_odds[0], home_probability)
+                    logging.info(
+                        f"Would be placing bet on home, match {bookmaker_matchid}, set{set_number} with odds"
+                        f" {set_odds[0]} and computed prob. {home_probability}")
                 else:
                     logging.info(
                         f"Not placing bet on home, match {bookmaker_matchid}, set{set_number} with odds {set_odds[0]}"
                         f" and computed prob. {home_probability}")
                 if (1 - home_probability) > 1 / set_odds[1]:
-                    self.bet_set('away', bookmaker_matchid, set_number, set_odds[1], 1 - home_probability)
+                    # self.bet_set('away', bookmaker_matchid, set_number, set_odds[1], 1 - home_probability)
+                    logging.info(
+                        f"Would be placing bet on away, match {bookmaker_matchid}, set{set_number} with odds"
+                        f" {set_odds[1]} and computed prob. {1 - home_probability}")
                 else:
                     logging.info(
                         f"Not placing bet on away, match {bookmaker_matchid}, set{set_number} with odds {set_odds[1]}"
