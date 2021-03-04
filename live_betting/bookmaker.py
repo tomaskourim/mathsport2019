@@ -1,4 +1,5 @@
 import time
+from sys import platform
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -18,8 +19,11 @@ class Bookmaker:
         options.add_argument("disable-infobars")
         options.add_argument("--disable-extensions")
         options.add_argument("window-size=1920,1080")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument('--remote-debugging-port=9222')
+
+        if platform == "linux" or platform == "linux2":
+            options.add_argument("--disable-dev-shm-usage")
+            options.add_argument('--remote-debugging-port=9222')
+
         self.driver = webdriver.Chrome(options=options, executable_path=WEBDRIVER_PATH)
         self.driver.maximize_window()
         self.driver.get(self._home_url)
