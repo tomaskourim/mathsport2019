@@ -75,7 +75,7 @@ def handle_match(bookmaker_matchid: str, c_lambda: float):
         book.handle_match(bookmaker_matchid, c_lambda)
     except Exception as err:
         logger.exception(f"Top level error while handling match {bookmaker_matchid}. Error: {err}")
-        save_screenshot(book.driver, f"top_match_handling_{str(err)[:5]}", bookmaker_matchid)
+        save_screenshot(book.driver, f"top_match_handling_{str(err)}", bookmaker_matchid)
     finally:
         remove_inplay(bookmaker_matchid, book.database_id)
         book.quit()
