@@ -83,7 +83,7 @@ Install Chrome (for some reason, you have to do it as root, not only sudo)
 
 Install ChromeDriver (go to https://sites.google.com/a/chromium.org/chromedriver/downloads to get the proper version)
 
-    wget https://chromedriver.storage.googleapis.com/79.0.3945.36/chromedriver_linux64.zip
+    wget https://chromedriver.storage.googleapis.com/89.0.4389.23/chromedriver_linux64.zip
     unzip chromedriver_linux64.zip
     sudo mv chromedriver /usr/bin/chromedriver
     sudo chown root:root /usr/bin/chromedriver
@@ -103,4 +103,3 @@ Run form `tmux` or similar
    
     cd live_betting
     python3 betting.py
-    
