@@ -13,6 +13,9 @@ class testTipsport(unittest.TestCase):
         score = main_book.get_score_from_video_raw_text(3, "2:1(5:7, 6:4, 12:10)", "11:10")
         self.assertEqual(((2, 1), (12, 10), '11:10'), score)
 
+        score = main_book.get_score_from_video_raw_text(1, "0:01.set - 3:5 (40:40*)", "30:40*")
+        self.assertEqual(((0, 0), (3, 5), '(40:40)'), score)
+
     def test_compute_bet(self):
         bet_amount = main_book.compute_bet(0.07713517328285746)
         self.assertEqual(str(main_book.minimal_bet_amount), bet_amount)

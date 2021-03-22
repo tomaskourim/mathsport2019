@@ -294,7 +294,9 @@ class Tipsport(Bookmaker):
                 set_number = set_number + 1
                 self.bet_next_set(bookmaker_matchid, set_number, home_probability)
             except Exception as error:
-                logging.exception(f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}")
+                logging.exception(
+                    f"Error while handling live match {bookmaker_matchid} in set{set_number}: {error}. "
+                    f"Url: {self.driver.current_url}")
                 errors_in_match = errors_in_match + 1
                 save_screenshot(self.driver, f"set{set_number}_live_{str(error)}", bookmaker_matchid)
                 time.sleep(self.seconds_to_sleep)
