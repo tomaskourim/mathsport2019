@@ -113,7 +113,7 @@ WHERE mc.start_time_utc > '2021-03-21 10:48:00.000000' AND o.id ISNULL;
 SELECT match_id, match_bookmaker_id, home, away, start_time_utc
 FROM matches_bookmaker
          JOIN matches m ON matches_bookmaker.match_id = m.id
-WHERE match_bookmaker_id IN (
+WHERE inplay_available AND match_bookmaker_id IN (
     SELECT o.match_bookmaker_id AS match_bookmaker_id
     FROM (SELECT odds.*, m2.start_time_utc,
               CASE
