@@ -15,7 +15,7 @@ from live_betting.bookmaker import Bookmaker
 from live_betting.config_betting import CREDENTIALS_PATH
 from live_betting.config_betting import MINUTES_PER_GAME
 from live_betting.inplay_operations import save_set_odds, evaluate_bet_on_set, home_won_set, save_bet
-from live_betting.prematch_operations import get_matchid
+from live_betting.prematch_operations import get_matchid, set_inplay
 from live_betting.utils import load_credentials, write_id, click_id, save_screenshot, click_xpath, clear_id
 from odds_to_probabilities import probabilities_from_odds
 
@@ -273,6 +273,9 @@ class Tipsport(Bookmaker):
     def handle_inplay(self, bookmaker_matchid: str, home_probability: float, c_lambda: float):
         self.driver.get("".join([self.tennis_match_live_base_url, bookmaker_matchid]))
         time.sleep(self.seconds_to_sleep)
+        if self.driver.current_url == "https://www.tipsport.cz/live":
+            set_inplay(False, bookmaker_matchid)
+            return
 
         matchid = get_matchid(bookmaker_matchid, self.database_id)
         set_number = 1

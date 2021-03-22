@@ -39,6 +39,11 @@ def save_match_bookmaker(params: list) -> tuple:
     return execute_sql_postgres(query, params, True)
 
 
+def set_inplay(inplay_available: bool, match_bookmaker_id: str) -> tuple:
+    query = f"UPDATE matches_bookmaker SET inplay_available = %s where match_bookmaker_id = %s"
+    return execute_sql_postgres(query, [inplay_available, match_bookmaker_id], True)
+
+
 def get_save_tournaments(book: Bookmaker) -> pd.DataFrame:
     tournaments = book.get_tournaments()
     logging.debug("------------------------------------------------------\nPrematch")
