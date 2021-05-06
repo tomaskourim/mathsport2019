@@ -274,6 +274,7 @@ class Tipsport(Bookmaker):
         self.driver.get("".join([self.tennis_match_live_base_url, bookmaker_matchid]))
         time.sleep(self.seconds_to_sleep)
         if self.driver.current_url == "https://www.tipsport.cz/live":
+            logging.info(f'Setting inplay for match {bookmaker_matchid} as unavailable.')
             set_inplay(False, bookmaker_matchid)
             return
 
