@@ -57,7 +57,7 @@ def save_screenshot(driver: webdriver, info_text: str, bookmaker_matchid: str):
         screen_order = screen_order + 1
         screen_filename = f'screens/{bookmaker_matchid}-{info_text}-{screen_order}.png'
     try:
-        logging.info(f'Saving screenshot {screen_filename}')
+        logging.debug(f'Saving screenshot {screen_filename}')
         driver.save_screenshot(screen_filename)
     except TimeoutException:
         logging.error(
