@@ -162,7 +162,7 @@ FROM bet
 WHERE utc_time_recorded >= '2021-04-12 10:16:11.000000' AND result_corrected NOTNULL;
 
 --------------------------------------------------------------
---theoretical results (if odds were as algorithms expected)
+--theoretical results (if odds were as algorithm expected)
 -- edge
 SELECT *, probability - 1 / odd AS edge
 FROM bet
