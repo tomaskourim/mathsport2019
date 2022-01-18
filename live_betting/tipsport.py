@@ -116,6 +116,11 @@ class Tipsport(Bookmaker):
             else:
                 tournament["surface"] = None
 
+            # to remove TV stations streaming a tournament
+            tv_location = text.find("\n")
+            if tv_location > 0:
+                text = text[0:tv_location]
+
             tournament["tournament_name"] = text.strip()
             tournaments = tournaments.append(tournament, ignore_index=True)
 
